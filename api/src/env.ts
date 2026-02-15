@@ -1,7 +1,6 @@
 import z from "zod";
 
 const envSchema = z.object({
-  API_TOKEN: z.string(),
   WEBSOCKET_TOKEN: z.string(),
 });
 
