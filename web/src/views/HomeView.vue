@@ -1,15 +1,30 @@
 <template>
   <div class="home">
-    <h1>This is the home page</h1>
+    <form @submit="handleSubmit">
+      <UploadForm @fileSelected="handleFileSelected" />
+      <button type="submit">print</button>
+    </form>
   </div>
 </template>
 
-<style>
-@media (min-width: 1024px) {
-  .home {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
+<script setup lang="ts">
+import { ref } from 'vue';
+import UploadForm from '../components/photo/UploadForm.vue';
+import { submitImagePrint } from '../utils/api';
+
+const file = ref<File | null>(null);
+
+function handleFileSelected(selectedFile: File) {
+  file.value = selectedFile;
 }
-</style>
+
+async function handleSubmit(e: SubmitEvent) {
+  e.preventDefault();
+
+  if (!file.value) {
+    return;
+  }
+  await submitImagePrint(file.value);
+}
+
+</script>
