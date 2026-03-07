@@ -1,6 +1,7 @@
 <template>
   <div class="home">
     <form @submit="handleSubmit">
+      <CameraForm />
       <UploadForm @fileSelected="handleFileSelected" />
       <button type="submit">print</button>
     </form>
@@ -11,6 +12,7 @@
 import { ref } from 'vue';
 import UploadForm from '../components/photo/UploadForm.vue';
 import { submitImagePrint } from '../utils/api';
+import CameraForm from '../components/photo/CameraForm.vue';
 
 const file = ref<File | null>(null);
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="upload">
+  <div class="upload-form">
     <div ref="dropzone" class="dropzone"></div>
     <label for="photo">File</label>
     <input ref="fileInput" id="photo" type="file" @change="handleFileUpload" accept="image/*" />
