@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <form @submit="handleSubmit">
-      <CameraForm />
+      <CameraForm @fileSelected="handleFileSelected" />
       <UploadForm @fileSelected="handleFileSelected" />
       <button type="submit">print</button>
     </form>

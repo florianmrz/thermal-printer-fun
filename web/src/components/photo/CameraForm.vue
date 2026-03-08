@@ -21,6 +21,10 @@ const isStreaming = ref(false);
 const videoSize = reactive({ width: 320, height: 0 });
 const capturedImage = ref<string | null>(null);
 
+const emit = defineEmits<{
+  'file-selected': [file: File];
+}>();
+
 async function startCamera() {
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
@@ -42,10 +46,12 @@ async function takePicture() {
       const dataUrl = $canvas.value.toDataURL('image/png');
       capturedImage.value = dataUrl;
 
-      const blob = await new Promise<Blob | null>((resolve) => {
-        $canvas.value!.toBlob((blob) => resolve(blob), 'image/png', 1);
+      const blob = await new Promise<Blob | null>(resolve => {
+        $canvas.value!.toBlob(blob => resolve(blob), 'image/png', 1);
       });
-      console.log('Captured image blob:', blob);
+      if (blob) {
+        emit('file-selected', new File([blob], 'captured-image.png', { type: 'image/png' }));
+      }
     }
   }
 }
