@@ -31,10 +31,26 @@ function sendMessageToWebClients(message: WebSocketMessage, clients?: WebSocket[
 let printerClient: WebSocket | null = null;
 
 function print(
-  printLines: number[][],
+  printLines: Uint8Array<ArrayBuffer>[],
   options?: {
+    /**
+     * Whether to cut the paper after printing.
+     * If set to false, the printer will not cut the paper, allowing for continuous printing.
+     *
+     * @default true
+     */
     cutPaper?: boolean;
+    /**
+     * The print quality.
+     *
+     * @default 'highPrint'
+     */
     printQuality?: 'highSpeed' | 'normal' | 'highPrint';
+    /**
+     * The number of dots to feed after printing.
+     *
+     * @default 0
+     */
     lineFeedDots?: number;
   }
 ) {
@@ -72,8 +88,7 @@ function print(
   let currentChunk: Uint8Array = new Uint8Array();
   printLines.forEach(line => {
     const lineHeader = Uint8Array.from([0x62, 0x48, 0x00]);
-    const lineData = Uint8Array.from(line);
-    const linePacket = new Uint8Array([...lineHeader, ...lineData]);
+    const linePacket = new Uint8Array([...lineHeader, ...line]);
     currentChunk = new Uint8Array([...currentChunk, ...linePacket]);
     linesInChunk++;
     if (linesInChunk >= 100) {
@@ -82,6 +97,9 @@ function print(
       linesInChunk = 0;
     }
   });
+  if (currentChunk.length > 0) {
+    lineChunks.push(currentChunk);
+  }
   lineChunks.forEach(chunk => printerClient!.send(chunk));
 
   // Move vertical direction position by 100 dots
