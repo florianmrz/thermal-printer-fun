@@ -2,11 +2,11 @@
   <header class="bm-header">
     <div class="global-container">
       <div class="header-container">
-        <a href="/" class="logo">🖨️</a>
+        <RouterLink :to="{ name: 'home' }" class="logo">🖨️</RouterLink>
 
         <nav class="nav-links">
-          <RouterLink to="/">Home</RouterLink>
-          <RouterLink to="/about">About</RouterLink>
+          <RouterLink :to="{ name: 'home' }">Home</RouterLink>
+          <RouterLink :to="{ name: 'print' }">Print</RouterLink>
         </nav>
 
         <div class="printer-status" :class="`is-${printerStatus}`">
@@ -20,6 +20,7 @@
 
 <script setup lang="ts">
 import { inject } from 'vue';
+import { RouterLink } from 'vue-router';
 import { printerStatusInjectionKey } from '../../../utils/keys';
 
 const printerStatus = inject(printerStatusInjectionKey);

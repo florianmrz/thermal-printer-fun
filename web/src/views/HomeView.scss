@@ -1,0 +1,41 @@
+@use '~/assets/styles/variables';
+@use '~/assets/styles/typography';
+
+.home-view {
+}
+
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 16px 0;
+}
+
+.card {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  aspect-ratio: 1 / 1;
+  max-width: 128px;
+  background-color: variables.$neutral-0_white;
+  border: 2px solid variables.$neutral-1000_black;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: variables.$neutral-100_off-white;
+  }
+
+  .icon {
+    font-size: 32px;
+    color: variables.$neutral-600_grey;
+  }
+
+  .title {
+    @include typography.text-medium;
+    font-weight: variables.$font-weight-medium;
+  }
+}

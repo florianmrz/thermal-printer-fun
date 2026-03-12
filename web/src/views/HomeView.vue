@@ -1,32 +1,16 @@
 <template>
-  <div class="home">
-    <form @submit="handleSubmit">
-      <CameraForm @fileSelected="handleFileSelected" />
-      <UploadForm @fileSelected="handleFileSelected" />
-      <button type="submit">print</button>
-    </form>
+  <div class="home-view">
+    <div class="card-container">
+      <RouterLink class="card" :to="{ name: 'print' }">
+        <div class="icon">🖨️</div>
+        <div class="title">Print</div>
+      </RouterLink>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import UploadForm from '../components/photo/UploadForm.vue';
-import { submitImagePrint } from '../utils/api';
-import CameraForm from '../components/photo/CameraForm.vue';
-
-const file = ref<File | null>(null);
-
-function handleFileSelected(selectedFile: File) {
-  file.value = selectedFile;
-}
-
-async function handleSubmit(e: SubmitEvent) {
-  e.preventDefault();
-
-  if (!file.value) {
-    return;
-  }
-  await submitImagePrint(file.value);
-}
-
+import { RouterLink } from 'vue-router';
 </script>
+
+<style lang="scss" src="./HomeView.scss" scoped />
