@@ -1,0 +1,47 @@
+@use 'variables';
+@use 'typography';
+@use 'fonts';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  font-weight: normal;
+}
+
+*:focus-visible {
+  outline-width: 2px;
+  outline-style: solid;
+}
+
+body {
+  min-height: 100vh;
+  color: variables.$neutral-950_almost-black;
+  background-color: variables.$neutral-0_white;
+  font-family: variables.$font-family, 'Courier New', Courier, monospace;
+  font-style: normal;
+  font-weight: variables.$font-weight-regular;
+  text-rendering: optimizeLegibility;
+  line-height: 1.2;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.global-container {
+  width: 100%;
+  max-width: variables.$site-max-width;
+  margin-right: variables.$container-margin;
+  margin-left: variables.$container-margin;
+
+  @media (min-width: 1280px) {
+    margin-right: auto;
+    margin-left: auto;
+  }
+}

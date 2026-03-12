@@ -1,0 +1,97 @@
+@use '~/assets/styles/variables';
+@use '~/assets/styles/typography';
+
+.bm-header {
+  height: variables.$header-height;
+  box-shadow: 0 2px 4px rgba(variables.$neutral-1000_black, 0.1);
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 8px 0;
+}
+
+.logo {
+  width: 48px;
+  height: 48px;
+  font-size: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-links {
+  display: flex;
+  gap: 8px;
+
+  a {
+    @include typography.text-medium;
+    color: variables.$neutral-950_almost-black;
+    transition: color 0.3s;
+    padding: 4px 8px;
+
+    &:hover {
+      color: variables.$neutral-600_grey;
+    }
+
+    &.router-link-exact-active {
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 6px;
+    }
+  }
+}
+
+.printer-status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 12px;
+  background-color: variables.$neutral-600_grey;
+
+  &.is-disconnected {
+    background-color: variables.$red-300;
+    color: variables.$red-900;
+
+    .printer-status-indicator {
+      background-color: variables.$red-600;
+    }
+  }
+
+  &.is-connected {
+    background-color: variables.$green-300;
+    color: variables.$green-950;
+
+    .printer-status-indicator {
+      background-color: variables.$green-700;
+      animation: pulse 2s infinite;
+    }
+  }
+}
+
+.printer-status-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(variables.$green-700, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(variables.$green-700, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(variables.$green-700, 0);
+  }
+}
+
+.printer-status-text {
+  @include typography.text-small;
+  text-transform: uppercase;
+  font-weight: variables.$font-weight-medium;
+}

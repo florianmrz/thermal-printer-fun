@@ -1,0 +1,94 @@
+@use 'variables';
+
+// text-heading
+@mixin text-heading-0 {
+  font-family: variables.$font-family;
+  font-size: 32px;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+@mixin text-heading-1280($ignoreDuplicates: false) {
+  @if not $ignoreDuplicates {
+    font-family: variables.$font-family;
+    line-height: 1.2;
+    letter-spacing: 0;
+  }
+  font-size: 36px;
+}
+@mixin text-heading {
+  @include text-heading-0;
+
+  @media (min-width: 1280px) {
+    @include text-heading-1280(true);
+  }
+}
+
+
+// text-small
+@mixin text-small-0 {
+  font-family: variables.$font-family;
+  font-size: 14px;
+  line-height: 1.4;
+  letter-spacing: 0;
+}
+@mixin text-small-1280($ignoreDuplicates: false) {
+  @if not $ignoreDuplicates {
+    font-family: variables.$font-family;
+    letter-spacing: 0;
+  }
+  font-size: 12px;
+  line-height: 1.6;
+}
+@mixin text-small {
+  @include text-small-0;
+
+  @media (min-width: 1280px) {
+    @include text-small-1280(true);
+  }
+}
+
+// text-medium
+@mixin text-medium-0 {
+  font-family: variables.$font-family;
+  font-size: 16px;
+  line-height: 1.6;
+  letter-spacing: 0;
+}
+@mixin text-medium-1280($ignoreDuplicates: false) {
+  @if not $ignoreDuplicates {
+    font-family: variables.$font-family;
+    line-height: 1.6;
+    letter-spacing: 0;
+  }
+  font-size: 14px;
+}
+@mixin text-medium {
+  @include text-medium-0;
+
+  @media (min-width: 1280px) {
+    @include text-medium-1280(true);
+  }
+}
+
+// text-large
+@mixin text-large-0 {
+  font-family: variables.$font-family;
+  font-size: 20px;
+  line-height: 1.4;
+  letter-spacing: 0;
+}
+@mixin text-large-1280($ignoreDuplicates: false) {
+  @if not $ignoreDuplicates {
+    font-family: variables.$font-family;
+    line-height: 1.4;
+    letter-spacing: 0;
+  }
+  font-size: 18px;
+}
+@mixin text-large {
+  @include text-large-0;
+
+  @media (min-width: 1280px) {
+    @include text-large-1280(true);
+  }
+}

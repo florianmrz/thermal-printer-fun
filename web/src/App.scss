@@ -1,0 +1,24 @@
+@use '~/assets/styles/variables';
+@use '~/assets/styles/typography';
+
+#main {
+  min-height: calc(100vh - #{variables.$header-height});
+}
+
+.skip-to-content-link {
+  @include typography.text-medium;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 99999;
+  padding: 4px 8px;
+  margin: 4px;
+  background: variables.$neutral-1000_black;
+  color: variables.$neutral-0_white;
+  border-radius: 0;
+  transform: translateY(-200px);
+
+  &:focus-visible {
+    transform: translateY(0);
+  }
+}

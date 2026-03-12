@@ -1,0 +1,118 @@
+// Place your global snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and
+// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope
+// is left empty or omitted, the snippet gets applied to all languages. The prefix is what is
+// used to trigger the snippet and the body will be expanded and inserted. Possible variables are:
+// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders.
+// Placeholders with the same ids are connected.
+// Example:
+// "Print to console": {
+// 	"scope": "javascript,typescript",
+// 	"prefix": "log",
+// 	"body": [
+// 		"console.log('$1');",
+// 		"$2"
+// 	],
+// 	"description": "Log output to console"
+// }
+{
+  "Media query min:480px (phone)": {
+    "scope": "html,css,scss,sass",
+    "prefix": "m:0480",
+    "body": [
+      "@media (min-width: 480px) {",
+      "${1}",
+      "}"
+    ],
+    "description": "Media query for phone"
+  },
+  "Media query min:640px (phoneLarge)": {
+    "scope": "html,css,scss,sass",
+    "prefix": "m:0640",
+    "body": [
+      "@media (min-width: 640px) {",
+      "${1}",
+      "}"
+    ],
+    "description": "Media query for phoneLarge"
+  },
+  "Media query min:768px (tablet)": {
+    "scope": "html,css,scss,sass",
+    "prefix": "m:0768",
+    "body": [
+      "@media (min-width: 768px) {",
+      "${1}",
+      "}"
+    ],
+    "description": "Media query for tablet"
+  },
+  "Media query min:1024px (tabletLarge)": {
+    "scope": "html,css,scss,sass",
+    "prefix": "m:1024",
+    "body": [
+      "@media (min-width: 1024px) {",
+      "${1}",
+      "}"
+    ],
+    "description": "Media query for tabletLarge"
+  },
+  "Media query min:1280px (laptop)": {
+    "scope": "html,css,scss,sass",
+    "prefix": "m:1280",
+    "body": [
+      "@media (min-width: 1280px) {",
+      "${1}",
+      "}"
+    ],
+    "description": "Media query for laptop"
+  },
+  "Media query min:1400px (laptopLarge)": {
+    "scope": "html,css,scss,sass",
+    "prefix": "m:1400",
+    "body": [
+      "@media (min-width: 1400px) {",
+      "${1}",
+      "}"
+    ],
+    "description": "Media query for laptopLarge"
+  },
+  "Media query min:1640px (desktop)": {
+    "scope": "html,css,scss,sass",
+    "prefix": "m:1640",
+    "body": [
+      "@media (min-width: 1640px) {",
+      "${1}",
+      "}"
+    ],
+    "description": "Media query for desktop"
+  },
+  "Media query min:1920px (desktopLarge)": {
+    "scope": "html,css,scss,sass",
+    "prefix": "m:1920",
+    "body": [
+      "@media (min-width: 1920px) {",
+      "${1}",
+      "}"
+    ],
+    "description": "Media query for desktopLarge"
+  },
+  "Media query min:2440px (cinema)": {
+    "scope": "html,css,scss,sass",
+    "prefix": "m:2440",
+    "body": [
+      "@media (min-width: 2440px) {",
+      "${1}",
+      "}"
+    ],
+    "description": "Media query for cinema"
+  },
+  "Media query min:2840px (cinemaLarge)": {
+    "scope": "html,css,scss,sass",
+    "prefix": "m:2840",
+    "body": [
+      "@media (min-width: 2840px) {",
+      "${1}",
+      "}"
+    ],
+    "description": "Media query for cinemaLarge"
+  },
+}
