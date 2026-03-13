@@ -5,8 +5,8 @@
         <RouterLink :to="{ name: 'home' }" class="logo">🖨️</RouterLink>
 
         <nav class="nav-links">
-          <RouterLink :to="{ name: 'home' }">Home</RouterLink>
-          <RouterLink :to="{ name: 'print' }">Print</RouterLink>
+          <BaseNavLink :to="{ name: 'home' }">Home</BaseNavLink>
+          <BaseNavLink :to="{ name: 'print' }">Print</BaseNavLink>
         </nav>
 
         <div class="printer-status" :class="`is-${printerStatus}`">
@@ -22,6 +22,7 @@
 import { inject } from 'vue';
 import { RouterLink } from 'vue-router';
 import { printerStatusInjectionKey } from '../../../utils/keys';
+import BaseNavLink from '../../base/BaseNavLink/BaseNavLink.vue';
 
 const printerStatus = inject(printerStatusInjectionKey);
 </script>

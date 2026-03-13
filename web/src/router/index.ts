@@ -12,8 +12,27 @@ const router = createRouter({
     },
     {
       path: '/print',
-      name: 'print',
-      component: PrintView,
+      children: [
+        {
+          path: '',
+          name: 'print',
+          redirect: (_to, _from) => {
+            // Redirect to camera view on mobile
+            const isMobile = /Mobi|Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent);
+            return isMobile ? { name: 'print-camera' } : { name: 'print-upload' };
+          },
+        },
+        {
+          path: 'upload',
+          name: 'print-upload',
+          component: PrintView,
+        },
+        {
+          path: 'camera',
+          name: 'print-camera',
+          component: PrintView,
+        },
+      ],
     },
   ],
 });

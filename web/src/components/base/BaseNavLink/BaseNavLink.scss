@@ -1,0 +1,19 @@
+@use '~/assets/styles/variables';
+@use '~/assets/styles/typography';
+
+.base-nav-link {
+  @include typography.text-medium;
+  color: variables.$neutral-950_almost-black;
+  transition: color 0.2s ease;
+  padding: 4px 8px;
+
+  &:hover {
+    color: variables.$neutral-600_grey;
+  }
+
+  &.router-link-active {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 6px;
+  }
+}
