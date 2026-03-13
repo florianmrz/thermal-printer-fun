@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import CameraForm from '../components/modules/print/PMCamera.vue';
+import UploadForm from '../components/modules/print/PMUpload.vue';
 import HomeView from '../views/HomeView.vue';
-import PrintView from '../views/PrintView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -25,12 +26,12 @@ const router = createRouter({
         {
           path: 'upload',
           name: 'print-upload',
-          component: PrintView,
+          component: UploadForm,
         },
         {
           path: 'camera',
           name: 'print-camera',
-          component: PrintView,
+          component: CameraForm,
         },
       ],
     },

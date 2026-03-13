@@ -1,0 +1,21 @@
+@use '~/assets/styles/variables';
+@use '~/assets/styles/typography';
+
+.pm-upload {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.dropzone {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  border: 2px dashed variables.$neutral-600_grey;
+  aspect-ratio: 3 / 2;
+  cursor: pointer;
+}
+
+input {
+  display: none;
+}

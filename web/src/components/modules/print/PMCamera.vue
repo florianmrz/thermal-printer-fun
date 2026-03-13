@@ -1,17 +1,22 @@
 <template>
-  <div class="camera-form">
-    <video ref="video"></video>
-    <canvas ref="canvas" hidden></canvas>
-    <img v-if="capturedImage" :src="capturedImage" alt="Captured Image" />
-    <button type="button" @click="startCamera">start camera</button>
-    <button type="button" @click="takePicture">take picture</button>
-    <p v-if="cameraError">{{ cameraError }}</p>
-  </div>
+  <PrintView>
+    <form class="pm-camera" @submit="handleSubmit">
+      <video ref="video"></video>
+      <canvas ref="canvas" hidden></canvas>
+      <img v-if="capturedImage" :src="capturedImage" alt="Captured Image" />
+      <button type="button" @click="startCamera">start camera</button>
+      <button type="button" @click="takePicture">take picture</button>
+      <p v-if="cameraError">{{ cameraError }}</p>
+      <button type="submit">Print</button>
+    </form>
+  </PrintView>
 </template>
 
 <script setup lang="ts">
 import { useEventListener } from '@vueuse/core';
 import { reactive, ref, useTemplateRef } from 'vue';
+import { submitImagePrint } from '../../../utils/api';
+import PrintView from '../../../views/PrintView.vue';
 
 const $video = useTemplateRef('video');
 const $canvas = useTemplateRef('canvas');
@@ -20,10 +25,7 @@ const cameraError = ref<string | null>(null);
 const isStreaming = ref(false);
 const videoSize = reactive({ width: 320, height: 0 });
 const capturedImage = ref<string | null>(null);
-
-const emit = defineEmits<{
-  'file-selected': [file: File];
-}>();
+const file = ref<File | null>(null);
 
 async function startCamera() {
   try {
@@ -50,7 +52,7 @@ async function takePicture() {
         $canvas.value!.toBlob(blob => resolve(blob), 'image/png', 1);
       });
       if (blob) {
-        emit('file-selected', new File([blob], 'captured-image.png', { type: 'image/png' }));
+        file.value = new File([blob], 'captured-image.png', { type: 'image/png' });
       }
     }
   }
@@ -68,6 +70,16 @@ useEventListener($video, 'canplay', () => {
     isStreaming.value = true;
   }
 });
+
+async function handleSubmit(e: SubmitEvent) {
+  e.preventDefault();
+
+  if (!file.value) {
+    return;
+  }
+
+  await submitImagePrint(file.value);
+}
 </script>
 
-<style scoped></style>
+<style lang="scss" src="./PMCamera.scss" scoped />
