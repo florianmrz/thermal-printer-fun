@@ -2,7 +2,7 @@
 @use '~/assets/styles/typography';
 
 .base-nav-link {
-  @include typography.text-medium;
+  @include typography.action-medium;
   color: variables.$neutral-950_almost-black;
   transition: color 0.2s ease;
   padding: 4px 8px;

@@ -76,7 +76,6 @@
 }
 
 .printer-status-text {
-  @include typography.text-small;
+  @include typography.action-small;
   text-transform: uppercase;
-  font-weight: variables.$font-weight-medium;
 }

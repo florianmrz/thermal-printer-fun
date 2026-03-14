@@ -1,0 +1,31 @@
+@use '~/assets/styles/variables';
+@use '~/assets/styles/typography';
+
+.base-button {
+  @include typography.action-medium;
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s ease;
+  transition-property: background-color, color;
+  outline-offset: 2px;
+
+  &.is-filled {
+    background-color: variables.$neutral-950_almost-black;
+    color: variables.$neutral-0_white;
+
+    &:hover {
+      background-color: variables.$neutral-600_grey;
+    }
+  }
+
+  &.is-outlined {
+    background-color: transparent;
+    color: variables.$neutral-950_almost-black;
+    box-shadow: 0 0 0 2px variables.$neutral-950_almost-black inset;
+
+    &:hover {
+      color: variables.$neutral-600_grey;
+    }
+  }
+}

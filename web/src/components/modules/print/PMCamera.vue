@@ -1,22 +1,31 @@
 <template>
   <PrintView>
     <form class="pm-camera" @submit="handleSubmit">
-      <video ref="video"></video>
+      <div class="video-container">
+        <BaseIcon v-if="!isStreaming" icon="account-box" size="large" />
+        <BaseButton v-if="!isStreaming" type="button" @click="startCamera">Start camera</BaseButton>
+        <video ref="video" class="video" :hidden="!isStreaming"></video>
+        <img v-if="imageSrc" class="captured-image" :src="imageSrc" alt="Captured Image" />
+      </div>
       <canvas ref="canvas" hidden></canvas>
-      <img v-if="capturedImage" :src="capturedImage" alt="Captured Image" />
-      <button type="button" @click="startCamera">start camera</button>
-      <button type="button" @click="takePicture">take picture</button>
+      <BaseButton v-if="isStreaming && !file" type="button" @click="takePicture">Take picture</BaseButton>
       <p v-if="cameraError">{{ cameraError }}</p>
-      <button type="submit">Print</button>
+
+      <div class="actions-container">
+        <BaseButton v-if="file" variant="outlined" type="button" @click="file = null">Cancel</BaseButton>
+        <BaseButton v-if="file" type="submit">Print</BaseButton>
+      </div>
     </form>
   </PrintView>
 </template>
 
 <script setup lang="ts">
 import { useEventListener } from '@vueuse/core';
-import { reactive, ref, useTemplateRef } from 'vue';
+import { computed, reactive, ref, useTemplateRef } from 'vue';
 import { submitImagePrint } from '../../../utils/api';
 import PrintView from '../../../views/PrintView.vue';
+import BaseButton from '../../base/BaseButton/BaseButton.vue';
+import BaseIcon from '../../base/BaseIcon/BaseIcon.vue';
 
 const $video = useTemplateRef('video');
 const $canvas = useTemplateRef('canvas');
@@ -24,8 +33,9 @@ const $canvas = useTemplateRef('canvas');
 const cameraError = ref<string | null>(null);
 const isStreaming = ref(false);
 const videoSize = reactive({ width: 320, height: 0 });
-const capturedImage = ref<string | null>(null);
 const file = ref<File | null>(null);
+
+const imageSrc = computed(() => (file.value ? URL.createObjectURL(file.value) : null));
 
 async function startCamera() {
   try {
@@ -45,9 +55,6 @@ async function takePicture() {
     const context = $canvas.value.getContext('2d');
     if (context) {
       context.drawImage($video.value, 0, 0, videoSize.width, videoSize.height);
-      const dataUrl = $canvas.value.toDataURL('image/png');
-      capturedImage.value = dataUrl;
-
       const blob = await new Promise<Blob | null>(resolve => {
         $canvas.value!.toBlob(blob => resolve(blob), 'image/png', 1);
       });

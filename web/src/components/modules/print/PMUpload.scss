@@ -2,18 +2,30 @@
 @use '~/assets/styles/typography';
 
 .pm-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
   max-width: 400px;
   margin: 0 auto;
 }
 
 .dropzone {
+  @include typography.action-medium;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 4px;
   width: 100%;
   border: 2px dashed variables.$neutral-600_grey;
   aspect-ratio: 3 / 2;
   cursor: pointer;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: variables.$neutral-600_grey;
+  }
 }
 
 input {

@@ -35,7 +35,6 @@
   }
 
   .title {
-    @include typography.text-medium;
-    font-weight: variables.$font-weight-medium;
+    @include typography.action-medium;
   }
 }

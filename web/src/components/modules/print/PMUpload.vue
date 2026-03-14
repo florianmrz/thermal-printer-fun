@@ -2,10 +2,11 @@
   <PrintView>
     <form class="pm-upload" @submit="handleSubmit">
       <label ref="dropzone" class="dropzone" for="photo">
-        <!-- <BaseIcon :icon="UploadSVG" size="large" /> -->
-        Upload a file</label>
+        <BaseIcon icon="upload" size="large" />
+        Upload a file</label
+      >
       <input ref="fileInput" id="photo" type="file" @change="handleFileUpload" accept="image/*" />
-      <button type="submit">Print</button>
+      <BaseButton v-if="!!file" type="submit">Print</BaseButton>
     </form>
   </PrintView>
 </template>
@@ -15,9 +16,8 @@ import { useDropZone } from '@vueuse/core';
 import { ref, useTemplateRef } from 'vue';
 import { submitImagePrint } from '../../../utils/api';
 import PrintView from '../../../views/PrintView.vue';
-// import UploadSVG from '@pictogrammers/memory-svg/svg/upload.svg';
-// import BaseIcon from '../../base/BaseIcon/BaseIcon.vue';
-
+import BaseIcon from '../../base/BaseIcon/BaseIcon.vue';
+import BaseButton from '../../base/BaseButton/BaseButton.vue';
 const $dropzone = useTemplateRef('dropzone');
 const $input = useTemplateRef('fileInput');
 

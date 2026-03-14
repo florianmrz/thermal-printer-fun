@@ -23,7 +23,6 @@
   }
 }
 
-
 // text-small
 @mixin text-small-0 {
   font-family: variables.$font-family;
@@ -90,5 +89,80 @@
 
   @media (min-width: 1280px) {
     @include text-large-1280(true);
+  }
+}
+
+// action-small
+@mixin action-small-0 {
+  font-family: variables.$font-family;
+  font-size: 14px;
+  line-height: 1.4;
+  letter-spacing: 0;
+  font-weight: variables.$font-weight-medium;
+}
+@mixin action-small-1280($ignoreDuplicates: false) {
+  @if not $ignoreDuplicates {
+    font-family: variables.$font-family;
+    letter-spacing: 0;
+    font-weight: variables.$font-weight-medium;
+  }
+  font-size: 12px;
+  line-height: 1.6;
+}
+@mixin action-small {
+  @include action-small-0;
+
+  @media (min-width: 1280px) {
+    @include action-small-1280(true);
+  }
+}
+
+// action-medium
+@mixin action-medium-0 {
+  font-family: variables.$font-family;
+  font-size: 16px;
+  line-height: 1.6;
+  letter-spacing: 0;
+  font-weight: variables.$font-weight-medium;
+}
+@mixin action-medium-1280($ignoreDuplicates: false) {
+  @if not $ignoreDuplicates {
+    font-family: variables.$font-family;
+    line-height: 1.6;
+    letter-spacing: 0;
+    font-weight: variables.$font-weight-medium;
+  }
+  font-size: 14px;
+}
+@mixin action-medium {
+  @include action-medium-0;
+
+  @media (min-width: 1280px) {
+    @include action-medium-1280(true);
+  }
+}
+
+// action-large
+@mixin action-large-0 {
+  font-family: variables.$font-family;
+  font-size: 20px;
+  line-height: 1.4;
+  letter-spacing: 0;
+  font-weight: variables.$font-weight-medium;
+}
+@mixin action-large-1280($ignoreDuplicates: false) {
+  @if not $ignoreDuplicates {
+    font-family: variables.$font-family;
+    line-height: 1.4;
+    letter-spacing: 0;
+    font-weight: variables.$font-weight-medium;
+  }
+  font-size: 18px;
+}
+@mixin action-large {
+  @include action-large-0;
+
+  @media (min-width: 1280px) {
+    @include action-large-1280(true);
   }
 }
