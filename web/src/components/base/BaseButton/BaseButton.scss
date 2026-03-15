@@ -11,7 +11,7 @@
   outline-offset: 2px;
 
   &.is-filled {
-    background-color: variables.$neutral-950_almost-black;
+    background-color: variables.$neutral-1000_black;
     color: variables.$neutral-0_white;
 
     &:hover {
@@ -21,8 +21,8 @@
 
   &.is-outlined {
     background-color: transparent;
-    color: variables.$neutral-950_almost-black;
-    box-shadow: 0 0 0 2px variables.$neutral-950_almost-black inset;
+    color: variables.$neutral-1000_black;
+    box-shadow: 0 0 0 2px variables.$neutral-1000_black inset;
 
     &:hover {
       color: variables.$neutral-600_grey;

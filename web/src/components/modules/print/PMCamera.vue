@@ -8,10 +8,10 @@
         </template>
         <video ref="video" class="video" :hidden="!isStreaming"></video>
         <img v-if="previewSrc" class="captured-image" :src="previewSrc" alt="Captured Image" />
+        <p class="error" v-if="cameraError">{{ cameraError }}</p>
       </div>
       <canvas ref="canvas" hidden></canvas>
       <BaseButton v-if="isStreaming && !file" class="photo-button" type="button" @click="takePicture" size="large">Take picture</BaseButton>
-      <p v-if="cameraError">{{ cameraError }}</p>
       <div class="actions-container" v-if="file">
         <BaseButton variant="outlined" type="button" @click="file = null">Cancel</BaseButton>
         <BaseButton type="submit">Print</BaseButton>

@@ -18,13 +18,17 @@
   align-items: center;
   gap: 4px;
   width: 100%;
-  border: 2px dashed variables.$neutral-600_grey;
+  border: 2px dashed variables.$neutral-1000_black;
   aspect-ratio: 3 / 2;
   cursor: pointer;
   transition: color 0.2s ease;
 
   &:hover {
     color: variables.$neutral-600_grey;
+  }
+
+  &.is-over {
+    border-style: solid;
   }
 }
 
@@ -36,6 +40,11 @@ input {
   width: 100%;
   height: auto;
   border: 2px solid variables.$neutral-600_grey;
+}
+
+.error {
+  color: variables.$color-error;
+  text-align: center;
 }
 
 .actions-container {
