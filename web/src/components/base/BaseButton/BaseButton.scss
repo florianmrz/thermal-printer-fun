@@ -32,4 +32,11 @@
   &.is-large {
     padding: 12px 24px;
   }
+
+  &.is-icon-only {
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }

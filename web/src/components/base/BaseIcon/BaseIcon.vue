@@ -6,10 +6,12 @@
 import { computed } from 'vue';
 import { icons, type IconName } from './icons';
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   icon: IconName;
-  size: 'small' | 'medium' | 'large';
-}>();
+  size?: 'small' | 'medium' | 'large';
+}>(), {
+  size: 'medium'
+});
 
 const component = computed(() => icons[props.icon]);
 </script>

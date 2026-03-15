@@ -6,9 +6,12 @@
           <BaseIcon icon="upload" size="large" />
           Upload a file</label
         >
+
         <input ref="fileInput" id="photo" type="file" @change="handleFileSelect" :accept="accept" />
+
         <p class="error" v-if="uploadError">{{ uploadError }}</p>
       </template>
+
       <div v-else-if="previewSrc">
         <img class="file-preview" :src="previewSrc" alt="Uploaded image" />
       </div>
