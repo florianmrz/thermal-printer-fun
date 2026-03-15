@@ -31,3 +31,14 @@
 input {
   display: none;
 }
+
+.file-preview {
+  width: 100%;
+  height: auto;
+  border: 2px solid variables.$neutral-600_grey;
+}
+
+.actions-container {
+  display: flex;
+  gap: 8px;
+}

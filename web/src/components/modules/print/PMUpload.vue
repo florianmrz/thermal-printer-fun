@@ -1,19 +1,28 @@
 <template>
   <PrintView>
     <form class="pm-upload" @submit="handleSubmit">
-      <label ref="dropzone" class="dropzone" for="photo">
-        <BaseIcon icon="upload" size="large" />
-        Upload a file</label
-      >
-      <input ref="fileInput" id="photo" type="file" @change="handleFileUpload" accept="image/*" />
-      <BaseButton v-if="!!file" type="submit">Print</BaseButton>
+      <template v-if="!file">
+        <label ref="dropzone" class="dropzone" for="photo">
+          <BaseIcon icon="upload" size="large" />
+          Upload a file</label
+        >
+        <input ref="fileInput" id="photo" type="file" @change="handleFileUpload" accept="image/*" />
+      </template>
+      <div v-else-if="previewSrc">
+        <img class="file-preview" :src="previewSrc" alt="Uploaded image" />
+      </div>
+
+      <div class="actions-container" v-if="file">
+        <BaseButton variant="outlined" type="button" @click="file = null">Cancel</BaseButton>
+        <BaseButton type="submit">Print</BaseButton>
+      </div>
     </form>
   </PrintView>
 </template>
 
 <script setup lang="ts">
 import { useDropZone } from '@vueuse/core';
-import { ref, useTemplateRef } from 'vue';
+import { computed, ref, useTemplateRef } from 'vue';
 import { submitImagePrint } from '../../../utils/api';
 import PrintView from '../../../views/PrintView.vue';
 import BaseIcon from '../../base/BaseIcon/BaseIcon.vue';
@@ -30,6 +39,8 @@ useDropZone($dropzone, {
     }
   },
 });
+
+const previewSrc = computed(() => (file.value ? URL.createObjectURL(file.value) : null));
 
 function handleFileUpload(event: Event) {
   const target = event.target as HTMLInputElement;

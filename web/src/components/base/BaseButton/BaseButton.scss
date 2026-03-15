@@ -28,4 +28,8 @@
       color: variables.$neutral-600_grey;
     }
   }
+
+  &.is-large {
+    padding: 12px 24px;
+  }
 }

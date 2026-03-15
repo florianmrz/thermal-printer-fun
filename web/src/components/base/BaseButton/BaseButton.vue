@@ -1,5 +1,5 @@
 <template>
-  <button class="base-button" :class="`is-${props.variant}`">
+  <button class="base-button" :class="`is-${props.variant} is-${props.size}`">
     <slot />
   </button>
 </template>
@@ -8,9 +8,11 @@
 const props = withDefaults(
   defineProps<{
     variant?: 'filled' | 'outlined';
+    size?: 'regular' | 'large'
   }>(),
   {
     variant: 'filled',
+    size: 'regular',
   }
 );
 </script>
