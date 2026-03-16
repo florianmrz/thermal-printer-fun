@@ -8,27 +8,43 @@ import { env } from '../env.js';
 const app = new Hono().basePath('/ws');
 const { injectWebSocket, upgradeWebSocket, wss } = createNodeWebSocket({ app });
 
-let printerStatus: PrinterStatus = 'disconnected';
+/**
+ * To distinguish between printer clients and web clients, we add a custom property to underlying WebSocket object.
+ */
+type WebSocketWithIdentifier = WebSocket & { __clientType: 'printer' | 'web' };
 
 app.get(
   '/web',
-  upgradeWebSocket(c => {
-    console.log(c.req.url);
+  upgradeWebSocket(_c => {
     return {
       onOpen(_event, ws) {
-        sendMessageToWebClients({ type: 'printer-status', status: printerStatus }, [ws.raw!]);
+        (ws.raw as WebSocketWithIdentifier).__clientType = 'web';
+        broadcastToClients({ type: 'printer-status', status: getPrinterStatus() }, [ws.raw!]);
       },
     };
   })
 );
 
-function sendMessageToWebClients(message: WebSocketMessage, clients?: WebSocket[]) {
+/**
+ * Broadcast a message to a given list of connected clients, defaulting to all clients if none are specified.
+ */
+function broadcastToClients(message: WebSocketMessage, clients?: WebSocket[]) {
   (clients ?? Array.from(wss.clients)).forEach(client => {
     client.send(JSON.stringify(message));
   });
 }
 
-let printerClient: WebSocket | null = null;
+function getPrinterClient(): WebSocket | null {
+  const printerClient = Array.from(wss.clients).find(
+    client => (client as WebSocketWithIdentifier).__clientType === 'printer'
+  );
+  return printerClient ?? null;
+}
+
+function getPrinterStatus(): PrinterStatus {
+  const printerClient = getPrinterClient();
+  return printerClient ? 'connected' : 'disconnected';
+}
 
 function print(
   printLines: Uint8Array<ArrayBuffer>[],
@@ -54,6 +70,7 @@ function print(
     lineFeedDots?: number;
   }
 ) {
+  const printerClient = getPrinterClient();
   if (!printerClient) {
     throw new HTTPException(503, { message: 'Printer not connected' });
   }
@@ -123,19 +140,14 @@ app.get(
         ws.close(1008, 'Invalid API token');
         return;
       }
-      console.log('Client connected');
-      printerClient = ws.raw!;
-      printerStatus = 'connected';
-      sendMessageToWebClients({ type: 'printer-status', status: printerStatus });
+      (ws.raw as WebSocketWithIdentifier).__clientType = 'printer';
+      broadcastToClients({ type: 'printer-status', status: getPrinterStatus() });
     },
     onMessage(event) {
       console.log(`Message from client: ${event.data}`);
     },
     onClose: () => {
-      console.log('Connection closed');
-      printerClient = null;
-      printerStatus = 'disconnected';
-      sendMessageToWebClients({ type: 'printer-status', status: printerStatus });
+      broadcastToClients({ type: 'printer-status', status: getPrinterStatus() });
     },
   }))
 );
