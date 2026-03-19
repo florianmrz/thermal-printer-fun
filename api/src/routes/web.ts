@@ -33,4 +33,10 @@ app.post(
   }
 );
 
+app.post('/render-test', async c => {
+  const body = await c.req.json();
+
+  // TODO continue
+});
+
 export default app;
