@@ -1,8 +1,7 @@
+import { FILE_UPLOAD_OPTIONS, renderTestSchema } from '@thermal-printer-fun/shared';
 import { Hono } from 'hono';
 import { bodyLimit } from 'hono/body-limit';
 import { HTTPException } from 'hono/http-exception';
-import { renderTestSchema } from '@thermal-printer-fun/shared';
-import { FILE_UPLOAD_OPTIONS } from '../const.js';
 import { convertImageToPrintData } from '../utils/image.js';
 import { print } from './ws.js';
 

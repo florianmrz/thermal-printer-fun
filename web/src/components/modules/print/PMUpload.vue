@@ -27,10 +27,11 @@
 <script setup lang="ts">
 import { useDropZone } from '@vueuse/core';
 import { computed, ref, useTemplateRef } from 'vue';
-import { FILE_UPLOAD_OPTIONS, submitImagePrint } from '../../../utils/api';
+import { submitImagePrint } from '../../../utils/api';
 import PrintView from '../../../views/PrintView.vue';
 import BaseIcon from '../../base/BaseIcon/BaseIcon.vue';
 import BaseButton from '../../base/BaseButton/BaseButton.vue';
+import { FILE_UPLOAD_OPTIONS } from '@thermal-printer-fun/shared';
 const $dropzone = useTemplateRef('dropzone');
 const $input = useTemplateRef('fileInput');
 
