@@ -13,7 +13,7 @@
  * This view is used for rendering content that is to be printed.
  * It is viewed in puppeteer on the server to generate a screenshot that is then printed.
  */
-import type { RenderData } from '../../shared/types';
+import type { RenderData } from '@thermal-printer-fun/shared';
 import RMTest from './components/modules/render/RMTest.vue';
 
 const data = parseDataFromUrl();

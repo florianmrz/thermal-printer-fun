@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import CameraForm from '../components/modules/print/PMCamera.vue';
 import UploadForm from '../components/modules/print/PMUpload.vue';
+import TMTest from '../components/modules/test/TMTest.vue';
 import HomeView from '../views/HomeView.vue';
 
 const router = createRouter({
@@ -34,6 +35,11 @@ const router = createRouter({
           component: CameraForm,
         },
       ],
+    },
+    {
+      path: '/test',
+      name: 'test',
+      component: TMTest,
     },
   ],
 });

@@ -10,7 +10,7 @@
 import { useWebSocket } from '@vueuse/core';
 import { provide, readonly, ref } from 'vue';
 import { RouterView } from 'vue-router';
-import { type PrinterStatus, type WebSocketMessage } from '../../shared/types';
+import { type PrinterStatus, type WebSocketMessage } from '@thermal-printer-fun/shared';
 import BMHeader from './components/modules/basic/BMHeader.vue';
 import env from './utils/env';
 import { printerStatusInjectionKey } from './utils/keys';

@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import type { RenderDataTest } from '../../../../../shared/types';
+import type { RenderDataTest } from '@thermal-printer-fun/shared';
 
 const props = defineProps<{
   data: RenderDataTest;

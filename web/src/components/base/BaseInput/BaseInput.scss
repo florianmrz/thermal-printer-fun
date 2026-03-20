@@ -1,0 +1,40 @@
+@use '~/assets/styles/variables';
+@use '~/assets/styles/typography';
+
+.base-input {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.label {
+  @include typography.action-small;
+}
+
+.field {
+  padding: 16px 24px;
+  border: 1px solid variables.$neutral-1000_black;
+  transition: border-color 0.2s;
+  background-color: variables.$neutral-0_white;
+  color: variables.$neutral-1000_black;
+
+  &:focus {
+    outline: 1px solid variables.$neutral-1000_black;
+  }
+
+  &.has-error {
+    border-color: variables.$color-error;
+    outline-color: variables.$color-error;
+  }
+
+  &:disabled {
+    background-color: variables.$neutral-100_off-white;
+    cursor: not-allowed;
+  }
+}
+
+.error {
+  @include typography.text-small;
+  color: variables.$color-error;
+}

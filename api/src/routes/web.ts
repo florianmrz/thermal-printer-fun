@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { bodyLimit } from 'hono/body-limit';
 import { HTTPException } from 'hono/http-exception';
+import { renderTestSchema } from '@thermal-printer-fun/shared';
 import { FILE_UPLOAD_OPTIONS } from '../const.js';
 import { convertImageToPrintData } from '../utils/image.js';
 import { print } from './ws.js';
@@ -35,8 +36,11 @@ app.post(
 
 app.post('/render-test', async c => {
   const body = await c.req.json();
+  const parsedBody = renderTestSchema.parse(body);
 
-  // TODO continue
+  console.log(parsedBody);
+
+  return c.json({ success: true });
 });
 
 export default app;

@@ -5,6 +5,10 @@
         <div class="icon">🖨️</div>
         <div class="title">Print</div>
       </RouterLink>
+      <RouterLink class="card" :to="{ name: 'test' }">
+        <div class="icon">🧪</div>
+        <div class="title">Test</div>
+      </RouterLink>
     </div>
   </div>
 </template>

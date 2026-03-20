@@ -2,7 +2,7 @@ import { createNodeWebSocket } from '@hono/node-ws';
 import { Hono } from 'hono';
 import { HTTPException } from 'hono/http-exception';
 import type WebSocket from 'ws';
-import type { PrinterStatus, WebSocketMessage } from '../../../shared/const.js';
+import type { PrinterStatus, WebSocketMessage } from '@thermal-printer-fun/shared';
 import { env } from '../env.js';
 
 const app = new Hono().basePath('/ws');

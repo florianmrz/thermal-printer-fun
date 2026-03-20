@@ -1,0 +1,17 @@
+@use '~/assets/styles/variables';
+@use '~/assets/styles/typography';
+
+.test-module {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  margin: 0 auto;
+  padding: 32px 0;
+}
+
+.test-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}

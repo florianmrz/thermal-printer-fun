@@ -1,3 +1,5 @@
+import type { RenderTestInput } from '@thermal-printer-fun/shared';
+
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
 if (!apiBaseUrl) {
@@ -7,10 +9,20 @@ if (!apiBaseUrl) {
 export async function submitImagePrint(file: File) {
   const formData = new FormData();
   formData.set('file', file);
-  return fetch(`${apiBaseUrl}/api/web/print`, {
+  await fetch(`${apiBaseUrl}/api/web/print`, {
     body: formData,
     method: 'POST',
-  }).then(res => res.json());
+  });
+}
+
+export async function submitRenderTest(payload: RenderTestInput) {
+  await fetch(`${apiBaseUrl}/api/web/render-test`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
 }
 
 // These settings are to be kept in sync with the server-side ones
