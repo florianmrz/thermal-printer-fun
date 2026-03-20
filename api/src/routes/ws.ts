@@ -46,7 +46,19 @@ function getPrinterStatus(): PrinterStatus {
   return printerClient ? 'connected' : 'disconnected';
 }
 
-function print(
+async function sendToPrinter(printerClient: WebSocket, data: Uint8Array) {
+  await new Promise<void>((resolve, reject) => {
+    printerClient.send(data, error => {
+      if (error) {
+        reject(error);
+        return;
+      }
+      resolve();
+    });
+  });
+}
+
+async function print(
   printLines: Uint8Array<ArrayBuffer>[],
   options?: {
     /**
@@ -77,11 +89,11 @@ function print(
 
   // Reset printer and initialize raster mode
   // ESC * r A
-  printerClient.send(Uint8Array.from([0x1b, 0x2a, 0x72, 0x41]));
+  await sendToPrinter(printerClient, Uint8Array.from([0x1b, 0x2a, 0x72, 0x41]));
 
   // Set raster page length to continous mode
   // ESC * r P n NUL (n = page length, 0 for continous print)
-  printerClient.send(Uint8Array.from([0x1b, 0x2a, 0x72, 0x50, 0x00, 0x00]));
+  await sendToPrinter(printerClient, Uint8Array.from([0x1b, 0x2a, 0x72, 0x50, 0x00, 0x00]));
 
   // Set raster print quality
   // ESC * r Q n NUL (n = print quality: 0 = high speed, 1 = normal 2 = high print)
@@ -91,12 +103,12 @@ function print(
     normal: 0x31, // 1
     highPrint: 0x32, // 2
   };
-  printerClient.send(Uint8Array.from([0x1b, 0x2a, 0x72, 0x51, printQualityMap[printQuality], 0x00]));
+  await sendToPrinter(printerClient, Uint8Array.from([0x1b, 0x2a, 0x72, 0x51, printQualityMap[printQuality], 0x00]));
 
   // Set raster FF mode
   // ESC * r F n NUL (n = mode: 0 = allows paper cut, 1 = prevents paper cut)
   const cutPaper = options?.cutPaper ?? true;
-  printerClient.send(Uint8Array.from([0x1b, 0x2a, 0x72, 0x46, cutPaper ? 0x30 : 0x31, 0x00]));
+  await sendToPrinter(printerClient, Uint8Array.from([0x1b, 0x2a, 0x72, 0x46, cutPaper ? 0x30 : 0x31, 0x00]));
 
   // Send raster data (auto line feed)
   // b H 00 + 72 bytes of data
@@ -117,18 +129,20 @@ function print(
   if (currentChunk.length > 0) {
     lineChunks.push(currentChunk);
   }
-  lineChunks.forEach(chunk => printerClient!.send(chunk));
+  for (const chunk of lineChunks) {
+    await sendToPrinter(printerClient, chunk);
+  }
 
   // Move vertical direction position by 100 dots
   // ESC * r Y n NUL (n = number of dots to move)
   if (options?.lineFeedDots && typeof options.lineFeedDots === 'number' && options.lineFeedDots > 0) {
     const lineFeedAsHex = Array.from(options.lineFeedDots.toString()).map(c => c.charCodeAt(0));
-    printerClient.send(Uint8Array.from([0x1b, 0x2a, 0x72, 0x59, ...lineFeedAsHex, 0x00]));
+    await sendToPrinter(printerClient, Uint8Array.from([0x1b, 0x2a, 0x72, 0x59, ...lineFeedAsHex, 0x00]));
   }
 
   // Execute FF mode (cuts paper)
   // ESC FF NUL
-  printerClient.send(Uint8Array.from([0x1b, 0x0c, 0x00]));
+  await sendToPrinter(printerClient, Uint8Array.from([0x1b, 0x0c, 0x00]));
 }
 
 app.get(

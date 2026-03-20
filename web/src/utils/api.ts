@@ -1,4 +1,4 @@
-import type { RenderTestInput } from '@thermal-printer-fun/shared';
+import type { RenderDataTest } from '@thermal-printer-fun/shared';
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
@@ -15,8 +15,8 @@ export async function submitImagePrint(file: File) {
   });
 }
 
-export async function submitRenderTest(payload: RenderTestInput) {
-  await fetch(`${apiBaseUrl}/api/web/render-test`, {
+export async function submitRenderTest(payload: RenderDataTest) {
+  await fetch(`${apiBaseUrl}/api/web/print-render`, {
     method: 'POST',
     headers: {
       'content-type': 'application/json',

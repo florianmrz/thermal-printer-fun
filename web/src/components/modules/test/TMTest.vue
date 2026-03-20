@@ -22,8 +22,9 @@ import { submitRenderTest } from '../../../utils/api';
 import BaseButton from '../../base/BaseButton/BaseButton.vue';
 import BaseInput from '../../base/BaseInput/BaseInput.vue';
 
-const { defineField, errors, isSubmitting, handleSubmit } = useForm<{ foo: string }>({
+const { defineField, errors, isSubmitting, handleSubmit } = useForm({
   initialValues: {
+    _type: 'test',
     foo: '',
   },
   validationSchema: renderTestSchema,

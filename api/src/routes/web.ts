@@ -1,11 +1,14 @@
-import { FILE_UPLOAD_OPTIONS, renderTestSchema } from '@thermal-printer-fun/shared';
+import { FILE_UPLOAD_OPTIONS, renderDataSchema } from '@thermal-printer-fun/shared';
 import { Hono } from 'hono';
 import { bodyLimit } from 'hono/body-limit';
 import { HTTPException } from 'hono/http-exception';
+import PQueue from 'p-queue';
 import { convertImageToPrintData } from '../utils/image.js';
+import { renderToPng } from '../utils/render.js';
 import { print } from './ws.js';
 
 const app = new Hono();
+const printQueue = new PQueue({ concurrency: 1 });
 
 app.post(
   '/print',
@@ -27,18 +30,20 @@ app.post(
 
     const bytes = await file.bytes();
     const printData = await convertImageToPrintData(bytes);
-    print(printData, { printQuality: 'highPrint', cutPaper: true });
+    printQueue.add(() => print(printData, { printQuality: 'highPrint', cutPaper: true }));
 
     return c.json({ success: true });
   }
 );
 
-app.post('/render-test', async c => {
+app.post('/print-render', async c => {
   const body = await c.req.json();
-  const parsedBody = renderTestSchema.parse(body);
+  const data = renderDataSchema.parse(body);
+  console.log(data);
 
-  console.log(parsedBody);
-
+  const screenshot = await renderToPng(data);
+  const printData = await convertImageToPrintData(screenshot);
+  printQueue.add(() => print(printData, { printQuality: 'highPrint', cutPaper: true }));
   return c.json({ success: true });
 });
 

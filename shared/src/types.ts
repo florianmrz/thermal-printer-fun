@@ -6,10 +6,3 @@ interface WebSocketMessagePrinterStatus {
 }
 
 export type WebSocketMessage = WebSocketMessagePrinterStatus;
-
-export type RenderDataTest = {
-  _type: 'test';
-  foo: string;
-};
-
-export type RenderData = RenderDataTest;
