@@ -3,7 +3,6 @@
   "type": "module",
   "scripts": {
     "dev": "tsx --env-file=.env --watch src/index.ts",
-    "build": "tsc --noEmit",
     "start": "tsx --env-file=.env src/index.ts",
     "test": "vitest run",
     "test:watch": "vitest"

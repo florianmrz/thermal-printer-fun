@@ -17,9 +17,9 @@ const data = parseRenderDataFromWindow();
 function parseRenderDataFromWindow(): RenderData {
   let inputData: unknown = window.__RENDER_DATA__;
 
-  if (import.meta.env.DEV) {
-    const dataParam = new URLSearchParams(window.location.search).get('data');
-    inputData = JSON.parse(atob(dataParam ?? ''));
+  const devDataParam = new URLSearchParams(window.location.search).get('data');
+  if (import.meta.env.DEV && devDataParam) {
+    inputData = JSON.parse(atob(devDataParam));
   }
 
   if (!inputData) {

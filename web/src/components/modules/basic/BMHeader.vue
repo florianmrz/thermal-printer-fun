@@ -7,6 +7,7 @@
         <nav class="nav-links">
           <BaseNavLink :to="{ name: 'home' }">Home</BaseNavLink>
           <BaseNavLink :to="{ name: 'print' }">Print</BaseNavLink>
+          <BaseNavLink :to="{ name: 'test' }">Test</BaseNavLink>
         </nav>
 
         <div class="printer-status" :class="`is-${printerStatus}`">

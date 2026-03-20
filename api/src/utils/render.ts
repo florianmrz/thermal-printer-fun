@@ -33,7 +33,7 @@ function withTimeout<T>(promise: Promise<T>): Promise<T> {
 
 async function getBrowser() {
   if (!browserPromise) {
-    browserPromise = puppeteer.launch({ headless: true });
+    browserPromise = puppeteer.launch({ headless: env.ENV === 'development' ? false : true });
     const browser = await browserPromise;
     browser.on('disconnected', () => {
       browserPromise = null;
