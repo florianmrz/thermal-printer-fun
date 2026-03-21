@@ -13,6 +13,7 @@
 import { type RenderData } from '@thermal-printer-fun/shared';
 import RMLargeText from './components/modules/render/RMLargeText.vue';
 import RMTest from './components/modules/render/RMTest.vue';
+import { parseRenderData } from './utils/render';
 
 const data = parseRenderDataFromWindow();
 
@@ -21,7 +22,7 @@ function parseRenderDataFromWindow(): RenderData {
 
   const devDataParam = new URLSearchParams(window.location.search).get('data');
   if (import.meta.env.DEV && devDataParam) {
-    inputData = JSON.parse(atob(devDataParam));
+    inputData = parseRenderData(decodeURIComponent(devDataParam));
   }
 
   if (!inputData) {

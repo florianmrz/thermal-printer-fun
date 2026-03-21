@@ -34,7 +34,7 @@
         <BaseButton type="submit">Print</BaseButton>
       </div>
 
-      <BMPrintJobStatus :jobId="submittedJobId" />
+      <BMPrintJobResult v-if="submitResponse" :jobId="submitResponse.jobId" :renderData="submitResponse.renderData" />
     </form>
   </PrintView>
 </template>
@@ -46,7 +46,8 @@ import { submitImagePrint } from '../../../utils/api';
 import PrintView from '../../../views/PrintView.vue';
 import BaseButton from '../../base/BaseButton/BaseButton.vue';
 import BaseIcon from '../../base/BaseIcon/BaseIcon.vue';
-import BMPrintJobStatus from '../basic/BMPrintJobStatus.vue';
+import BMPrintJobResult from '../basic/BMPrintJobResult.vue';
+import type { PrintSubmitResponse } from '@thermal-printer-fun/shared';
 
 const $video = useTemplateRef('video');
 const $canvas = useTemplateRef('canvas');
@@ -54,7 +55,7 @@ const $canvas = useTemplateRef('canvas');
 const cameraError = ref<string | null>(null);
 const videoSize = reactive({ width: 320, height: 0 });
 const file = ref<File | null>(null);
-const submittedJobId = ref<string | null>(null);
+const submitResponse = ref<PrintSubmitResponse | null>(null);
 const currentStream = ref<MediaStream | null>(null);
 const availableVideoDevices = ref<MediaDeviceInfo[]>([]);
 const canToggleCamera = computed(
@@ -144,8 +145,7 @@ async function handleSubmit(e: SubmitEvent) {
     return;
   }
 
-  const { jobId } = await submitImagePrint(file.value);
-  submittedJobId.value = jobId;
+  submitResponse.value = await submitImagePrint(file.value);
 }
 </script>
 

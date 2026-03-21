@@ -1,3 +1,5 @@
+import type { RenderData } from './validation.js';
+
 export type PrinterStatus = 'unknown' | 'connected' | 'disconnected';
 
 interface WebSocketMessagePrinterStatus {
@@ -11,3 +13,9 @@ interface WebSocketMessagePrinterQueue {
 }
 
 export type WebSocketMessage = WebSocketMessagePrinterStatus | WebSocketMessagePrinterQueue;
+
+export interface PrintSubmitResponse {
+  success: true;
+  jobId: string;
+  renderData?: RenderData;
+}

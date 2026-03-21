@@ -21,7 +21,7 @@
         <BaseButton type="submit">Print</BaseButton>
       </div>
 
-      <BMPrintJobStatus :jobId="submittedJobId" />
+      <BMPrintJobResult v-if="submitResponse" :jobId="submitResponse.jobId" :renderData="submitResponse.renderData" />
     </form>
   </PrintView>
 </template>
@@ -33,14 +33,14 @@ import { submitImagePrint } from '../../../utils/api';
 import PrintView from '../../../views/PrintView.vue';
 import BaseIcon from '../../base/BaseIcon/BaseIcon.vue';
 import BaseButton from '../../base/BaseButton/BaseButton.vue';
-import BMPrintJobStatus from '../basic/BMPrintJobStatus.vue';
-import { FILE_UPLOAD_OPTIONS } from '@thermal-printer-fun/shared';
+import BMPrintJobResult from '../basic/BMPrintJobResult.vue';
+import { FILE_UPLOAD_OPTIONS, type PrintSubmitResponse } from '@thermal-printer-fun/shared';
 const $dropzone = useTemplateRef('dropzone');
 const $input = useTemplateRef('fileInput');
 
 const uploadError = ref<string | null>(null);
 const file = ref<File | null>(null);
-const submittedJobId = ref<string | null>(null);
+const submitResponse = ref<PrintSubmitResponse | null>(null);
 
 const { isOverDropZone } = useDropZone($dropzone, {
   onDrop: files => {
@@ -80,8 +80,7 @@ async function handleSubmit(e: SubmitEvent) {
     return;
   }
 
-  const { jobId } = await submitImagePrint(file.value);
-  submittedJobId.value = jobId;
+  submitResponse.value = await submitImagePrint(file.value);
 
   // Clear input
   if ($input.value) {

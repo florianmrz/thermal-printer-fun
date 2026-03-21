@@ -12,19 +12,19 @@
 
       <BaseButton type="submit" :disabled="isSubmitting">Submit</BaseButton>
 
-      <BMPrintJobStatus :jobId="submittedJobId" />
+      <BMPrintJobResult v-if="submitResponse" :jobId="submitResponse.jobId" :renderData="submitResponse.renderData" />
     </form>
   </section>
 </template>
 
 <script setup lang="ts">
-import { renderTestSchema } from '@thermal-printer-fun/shared';
+import { renderTestSchema, type PrintSubmitResponse } from '@thermal-printer-fun/shared';
 import { useForm } from 'vee-validate';
 import { ref } from 'vue';
 import { submitRenderTest } from '../../../utils/api';
 import BaseButton from '../../base/BaseButton/BaseButton.vue';
 import BaseInput from '../../base/BaseInput/BaseInput.vue';
-import BMPrintJobStatus from '../basic/BMPrintJobStatus.vue';
+import BMPrintJobResult from '../basic/BMPrintJobResult.vue';
 
 const { defineField, errors, isSubmitting, handleSubmit } = useForm({
   initialValues: {
@@ -35,11 +35,10 @@ const { defineField, errors, isSubmitting, handleSubmit } = useForm({
 });
 
 const [input] = defineField('input');
-const submittedJobId = ref<string | null>(null);
+const submitResponse = ref<PrintSubmitResponse | null>(null);
 
 const onSubmit = handleSubmit(async values => {
-  const { jobId } = await submitRenderTest(values);
-  submittedJobId.value = jobId;
+  submitResponse.value = await submitRenderTest(values);
 });
 </script>
 
