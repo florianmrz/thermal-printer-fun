@@ -1,27 +1,15 @@
 @use '~/assets/styles/variables';
 
 .rm-large-text {
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.canvas {
-  width: 576px;
-  height: 576px;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.text {
-  margin: 0;
-  white-space: nowrap;
   line-height: 1;
   font-family: variables.$font-family;
-  font-style: normal;
-  font-weight: 400;
-  transform: rotate(90deg);
-  transform-origin: center center;
+  font-weight: variables.$font-weight-bold;
+  font-size: 100vw;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  overflow-x: hidden;
 }
