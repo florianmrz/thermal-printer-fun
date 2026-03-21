@@ -1,8 +1,12 @@
 import sharp from 'sharp';
+import { env } from '../env.js';
 
 const MAX_FILE_WIDTH = 72 * 8; // 576px for 72mm printer at 8px/mm
 
-export async function convertImageToPrintData(imageData: Uint8Array<ArrayBuffer>, ditherAlgorithm: 'floyd-steinberg' = 'floyd-steinberg'): Promise<Uint8Array<ArrayBuffer>[]> {
+export async function convertImageToPrintData(
+  imageData: Uint8Array<ArrayBuffer>,
+  ditherAlgorithm: 'floyd-steinberg' = 'floyd-steinberg'
+): Promise<Uint8Array<ArrayBuffer>[]> {
   const { data: sharpData, info: sharpInfo } = await sharp(imageData)
     .resize({ width: MAX_FILE_WIDTH, fit: 'inside', background: 'white' })
     .greyscale()
@@ -10,19 +14,24 @@ export async function convertImageToPrintData(imageData: Uint8Array<ArrayBuffer>
     .toBuffer({ resolveWithObject: true });
 
   const imageDataArray = new Uint8Array(sharpData);
-  const ditheredData = ditherAlgorithm === 'floyd-steinberg' ? floydSteinberg({
-    data: imageDataArray,
-    width: sharpInfo.width,
-    height: sharpInfo.height,
-  }) : imageDataArray;
+  const ditheredData =
+    ditherAlgorithm === 'floyd-steinberg'
+      ? floydSteinberg({
+          data: imageDataArray,
+          width: sharpInfo.width,
+          height: sharpInfo.height,
+        })
+      : imageDataArray;
 
-  sharp(ditheredData, {
-    raw: {
-      width: sharpInfo.width,
-      height: sharpInfo.height,
-      channels: 1,
-    },
-  }).toFile('./last-print.png');
+  if (env.ENV === 'development') {
+    sharp(ditheredData, {
+      raw: {
+        width: sharpInfo.width,
+        height: sharpInfo.height,
+        channels: 1,
+      },
+    }).toFile('./last-dithered.png');
+  }
 
   const rasterData: Uint8Array<ArrayBuffer>[] = [];
   const rasterDataChunkSize = sharpInfo.width / 8; // We can represent 8 pixels per byte
@@ -47,7 +56,15 @@ export async function convertImageToPrintData(imageData: Uint8Array<ArrayBuffer>
   return rasterData;
 }
 
-function floydSteinberg({ data, width, height }: { data: Uint8Array; width: number; height: number }): Uint8ClampedArray {
+function floydSteinberg({
+  data,
+  width,
+  height,
+}: {
+  data: Uint8Array;
+  width: number;
+  height: number;
+}): Uint8ClampedArray {
   const newData = new Uint8ClampedArray(data);
 
   const threshold = 128;

@@ -18,4 +18,5 @@ lerna-debug.log*
 .DS_Store
 
 # Debug files
-/last-print.png
+/last-dithered.png
+/last-screenshot.png

@@ -1,6 +1,5 @@
 import { createNodeWebSocket } from '@hono/node-ws';
 import { Hono } from 'hono';
-import { HTTPException } from 'hono/http-exception';
 import type WebSocket from 'ws';
 import type { PrinterStatus, WebSocketMessage } from '@thermal-printer-fun/shared';
 import { env } from '../env.js';
@@ -84,7 +83,7 @@ async function print(
 ) {
   const printerClient = getPrinterClient();
   if (!printerClient) {
-    throw new HTTPException(503, { message: 'Printer not connected' });
+    throw new Error('Printer not connected');
   }
 
   // Reset printer and initialize raster mode

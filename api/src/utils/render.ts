@@ -3,6 +3,7 @@ import puppeteer from 'puppeteer';
 import PQueue from 'p-queue';
 import type { RenderData } from '@thermal-printer-fun/shared';
 import { env } from '../env.js';
+import { writeFileSync } from 'node:fs';
 
 const RENDER_VIEWPORT_WIDTH = 576;
 const NAVIGATION_TIMEOUT_MS = 10_000;
@@ -44,7 +45,7 @@ async function getBrowser() {
   return browserPromise;
 }
 
-type PuppeteerWindow = {
+type PuppeteerWindow = Window & {
   __RENDER_DATA__?: RenderData;
   __RENDER_READY__?: boolean;
 };
@@ -69,10 +70,23 @@ async function renderPngInternal(data: RenderData): Promise<Uint8Array<ArrayBuff
       timeout: READY_TIMEOUT_MS,
     });
 
+    if (env.ENV === 'development') {
+      /**
+       * During development, the Vue Devtools might be visible in the rendered app.
+       * We remove it by simply deleting the element from the page.
+       */
+      await page.waitForSelector('#__vue-devtools-container__', { timeout: 1_000 });
+      await page.evaluate(() => document.getElementById('__vue-devtools-container__')?.remove());
+    }
+
     const screenshot = await page.screenshot({
       type: 'png',
       fullPage: true,
     });
+
+    if (env.ENV === 'development') {
+      writeFileSync('last-screenshot.png', screenshot);
+    }
 
     return new Uint8Array(screenshot);
   } finally {
