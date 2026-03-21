@@ -1,16 +1,12 @@
+import type { RenderData } from '@thermal-printer-fun/shared';
+import { writeFileSync } from 'node:fs';
 import type { Browser } from 'puppeteer';
 import puppeteer from 'puppeteer';
-import PQueue from 'p-queue';
-import type { RenderData } from '@thermal-printer-fun/shared';
 import { env } from '../env.js';
-import { writeFileSync } from 'node:fs';
 
 const RENDER_VIEWPORT_WIDTH = 576;
 const NAVIGATION_TIMEOUT_MS = 10_000;
 const READY_TIMEOUT_MS = 10_000;
-const TOTAL_RENDER_TIMEOUT_MS = 20_000;
-
-const renderQueue = new PQueue({ concurrency: 2, timeout: TOTAL_RENDER_TIMEOUT_MS });
 
 let browserPromise: Promise<Browser> | null = null;
 
@@ -32,7 +28,7 @@ type PuppeteerWindow = Window & {
   __RENDER_READY__?: boolean;
 };
 
-async function renderPngInternal(data: RenderData): Promise<Uint8Array<ArrayBuffer>> {
+export async function renderToPng(data: RenderData): Promise<Uint8Array<ArrayBuffer>> {
   const browser = await getBrowser();
   const page = await browser.newPage();
 
@@ -74,8 +70,4 @@ async function renderPngInternal(data: RenderData): Promise<Uint8Array<ArrayBuff
   } finally {
     await page.close();
   }
-}
-
-export async function renderToPng(data: RenderData) {
-  return renderQueue.add(() => renderPngInternal(data));
 }

@@ -5,4 +5,9 @@ interface WebSocketMessagePrinterStatus {
   status: PrinterStatus;
 }
 
-export type WebSocketMessage = WebSocketMessagePrinterStatus;
+interface WebSocketMessagePrinterQueue {
+  type: 'printer-queue';
+  queueJobIds: string[];
+}
+
+export type WebSocketMessage = WebSocketMessagePrinterStatus | WebSocketMessagePrinterQueue;

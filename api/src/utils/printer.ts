@@ -1,8 +1,21 @@
 import PQueue from 'p-queue';
-import { getPrinterClient } from './ws.js';
+import { broadcastPrinterQueue, getPrinterClient } from './ws.js';
 import { nanoid } from 'nanoid';
+import type { PrinterStatus } from '@thermal-printer-fun/shared';
 
-const printerQueue = new PQueue({ concurrency: 1 });
+const queue = new PQueue({ concurrency: 1, timeout: 30_000 });
+const queueJobIds = new Set<string>();
+
+export function getPrinterQueueJobIds() {
+  return Array.from(queueJobIds);
+}
+
+export function setPrinterStatus(status: PrinterStatus) {
+  if (status === 'connected') {
+    // If the printer was just connected, restart the queue to process any pending jobs
+    queue.start();
+  }
+}
 
 /**
  * Submits a print job to the printer queue. The job will be executed in order, and the printer will process one job at a time.
@@ -10,7 +23,11 @@ const printerQueue = new PQueue({ concurrency: 1 });
  * @returns The ID of the print job
  */
 export function print(
-  printLines: Uint8Array<ArrayBuffer>[],
+  /**
+   * The print lines to send to the printer. Each line should be a Uint8Array of raster data representing a single line of the printout.
+   * Can be as-is or a function that returns the data (or a promise that resolves to the data) to allow for lazy evaluation of the print data when the job is executed.
+   */
+  printData: Uint8Array<ArrayBuffer>[] | (() => Promise<Uint8Array<ArrayBuffer>[]> | Uint8Array<ArrayBuffer>[]),
   options?: {
     /**
      * Whether to cut the paper after printing.
@@ -34,6 +51,8 @@ export function print(
   }
 ) {
   async function submitPrint() {
+    const printLines = await Promise.resolve(typeof printData === 'function' ? printData() : printData);
+
     // Reset printer and initialize raster mode
     // ESC * r A
     await sendToPrinter(Uint8Array.from([0x1b, 0x2a, 0x72, 0x41]));
@@ -93,20 +112,28 @@ export function print(
   }
 
   const jobId = nanoid();
+  queueJobIds.add(jobId);
+  broadcastPrinterQueue();
 
   // Add job to queue and catch any errors
-  printerQueue.add(
-    () =>
-      submitPrint().catch(error => {
+  void queue.add(
+    async () => {
+      try {
+        await submitPrint();
+      } catch (error) {
         if (error instanceof PrinterOfflineError) {
           // This is the only expected error; simply pause the queue until the printer is back online.
           console.error('Printer is offline, pausing queue...');
-          printerQueue.pause();
+          queue.pause();
         } else {
           // Something else went wrong; log the error but keep the queue running.
           console.error('An error occurred while printing:', error);
         }
-      }),
+      } finally {
+        queueJobIds.delete(jobId);
+        broadcastPrinterQueue();
+      }
+    },
     {
       id: jobId,
     }

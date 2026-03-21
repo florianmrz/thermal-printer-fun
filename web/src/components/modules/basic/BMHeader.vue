@@ -11,7 +11,7 @@
         </nav>
 
         <div class="printer-status" :class="`is-${printerStatus}`">
-          <span class="printer-status-text">{{ printerStatus }}</span>
+          <span class="printer-status-text">{{ printerStatus }} (Print queue: {{ printerQueueJobIds?.length ?? 0 }})</span>
           <span class="printer-status-indicator" />
         </div>
       </div>
@@ -22,10 +22,11 @@
 <script setup lang="ts">
 import { inject } from 'vue';
 import { RouterLink } from 'vue-router';
-import { printerStatusInjectionKey } from '../../../utils/keys';
+import { printerQueueJobIdsInjectionKey, printerStatusInjectionKey } from '../../../utils/keys';
 import BaseNavLink from '../../base/BaseNavLink/BaseNavLink.vue';
 
 const printerStatus = inject(printerStatusInjectionKey);
+const printerQueueJobIds = inject(printerQueueJobIdsInjectionKey);
 </script>
 
 <style lang="scss" src="./BMHeader.scss" scoped />

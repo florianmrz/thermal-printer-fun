@@ -1,5 +1,6 @@
 import type { PrinterStatus, WebSocketMessage } from '@thermal-printer-fun/shared';
 import { getWebSocketClients } from '../routes/ws.js';
+import { getPrinterQueueJobIds, setPrinterStatus } from './printer.js';
 
 export function getPrinterClient() {
   const printerClient = getWebSocketClients().find(client => client.__clientType === 'printer');
@@ -21,5 +22,11 @@ export function broadcast(message: WebSocketMessage) {
 }
 
 export function broadcastPrinterStatus() {
-  broadcast({ type: 'printer-status', status: getPrinterStatus() });
+  const status = getPrinterStatus();
+  setPrinterStatus(status);
+  broadcast({ type: 'printer-status', status });
+}
+
+export function broadcastPrinterQueue() {
+  broadcast({ type: 'printer-queue', queueJobIds: getPrinterQueueJobIds() });
 }

@@ -20,6 +20,8 @@
         <BaseButton variant="outlined" type="button" @click="file = null">Cancel</BaseButton>
         <BaseButton type="submit">Print</BaseButton>
       </div>
+
+      <BMPrintJobStatus :jobId="submittedJobId" />
     </form>
   </PrintView>
 </template>
@@ -31,12 +33,14 @@ import { submitImagePrint } from '../../../utils/api';
 import PrintView from '../../../views/PrintView.vue';
 import BaseIcon from '../../base/BaseIcon/BaseIcon.vue';
 import BaseButton from '../../base/BaseButton/BaseButton.vue';
+import BMPrintJobStatus from '../basic/BMPrintJobStatus.vue';
 import { FILE_UPLOAD_OPTIONS } from '@thermal-printer-fun/shared';
 const $dropzone = useTemplateRef('dropzone');
 const $input = useTemplateRef('fileInput');
 
 const uploadError = ref<string | null>(null);
 const file = ref<File | null>(null);
+const submittedJobId = ref<string | null>(null);
 
 const { isOverDropZone } = useDropZone($dropzone, {
   onDrop: files => {
@@ -76,7 +80,8 @@ async function handleSubmit(e: SubmitEvent) {
     return;
   }
 
-  await submitImagePrint(file.value);
+  const { jobId } = await submitImagePrint(file.value);
+  submittedJobId.value = jobId;
 
   // Clear input
   if ($input.value) {

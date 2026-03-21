@@ -2,7 +2,7 @@ import { createNodeWebSocket } from '@hono/node-ws';
 import { Hono } from 'hono';
 import type WebSocket from 'ws';
 import { env } from '../env.js';
-import { broadcastPrinterStatus } from '../utils/ws.js';
+import { broadcastPrinterQueue, broadcastPrinterStatus } from '../utils/ws.js';
 
 const app = new Hono().basePath('/ws');
 const { injectWebSocket, upgradeWebSocket, wss } = createNodeWebSocket({ app });
@@ -19,6 +19,7 @@ app.get(
       onOpen(_event, ws) {
         (ws.raw as WebSocketWithIdentifier).__clientType = 'web';
         broadcastPrinterStatus();
+        broadcastPrinterQueue();
       },
     };
   })

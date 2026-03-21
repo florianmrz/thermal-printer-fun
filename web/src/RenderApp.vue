@@ -9,7 +9,7 @@
  * This view is used for rendering content that is to be printed.
  * It is viewed in puppeteer on the server to generate a screenshot that is then printed.
  */
-import { renderDataSchema, type RenderData } from '@thermal-printer-fun/shared';
+import { type RenderData } from '@thermal-printer-fun/shared';
 import RMTest from './components/modules/render/RMTest.vue';
 
 const data = parseRenderDataFromWindow();
@@ -28,7 +28,7 @@ function parseRenderDataFromWindow(): RenderData {
     );
   }
 
-  return renderDataSchema.parse(inputData);
+  return inputData as RenderData;
 }
 
 /**

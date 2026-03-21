@@ -1,6 +1,10 @@
 <template>
   <div class="rm-test">
-    <div class="text">{{ props.data.foo }}</div>
+    <div class="text">
+      {{ props.data.input }}
+      <br />
+      {{ props.data.id }}
+    </div>
   </div>
 </template>
 
@@ -22,8 +26,6 @@ onMounted(() => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  height: 500px;
 }
 
 .text {
@@ -31,8 +33,7 @@ onMounted(() => {
   padding: 16px;
   font-size: 24px;
   font-weight: bold;
-  color: #333;
-  border-radius: 8px;
+  border: 2px solid black;
   display: inline-block;
 }
 </style>

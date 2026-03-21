@@ -33,6 +33,8 @@
         <BaseButton variant="outlined" type="button" @click="handleOnCancel">Cancel</BaseButton>
         <BaseButton type="submit">Print</BaseButton>
       </div>
+
+      <BMPrintJobStatus :jobId="submittedJobId" />
     </form>
   </PrintView>
 </template>
@@ -44,6 +46,7 @@ import { submitImagePrint } from '../../../utils/api';
 import PrintView from '../../../views/PrintView.vue';
 import BaseButton from '../../base/BaseButton/BaseButton.vue';
 import BaseIcon from '../../base/BaseIcon/BaseIcon.vue';
+import BMPrintJobStatus from '../basic/BMPrintJobStatus.vue';
 
 const $video = useTemplateRef('video');
 const $canvas = useTemplateRef('canvas');
@@ -51,6 +54,7 @@ const $canvas = useTemplateRef('canvas');
 const cameraError = ref<string | null>(null);
 const videoSize = reactive({ width: 320, height: 0 });
 const file = ref<File | null>(null);
+const submittedJobId = ref<string | null>(null);
 const currentStream = ref<MediaStream | null>(null);
 const availableVideoDevices = ref<MediaDeviceInfo[]>([]);
 const canToggleCamera = computed(
@@ -140,7 +144,8 @@ async function handleSubmit(e: SubmitEvent) {
     return;
   }
 
-  await submitImagePrint(file.value);
+  const { jobId } = await submitImagePrint(file.value);
+  submittedJobId.value = jobId;
 }
 </script>
 

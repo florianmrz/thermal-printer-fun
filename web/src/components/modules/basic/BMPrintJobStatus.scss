@@ -1,0 +1,9 @@
+@use '~/assets/styles/variables';
+@use '~/assets/styles/typography';
+
+.bm-print-job-status {
+  @include typography.text-small;
+  text-align: center;
+  border: 2px solid variables.$neutral-1000_black;
+  padding: 16px;
+}

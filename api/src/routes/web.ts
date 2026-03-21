@@ -1,10 +1,10 @@
-import { FILE_UPLOAD_OPTIONS, renderDataSchema } from '@thermal-printer-fun/shared';
+import { FILE_UPLOAD_OPTIONS, renderTestSchema } from '@thermal-printer-fun/shared';
 import { Hono } from 'hono';
 import { bodyLimit } from 'hono/body-limit';
 import { HTTPException } from 'hono/http-exception';
 import { convertImageToPrintData } from '../utils/image.js';
-import { renderToPng } from '../utils/render.js';
 import { print } from '../utils/printer.js';
+import { renderToPng } from '../utils/render.js';
 
 const app = new Hono();
 
@@ -36,11 +36,11 @@ app.post(
 
 app.post('/print-render', async c => {
   const body = await c.req.json();
-  const data = renderDataSchema.parse(body);
+  const data = renderTestSchema.parse(body);
   console.log(data);
 
-  const screenshot = await renderToPng(data);
-  const printData = await convertImageToPrintData(screenshot);
+  const fakeId = Math.random().toString(36).substring(2, 10);
+  const printData = () => renderToPng({ ...data, id: fakeId }).then(image => convertImageToPrintData(image));
   const { jobId } = print(printData, { printQuality: 'highPrint', cutPaper: true });
   return c.json({ success: true, jobId });
 });

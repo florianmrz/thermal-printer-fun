@@ -8,16 +8,18 @@
 
 <script setup lang="ts">
 import { useWebSocket } from '@vueuse/core';
-import { provide, readonly, ref } from 'vue';
+import { provide, readonly, ref, shallowReadonly } from 'vue';
 import { RouterView } from 'vue-router';
 import { type PrinterStatus, type WebSocketMessage } from '@thermal-printer-fun/shared';
 import BMHeader from './components/modules/basic/BMHeader.vue';
 import env from './utils/env';
-import { printerStatusInjectionKey } from './utils/keys';
+import { printerQueueJobIdsInjectionKey, printerStatusInjectionKey } from './utils/keys';
 
 const printerStatus = ref<PrinterStatus>('unknown');
+const printerQueueJobIds = ref<string[]>([]);
 
 provide(printerStatusInjectionKey, readonly(printerStatus));
+provide(printerQueueJobIdsInjectionKey, shallowReadonly(printerQueueJobIds));
 
 useWebSocket(`${env.VITE_API_BASE_URL}/ws/web`, {
   autoReconnect: true,
@@ -30,8 +32,12 @@ useWebSocket(`${env.VITE_API_BASE_URL}/ws/web`, {
           printerStatus.value = parsed.status;
           break;
         }
+        case 'printer-queue': {
+          printerQueueJobIds.value = parsed.queueJobIds;
+          break;
+        }
         default: {
-          console.warn('Unknown WebSocket message type:', parsed.type);
+          console.warn('Unknown WebSocket message:', JSON.stringify(parsed as unknown));
         }
       }
     } catch (error) {
