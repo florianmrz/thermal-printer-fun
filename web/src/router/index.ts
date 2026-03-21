@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import LMLargeText from '../components/modules/large-text/LMLargeText.vue';
 import CameraForm from '../components/modules/print/PMCamera.vue';
 import UploadForm from '../components/modules/print/PMUpload.vue';
 import TMTest from '../components/modules/test/TMTest.vue';
@@ -40,6 +41,11 @@ const router = createRouter({
       path: '/test',
       name: 'test',
       component: TMTest,
+    },
+    {
+      path: '/large-text',
+      name: 'large-text',
+      component: LMLargeText,
     },
   ],
 });

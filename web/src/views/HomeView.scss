@@ -36,5 +36,6 @@
 
   .title {
     @include typography.action-medium;
+    text-align: center;
   }
 }

@@ -9,6 +9,7 @@
       v-model="model"
       :type="props.type"
       :placeholder="props.placeholder"
+      :maxlength="props.maxlength"
       :autocomplete="props.autocomplete"
       :required="props.required"
       :disabled="props.disabled"
@@ -28,6 +29,7 @@ const props = defineProps<{
   autocomplete?: InputAutoCompleteAttribute;
   required?: boolean;
   disabled?: boolean;
+  maxlength?: number;
   name?: string;
   label?: string;
   error?: string;
