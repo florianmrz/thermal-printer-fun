@@ -2,13 +2,11 @@ import { FILE_UPLOAD_OPTIONS, renderDataSchema } from '@thermal-printer-fun/shar
 import { Hono } from 'hono';
 import { bodyLimit } from 'hono/body-limit';
 import { HTTPException } from 'hono/http-exception';
-import PQueue from 'p-queue';
 import { convertImageToPrintData } from '../utils/image.js';
 import { renderToPng } from '../utils/render.js';
-import { print } from './ws.js';
+import { print } from '../utils/printer.js';
 
 const app = new Hono();
-const printQueue = new PQueue({ concurrency: 1 });
 
 app.post(
   '/print',
@@ -30,9 +28,9 @@ app.post(
 
     const bytes = await file.bytes();
     const printData = await convertImageToPrintData(bytes);
-    printQueue.add(() => print(printData, { printQuality: 'highPrint', cutPaper: true }));
+    const { jobId } = print(printData, { printQuality: 'highPrint', cutPaper: true });
 
-    return c.json({ success: true });
+    return c.json({ success: true, jobId });
   }
 );
 
@@ -43,8 +41,8 @@ app.post('/print-render', async c => {
 
   const screenshot = await renderToPng(data);
   const printData = await convertImageToPrintData(screenshot);
-  printQueue.add(() => print(printData, { printQuality: 'highPrint', cutPaper: true }));
-  return c.json({ success: true });
+  const { jobId } = print(printData, { printQuality: 'highPrint', cutPaper: true });
+  return c.json({ success: true, jobId });
 });
 
 export default app;

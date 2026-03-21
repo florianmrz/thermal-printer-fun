@@ -10,27 +10,9 @@ const NAVIGATION_TIMEOUT_MS = 10_000;
 const READY_TIMEOUT_MS = 10_000;
 const TOTAL_RENDER_TIMEOUT_MS = 20_000;
 
-const renderQueue = new PQueue({ concurrency: 2 });
+const renderQueue = new PQueue({ concurrency: 2, timeout: TOTAL_RENDER_TIMEOUT_MS });
 
 let browserPromise: Promise<Browser> | null = null;
-
-function withTimeout<T>(promise: Promise<T>): Promise<T> {
-  return new Promise((resolve, reject) => {
-    const timeout = setTimeout(() => {
-      reject(new Error('Job timed out'));
-    }, TOTAL_RENDER_TIMEOUT_MS);
-
-    promise
-      .then(value => {
-        clearTimeout(timeout);
-        resolve(value);
-      })
-      .catch(error => {
-        clearTimeout(timeout);
-        reject(error);
-      });
-  });
-}
 
 async function getBrowser() {
   if (!browserPromise) {
@@ -95,5 +77,5 @@ async function renderPngInternal(data: RenderData): Promise<Uint8Array<ArrayBuff
 }
 
 export async function renderToPng(data: RenderData) {
-  return renderQueue.add(() => withTimeout(renderPngInternal(data)));
+  return renderQueue.add(() => renderPngInternal(data));
 }
