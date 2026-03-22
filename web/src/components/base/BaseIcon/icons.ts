@@ -1,11 +1,15 @@
-import upload from '@pictogrammers/memory-svg/svg/upload.svg?component';
-import accountBox from '@pictogrammers/memory-svg/svg/account-box.svg?component';
-import arrowLeftRight from '@pictogrammers/memory-svg/svg/arrow-left-right.svg?component';
+import upload from 'pixelarticons/svg/upload.svg';
+import camera from 'pixelarticons/svg/camera.svg';
+import arrowsHorizontal from 'pixelarticons/svg/arrows-horizontal.svg';
+
+/**
+ * @see https://pixelarticons.com/
+ */
 
 export const icons = {
   upload,
-  ['account-box']: accountBox,
-  ['arrow-left-right']: arrowLeftRight,
+  camera,
+  ['arrows-horizontal']: arrowsHorizontal,
 };
 
 export type IconName = keyof typeof icons;

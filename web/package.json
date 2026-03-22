@@ -15,9 +15,9 @@
     "format": "prettier --write --experimental-cli src/"
   },
   "dependencies": {
-    "@pictogrammers/memory-svg": "^1.5.0",
     "@thermal-printer-fun/shared": "file:../shared",
     "@vueuse/core": "^14.2.1",
+    "pixelarticons": "^2.0.2",
     "vee-validate": "^5.0.0-beta.0",
     "vue": "^3.5.29",
     "vue-router": "^5.0.3",
