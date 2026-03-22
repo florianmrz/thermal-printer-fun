@@ -1,9 +1,9 @@
 <template>
-  <PrintView>
-    <form class="pm-camera" @submit="handleSubmit">
+  <section class="pm-camera">
+    <form class="form" @submit="handleSubmit">
       <div class="video-container" :class="{ 'is-streaming': isStreaming }">
         <template v-if="!isStreaming">
-          <BaseIcon icon="account-box" size="large" />
+          <BaseIcon icon="camera" size="large" />
           <BaseButton type="button" @click="() => startCamera()">Start camera</BaseButton>
         </template>
 
@@ -19,7 +19,7 @@
           type="button"
           @click="toggleCamera"
           iconOnly>
-          <BaseIcon icon="arrow-left-right" />
+          <BaseIcon icon="arrows-horizontal" />
         </BaseButton>
       </div>
 
@@ -36,18 +36,17 @@
 
       <BMPrintJobResult v-if="submitResponse" :jobId="submitResponse.jobId" :renderData="submitResponse.renderData" />
     </form>
-  </PrintView>
+  </section>
 </template>
 
 <script setup lang="ts">
+import type { PrintSubmitResponse } from '@thermal-printer-fun/shared';
 import { useEventListener } from '@vueuse/core';
 import { computed, reactive, ref, useTemplateRef } from 'vue';
 import { submitImagePrint } from '../../../utils/api';
-import PrintView from '../../../views/PrintView.vue';
 import BaseButton from '../../base/BaseButton/BaseButton.vue';
 import BaseIcon from '../../base/BaseIcon/BaseIcon.vue';
 import BMPrintJobResult from '../basic/BMPrintJobResult.vue';
-import type { PrintSubmitResponse } from '@thermal-printer-fun/shared';
 
 const $video = useTemplateRef('video');
 const $canvas = useTemplateRef('canvas');

@@ -5,7 +5,8 @@
         <RouterLink :to="{ name: 'home' }" class="logo">🖨️</RouterLink>
 
         <nav class="nav-links">
-          <BaseNavLink :to="{ name: 'print' }">Print</BaseNavLink>
+          <BaseNavLink :to="{ name: 'upload' }">Upload</BaseNavLink>
+          <BaseNavLink :to="{ name: 'camera' }">Camera</BaseNavLink>
           <BaseNavLink :to="{ name: 'large-text' }">Large Text</BaseNavLink>
           <BaseNavLink :to="{ name: 'test' }">Test</BaseNavLink>
         </nav>

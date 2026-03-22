@@ -1,9 +1,13 @@
 <template>
   <div class="home-view">
     <div class="card-container">
-      <RouterLink class="card" :to="{ name: 'print' }">
-        <div class="icon">🖨️</div>
-        <div class="title">Print</div>
+      <RouterLink class="card" :to="{ name: 'upload' }">
+        <div class="icon">🔝</div>
+        <div class="title">Upload</div>
+      </RouterLink>
+      <RouterLink class="card" :to="{ name: 'camera' }">
+        <div class="icon">📸</div>
+        <div class="title">Camera</div>
       </RouterLink>
       <RouterLink class="card" :to="{ name: 'large-text' }">
         <div class="icon">🔤</div>

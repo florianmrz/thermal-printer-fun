@@ -1,16 +1,24 @@
 <template>
-  <component :is="component" class="base-icon" :class="`is-${props.size}`" />
+  <component
+    :is="component"
+    class="base-icon"
+    :class="`is-${props.size}`"
+    :viewBox="props.viewBox"
+  />
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
 import { icons, type IconName } from './icons';
 
+// TODO icons look blurry, fix
 const props = withDefaults(defineProps<{
   icon: IconName;
   size?: 'small' | 'medium' | 'large';
+  viewBox?: string;
 }>(), {
-  size: 'medium'
+  size: 'medium',
+  viewBox: '0 0 24 24'
 });
 
 const component = computed(() => icons[props.icon]);

@@ -1,6 +1,6 @@
 <template>
-  <PrintView>
-    <form class="pm-upload" @submit="handleSubmit">
+  <section class="pm-upload">
+    <form class="form" @submit="handleSubmit">
       <template v-if="!file">
         <label ref="dropzone" class="dropzone" :class="{ 'is-over': isOverDropZone }" for="photo">
           <BaseIcon icon="upload" size="large" />
@@ -23,18 +23,17 @@
 
       <BMPrintJobResult v-if="submitResponse" :jobId="submitResponse.jobId" :renderData="submitResponse.renderData" />
     </form>
-  </PrintView>
+  </section>
 </template>
 
 <script setup lang="ts">
+import { FILE_UPLOAD_OPTIONS, type PrintSubmitResponse } from '@thermal-printer-fun/shared';
 import { useDropZone } from '@vueuse/core';
 import { computed, ref, useTemplateRef } from 'vue';
 import { submitImagePrint } from '../../../utils/api';
-import PrintView from '../../../views/PrintView.vue';
-import BaseIcon from '../../base/BaseIcon/BaseIcon.vue';
 import BaseButton from '../../base/BaseButton/BaseButton.vue';
+import BaseIcon from '../../base/BaseIcon/BaseIcon.vue';
 import BMPrintJobResult from '../basic/BMPrintJobResult.vue';
-import { FILE_UPLOAD_OPTIONS, type PrintSubmitResponse } from '@thermal-printer-fun/shared';
 const $dropzone = useTemplateRef('dropzone');
 const $input = useTemplateRef('fileInput');
 
