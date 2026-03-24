@@ -42,7 +42,7 @@
 <script setup lang="ts">
 import type { PrintSubmitResponse } from '@thermal-printer-fun/shared';
 import { useEventListener } from '@vueuse/core';
-import { computed, reactive, ref, useTemplateRef } from 'vue';
+import { computed, onBeforeUnmount, reactive, ref, useTemplateRef } from 'vue';
 import { submitImagePrint } from '../../../utils/api';
 import BaseButton from '../../base/BaseButton/BaseButton.vue';
 import BaseIcon from '../../base/BaseIcon/BaseIcon.vue';
@@ -146,6 +146,12 @@ async function handleSubmit(e: SubmitEvent) {
 
   submitResponse.value = await submitImagePrint(file.value);
 }
+
+onBeforeUnmount(() => {
+  if (currentStream.value) {
+    currentStream.value.getTracks().forEach(track => track.stop());
+  }
+});
 </script>
 
 <style lang="scss" src="./PMCamera.scss" scoped />
