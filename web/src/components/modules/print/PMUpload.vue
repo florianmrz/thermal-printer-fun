@@ -3,7 +3,7 @@
     <form class="form" @submit="handleSubmit">
       <template v-if="!file">
         <label ref="dropzone" class="dropzone" :class="{ 'is-over': isOverDropZone }" for="photo">
-          <BaseIcon icon="upload" size="large" />
+          <BaseIcon icon="upload-sharp" size="large" />
           Upload a file</label
         >
 

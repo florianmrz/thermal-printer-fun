@@ -2,7 +2,9 @@
   <header class="bm-header">
     <div class="global-container">
       <div class="header-container">
-        <RouterLink :to="{ name: 'home' }" class="logo">🖨️</RouterLink>
+        <RouterLink :to="{ name: 'home' }" class="logo">
+          <BaseIcon icon="printer" size="large" />
+        </RouterLink>
 
         <nav class="nav-links">
           <BaseNavLink :to="{ name: 'upload' }">Upload</BaseNavLink>
@@ -12,8 +14,13 @@
         </nav>
 
         <div class="printer-status" :class="`is-${printerStatus}`">
-          <span class="printer-status-text">{{ printerStatus }} (Print queue: {{ printerQueueJobIds?.length ?? 0 }})</span>
-          <span class="printer-status-indicator" />
+          <span class="printer-status-text"
+            >{{ printerStatus }} (Print queue: {{ printerQueueJobIds?.length ?? 0 }})</span
+          >
+          <BaseIcon
+            v-if="printerStatus !== 'unknown'"
+            class="printer-status-indicator"
+            :icon="printerStatus === 'disconnected' ? 'warning-diamond' : 'check'" />
         </div>
       </div>
     </div>
@@ -24,6 +31,7 @@
 import { inject } from 'vue';
 import { RouterLink } from 'vue-router';
 import { printerQueueJobIdsInjectionKey, printerStatusInjectionKey } from '../../../utils/keys';
+import BaseIcon from '../../base/BaseIcon/BaseIcon.vue';
 import BaseNavLink from '../../base/BaseNavLink/BaseNavLink.vue';
 
 const printerStatus = inject(printerStatusInjectionKey);
