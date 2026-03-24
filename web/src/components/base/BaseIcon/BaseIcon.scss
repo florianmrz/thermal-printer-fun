@@ -3,19 +3,14 @@
   align-items: center;
   justify-content: center;
 
-  &.is-small {
-    width: 16px;
-    height: 16px;
-  }
-
-  &.is-medium {
+  &.is-regular {
     width: 24px;
     height: 24px;
   }
 
   &.is-large {
-    width: 32px;
-    height: 32px;
+    width: 48px;
+    height: 48px;
   }
 
   :deep(path) {
