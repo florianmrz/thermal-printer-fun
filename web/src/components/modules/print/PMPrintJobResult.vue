@@ -37,4 +37,4 @@ const queuePosition = computed(() => {
 });
 </script>
 
-<style lang="scss" src="./BMPrintJobResult.scss" scoped />
+<style lang="scss" src="./PMPrintJobResult.scss" scoped />

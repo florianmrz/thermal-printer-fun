@@ -1,8 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import LMLargeText from '../components/modules/large-text/LMLargeText.vue';
-import CameraForm from '../components/modules/print/PMCamera.vue';
-import UploadForm from '../components/modules/print/PMUpload.vue';
-import TMTest from '../components/modules/test/TMTest.vue';
+import PMLargeText from '../components/modules/print/PMLargeText.vue';
+import PMCamera from '../components/modules/print/PMCamera.vue';
+import PMUpload from '../components/modules/print/PMUpload.vue';
 import HomeView from '../views/HomeView.vue';
 
 const router = createRouter({
@@ -16,22 +15,17 @@ const router = createRouter({
     {
       path: '/upload',
       name: 'upload',
-      component: UploadForm,
+      component: PMUpload,
     },
     {
       path: '/camera',
       name: 'camera',
-      component: CameraForm,
-    },
-    {
-      path: '/test',
-      name: 'test',
-      component: TMTest,
+      component: PMCamera,
     },
     {
       path: '/large-text',
       name: 'large-text',
-      component: LMLargeText,
+      component: PMLargeText,
     },
   ],
 });

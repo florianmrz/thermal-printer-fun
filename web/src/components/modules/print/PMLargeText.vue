@@ -1,20 +1,21 @@
 <template>
   <section class="lm-large-text">
     <form class="form" @submit.prevent="onSubmitLargeText">
-      <h2 class="title">Large Text</h2>
+      <PMItemHeader title="Large Text" description="Enter a short text and print it in a large format." />
+
       <BaseInput
         v-model="largeTextInput"
         name="large-text-input"
-        label="Input"
+        label="Text"
         required
         autocomplete="off"
-        placeholder="Type text to print"
+        placeholder="This will be huge!"
         :maxlength="20"
         :error="errors.input" />
 
       <BaseButton type="submit" :disabled="isSubmitting">Print</BaseButton>
 
-      <BMPrintJobResult v-if="submitResponse" :jobId="submitResponse.jobId" :renderData="submitResponse.renderData" />
+      <PMPrintJobResult v-if="submitResponse" :jobId="submitResponse.jobId" :renderData="submitResponse.renderData" />
     </form>
   </section>
 </template>
@@ -26,7 +27,8 @@ import { ref } from 'vue';
 import { submitLargeText } from '../../../utils/api';
 import BaseButton from '../../base/BaseButton/BaseButton.vue';
 import BaseInput from '../../base/BaseInput/BaseInput.vue';
-import BMPrintJobResult from '../basic/BMPrintJobResult.vue';
+import PMItemHeader from './PMItemHeader.vue';
+import PMPrintJobResult from './PMPrintJobResult.vue';
 
 const { defineField, errors, isSubmitting, handleSubmit } = useForm({
   initialValues: {
@@ -44,4 +46,4 @@ const onSubmitLargeText = handleSubmit(async values => {
 });
 </script>
 
-<style lang="scss" src="./LMLargeText.scss" scoped />
+<style lang="scss" src="./PMLargeText.scss" scoped />

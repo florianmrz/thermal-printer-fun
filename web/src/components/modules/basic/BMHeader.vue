@@ -10,7 +10,6 @@
           <BaseNavLink :to="{ name: 'upload' }">Upload</BaseNavLink>
           <BaseNavLink :to="{ name: 'camera' }">Camera</BaseNavLink>
           <BaseNavLink :to="{ name: 'large-text' }">Large Text</BaseNavLink>
-          <BaseNavLink :to="{ name: 'test' }">Test</BaseNavLink>
         </nav>
 
         <div class="printer-status" :class="`is-${printerStatus}`">

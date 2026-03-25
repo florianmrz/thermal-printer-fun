@@ -15,10 +15,6 @@
         <div class="icon"><BaseIcon icon="a-arrow-up-sharp" size="large" /></div>
         <div class="title">Large Text</div>
       </RouterLink>
-      <RouterLink class="card" :to="{ name: 'test' }">
-        <div class="icon"><BaseIcon icon="test-tube-sharp" size="large" /></div>
-        <div class="title">Test</div>
-      </RouterLink>
     </div>
   </div>
 </template>

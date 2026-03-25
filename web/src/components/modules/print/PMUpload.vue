@@ -1,6 +1,8 @@
 <template>
   <section class="pm-upload">
     <form class="form" @submit="handleSubmit">
+      <PMItemHeader title="Upload" description="Select an image from your device to print." />
+
       <template v-if="!file">
         <label ref="dropzone" class="dropzone" :class="{ 'is-over': isOverDropZone }" for="photo">
           <BaseIcon icon="upload-sharp" size="large" />
@@ -21,7 +23,7 @@
         <BaseButton type="submit">Print</BaseButton>
       </div>
 
-      <BMPrintJobResult v-if="submitResponse" :jobId="submitResponse.jobId" :renderData="submitResponse.renderData" />
+      <PMPrintJobResult v-if="submitResponse" :jobId="submitResponse.jobId" :renderData="submitResponse.renderData" />
     </form>
   </section>
 </template>
@@ -33,7 +35,8 @@ import { computed, ref, useTemplateRef } from 'vue';
 import { submitImagePrint } from '../../../utils/api';
 import BaseButton from '../../base/BaseButton/BaseButton.vue';
 import BaseIcon from '../../base/BaseIcon/BaseIcon.vue';
-import BMPrintJobResult from '../basic/BMPrintJobResult.vue';
+import PMItemHeader from './PMItemHeader.vue';
+import PMPrintJobResult from './PMPrintJobResult.vue';
 const $dropzone = useTemplateRef('dropzone');
 const $input = useTemplateRef('fileInput');
 

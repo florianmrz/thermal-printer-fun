@@ -1,9 +1,4 @@
-import {
-  FILE_UPLOAD_OPTIONS,
-  renderLargeTextSchema,
-  renderTestSchema,
-  type PrintSubmitResponse,
-} from '@thermal-printer-fun/shared';
+import { FILE_UPLOAD_OPTIONS, renderLargeTextSchema, type PrintSubmitResponse } from '@thermal-printer-fun/shared';
 import { Hono } from 'hono';
 import { bodyLimit } from 'hono/body-limit';
 import { HTTPException } from 'hono/http-exception';
@@ -39,18 +34,7 @@ app.post(
   }
 );
 
-app.post('/print-render', async c => {
-  const body = await c.req.json();
-  const data = renderTestSchema.parse(body);
-
-  const fakeId = Math.random().toString(36).substring(2, 10);
-  const renderData = { ...data, id: fakeId };
-  const printData = () => renderToPng(renderData).then(image => convertImageToPrintData(image));
-  const { jobId } = print(printData, { printQuality: 'highPrint', cutPaper: true });
-  return c.json({ success: true, jobId, renderData } satisfies PrintSubmitResponse);
-});
-
-app.post('/print-large-text', async c => {
+app.post('/print/large-text', async c => {
   const body = await c.req.json();
   const data = renderLargeTextSchema.parse(body);
 

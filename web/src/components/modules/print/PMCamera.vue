@@ -1,6 +1,8 @@
 <template>
   <section class="pm-camera">
     <form class="form" @submit="handleSubmit">
+      <PMItemHeader title="Camera" description="Capture a photo using your camera and print it." />
+
       <div class="video-container" :class="{ 'is-streaming': isStreaming }">
         <template v-if="!isStreaming">
           <BaseIcon icon="camera" size="large" />
@@ -34,7 +36,7 @@
         <BaseButton type="submit">Print</BaseButton>
       </div>
 
-      <BMPrintJobResult v-if="submitResponse" :jobId="submitResponse.jobId" :renderData="submitResponse.renderData" />
+      <PMPrintJobResult v-if="submitResponse" :jobId="submitResponse.jobId" :renderData="submitResponse.renderData" />
     </form>
   </section>
 </template>
@@ -46,7 +48,8 @@ import { computed, onBeforeUnmount, reactive, ref, useTemplateRef } from 'vue';
 import { submitImagePrint } from '../../../utils/api';
 import BaseButton from '../../base/BaseButton/BaseButton.vue';
 import BaseIcon from '../../base/BaseIcon/BaseIcon.vue';
-import BMPrintJobResult from '../basic/BMPrintJobResult.vue';
+import PMItemHeader from './PMItemHeader.vue';
+import PMPrintJobResult from './PMPrintJobResult.vue';
 
 const $video = useTemplateRef('video');
 const $canvas = useTemplateRef('canvas');

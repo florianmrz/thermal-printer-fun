@@ -1,0 +1,20 @@
+@use '~/assets/styles/variables';
+@use '~/assets/styles/typography';
+
+.pm-item-header {
+	text-align: center;
+	margin-bottom: 16px;
+
+  @media (min-width: 1280px) {
+    margin-bottom: 32px;
+  }
+}
+
+.title {
+	@include typography.text-heading;
+}
+
+.description {
+	@include typography.text-small;
+	color: variables.$neutral-600_grey;
+}

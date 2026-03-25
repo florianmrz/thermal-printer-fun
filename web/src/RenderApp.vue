@@ -1,7 +1,6 @@
 <template>
   <div class="render-app">
-    <RMTest v-if="data._type === 'test'" :data="data" :onReady="setRenderReady" />
-    <RMLargeText v-else-if="data._type === 'large-text'" :data="data" :onReady="setRenderReady" />
+    <RMLargeText v-if="data._type === 'large-text'" :data="data" :onReady="setRenderReady" />
   </div>
 </template>
 
@@ -12,7 +11,6 @@
  */
 import { type RenderData } from '@thermal-printer-fun/shared';
 import RMLargeText from './components/modules/render/RMLargeText.vue';
-import RMTest from './components/modules/render/RMTest.vue';
 import { parseRenderData } from './utils/render';
 
 const data = parseRenderDataFromWindow();
