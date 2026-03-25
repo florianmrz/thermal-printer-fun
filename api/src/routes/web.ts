@@ -1,4 +1,9 @@
-import { FILE_UPLOAD_OPTIONS, renderLargeTextSchema, type PrintSubmitResponse } from '@thermal-printer-fun/shared';
+import {
+  FILE_UPLOAD_OPTIONS,
+  renderLargeTextDataSchema,
+  renderSudokuDataSchema,
+  type PrintSubmitResponse,
+} from '@thermal-printer-fun/shared';
 import { Hono } from 'hono';
 import { bodyLimit } from 'hono/body-limit';
 import { HTTPException } from 'hono/http-exception';
@@ -36,7 +41,16 @@ app.post(
 
 app.post('/print/large-text', async c => {
   const body = await c.req.json();
-  const data = renderLargeTextSchema.parse(body);
+  const data = renderLargeTextDataSchema.parse(body);
+
+  const printData = () => renderToPng(data).then(image => convertImageToPrintData(image));
+  const { jobId } = print(printData, { printQuality: 'highPrint', cutPaper: true });
+  return c.json({ success: true, jobId, renderData: data } satisfies PrintSubmitResponse);
+});
+
+app.post('/print/sudoku', async c => {
+  const body = await c.req.json();
+  const data = renderSudokuDataSchema.parse(body);
 
   const printData = () => renderToPng(data).then(image => convertImageToPrintData(image));
   const { jobId } = print(printData, { printQuality: 'highPrint', cutPaper: true });

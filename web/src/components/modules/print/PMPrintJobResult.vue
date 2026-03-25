@@ -1,5 +1,5 @@
 <template>
-  <div class="bm-print-job-result">
+  <div class="pm-print-job-result">
     Job ID: {{ jobId }}<br />
     <p>
       <span v-if="queuePosition">Queue position: {{ queuePosition }}</span>

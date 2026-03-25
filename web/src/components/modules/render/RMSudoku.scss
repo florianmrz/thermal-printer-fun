@@ -1,0 +1,41 @@
+@use '~/assets/styles/variables';
+@use '~/assets/styles/typography';
+
+.rm-sudoku {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  box-shadow: 0 0 0 4px variables.$neutral-1000_black inset;
+}
+
+.sudoku-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.sudoku-cell {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 2px solid variables.$neutral-1000_black;
+  border-bottom: 2px solid variables.$neutral-1000_black;
+  font-size: 32px;
+}
+
+.sudoku-row:nth-child(3n) .sudoku-cell {
+  border-bottom-width: 4px;
+}
+
+.sudoku-cell:nth-child(3n) {
+  border-right-width: 4px;
+}
+
+.sudoku-row:last-child .sudoku-cell {
+  border-bottom: 0;
+}
+
+.sudoku-cell:last-child {
+  border-right: 0;
+}

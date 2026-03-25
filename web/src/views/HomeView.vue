@@ -15,6 +15,10 @@
         <div class="icon"><BaseIcon icon="a-arrow-up-sharp" size="large" /></div>
         <div class="title">Large Text</div>
       </RouterLink>
+      <RouterLink class="card" :to="{ name: 'sudoku' }">
+        <div class="icon"><BaseIcon icon="grid-2x2-2-sharp" size="large" /></div>
+        <div class="title">Sudoku</div>
+      </RouterLink>
     </div>
   </div>
 </template>

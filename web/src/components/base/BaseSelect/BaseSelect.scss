@@ -1,7 +1,7 @@
 @use '~/assets/styles/variables';
 @use '~/assets/styles/typography';
 
-.base-input {
+.base-select {
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -12,12 +12,19 @@
   @include typography.action-small;
 }
 
+.field-wrapper {
+  position: relative;
+  width: 100%;
+}
+
 .field {
-  padding: 16px 24px;
+  width: 100%;
+  padding: 16px 56px 16px 24px;
   border: 2px solid variables.$neutral-1000_black;
   transition: border-color 0.2s;
   background-color: variables.$neutral-0_white;
   color: variables.$neutral-1000_black;
+  cursor: pointer;
 
   &:focus-visible {
     outline: 2px solid variables.$neutral-1000_black;
@@ -27,6 +34,10 @@
   &.has-error {
     border-color: variables.$color-error;
     outline-color: variables.$color-error;
+  }
+
+  &.is-placeholder {
+    color: variables.$neutral-600_grey;
   }
 
   &:disabled {

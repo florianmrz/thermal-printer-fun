@@ -5,6 +5,7 @@ import aArrowUpSharp from 'pixelarticons/svg/a-arrow-up-sharp.svg';
 import printer from 'pixelarticons/svg/printer.svg';
 import warningDiamond from 'pixelarticons/svg/warning-diamond.svg';
 import check from 'pixelarticons/svg/check.svg';
+import grid2x22Sharp from 'pixelarticons/svg/grid-2x2-2-sharp.svg';
 
 /**
  * @see https://pixelarticons.com/
@@ -18,6 +19,7 @@ export const icons = {
   printer,
   ['warning-diamond']: warningDiamond,
   ['check']: check,
+  ['grid-2x2-2-sharp']: grid2x22Sharp,
 };
 
 export type IconName = keyof typeof icons;
