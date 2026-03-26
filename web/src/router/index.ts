@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import PMCamera from '../components/modules/print/PMCamera.vue';
 import PMLargeText from '../components/modules/print/PMLargeText.vue';
 import PMSudoku from '../components/modules/print/PMSudoku.vue';
+import PMTodoList from '../components/modules/print/PMTodoList.vue';
 import PMUpload from '../components/modules/print/PMUpload.vue';
 import HomeView from '../views/HomeView.vue';
 
@@ -32,6 +33,11 @@ const router = createRouter({
       path: '/sudoku',
       name: 'sudoku',
       component: PMSudoku,
+    },
+    {
+      path: '/todo-list',
+      name: 'todo-list',
+      component: PMTodoList,
     },
   ],
 });

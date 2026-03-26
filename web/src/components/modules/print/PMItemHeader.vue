@@ -1,7 +1,7 @@
 <template>
 	<header class="pm-item-header">
 		<h2 class="title">{{ title }}</h2>
-		<p class="description">{{ description }}</p>
+		<p class="description" v-html="description"></p>
 	</header>
 </template>
 

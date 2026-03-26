@@ -1,0 +1,52 @@
+@use '~/assets/styles/variables';
+@use '~/assets/styles/typography';
+
+.rm-todo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  padding-left: 12px;
+  padding-bottom: 36px;
+  color: variables.$neutral-1000_black;
+}
+
+.title {
+  font-size: 56px;
+  line-height: 1.3;
+  letter-spacing: -0.03em;
+  font-weight: variables.$font-weight-bold;
+  margin: 0 0 12px;
+  text-align: center;
+}
+
+.todo-item {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  align-items: start;
+
+  &:last-child {
+    .item-text {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+  }
+}
+
+.checkbox {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border: 4px solid variables.$neutral-1000_black;
+}
+
+.item-text {
+  font-size: 32px;
+  line-height: 1.3;
+  letter-spacing: -0.03em;
+  font-weight: variables.$font-weight-bold;
+  padding-bottom: 16px;
+  border-bottom: 4px solid variables.$neutral-400;
+  word-break: break-word;
+}

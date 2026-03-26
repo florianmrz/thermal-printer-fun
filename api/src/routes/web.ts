@@ -2,6 +2,7 @@ import {
   FILE_UPLOAD_OPTIONS,
   renderLargeTextDataSchema,
   renderSudokuDataSchema,
+  renderTodoListDataSchema,
   type PrintSubmitResponse,
 } from '@thermal-printer-fun/shared';
 import { Hono } from 'hono';
@@ -51,6 +52,15 @@ app.post('/print/large-text', async c => {
 app.post('/print/sudoku', async c => {
   const body = await c.req.json();
   const data = renderSudokuDataSchema.parse(body);
+
+  const printData = () => renderToPng(data).then(image => convertImageToPrintData(image));
+  const { jobId } = print(printData, { printQuality: 'highPrint', cutPaper: true });
+  return c.json({ success: true, jobId, renderData: data } satisfies PrintSubmitResponse);
+});
+
+app.post('/print/todo-list', async c => {
+  const body = await c.req.json();
+  const data = renderTodoListDataSchema.parse(body);
 
   const printData = () => renderToPng(data).then(image => convertImageToPrintData(image));
   const { jobId } = print(printData, { printQuality: 'highPrint', cutPaper: true });

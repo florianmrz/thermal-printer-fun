@@ -11,6 +11,7 @@
           <BaseNavLink :to="{ name: 'camera' }">Camera</BaseNavLink>
           <BaseNavLink :to="{ name: 'large-text' }">Large Text</BaseNavLink>
           <BaseNavLink :to="{ name: 'sudoku' }">Sudoku</BaseNavLink>
+          <BaseNavLink :to="{ name: 'todo-list' }">Todo List</BaseNavLink>
         </nav>
 
         <div class="printer-status" :class="`is-${printerStatus}`">

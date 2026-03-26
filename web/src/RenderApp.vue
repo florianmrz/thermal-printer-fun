@@ -2,6 +2,7 @@
   <div class="render-app">
     <RMLargeText v-if="data._type === 'large-text'" :data="data" :onReady="setRenderReady" />
     <RMSudoku v-else-if="data._type === 'sudoku'" :data="data" :onReady="setRenderReady" />
+    <RMTodoList v-else-if="data._type === 'todo-list'" :data="data" :onReady="setRenderReady" />
   </div>
 </template>
 
@@ -13,6 +14,7 @@
 import { type RenderData } from '@thermal-printer-fun/shared';
 import RMLargeText from './components/modules/render/RMLargeText.vue';
 import RMSudoku from './components/modules/render/RMSudoku.vue';
+import RMTodoList from './components/modules/render/RMTodoList.vue';
 import { parseRenderData } from './utils/render';
 
 const data = parseRenderDataFromWindow();

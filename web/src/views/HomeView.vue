@@ -19,6 +19,10 @@
         <div class="icon"><BaseIcon icon="grid-2x2-2-sharp" size="large" /></div>
         <div class="title">Sudoku</div>
       </RouterLink>
+      <RouterLink class="card" :to="{ name: 'todo-list' }">
+        <div class="icon"><BaseIcon icon="check" size="large" /></div>
+        <div class="title">Todo List</div>
+      </RouterLink>
     </div>
   </div>
 </template>
