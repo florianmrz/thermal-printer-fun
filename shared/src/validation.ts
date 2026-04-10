@@ -29,10 +29,26 @@ export const renderTodoListFormSchema = z.object({
 });
 export const renderTodoListDataSchema = renderTodoListFormSchema;
 
+export const renderSentryErrorDataSchema = z.object({
+  _type: z.literal('sentry-error'),
+  data: z.object({
+    id: z.string(),
+    project: z.string(),
+    project_name: z.string(),
+    project_slug: z.string(),
+    level: z.string(),
+    culprit: z.string(),
+    message: z.string(),
+    url: z.url(),
+    event: z.json(),
+  }),
+});
+
 export type RenderLargeTextInput = z.infer<typeof renderLargeTextFormSchema>;
 export type RenderSudokuInput = z.infer<typeof renderSudokuFormSchema>;
 export type RenderTodoListInput = z.infer<typeof renderTodoListFormSchema>;
 export type RenderDataLargeText = z.infer<typeof renderLargeTextDataSchema>;
 export type RenderDataSudoku = z.infer<typeof renderSudokuDataSchema>;
 export type RenderDataTodoList = z.infer<typeof renderTodoListDataSchema>;
-export type RenderData = RenderDataLargeText | RenderDataSudoku | RenderDataTodoList;
+export type RenderSentryErrorData = z.infer<typeof renderSentryErrorDataSchema>;
+export type RenderData = RenderDataLargeText | RenderDataSudoku | RenderDataTodoList | RenderSentryErrorData;

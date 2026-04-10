@@ -1,0 +1,8 @@
+@use '~/assets/styles/variables';
+@use '~/assets/styles/typography';
+
+.rm-sentry-error {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+}

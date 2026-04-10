@@ -3,6 +3,7 @@
     <RMLargeText v-if="data._type === 'large-text'" :data="data" :onReady="setRenderReady" />
     <RMSudoku v-else-if="data._type === 'sudoku'" :data="data" :onReady="setRenderReady" />
     <RMTodoList v-else-if="data._type === 'todo-list'" :data="data" :onReady="setRenderReady" />
+    <RMSentryError v-else-if="data._type === 'sentry-error'" :data="data" :onReady="setRenderReady" />
   </div>
 </template>
 
@@ -16,6 +17,7 @@ import RMLargeText from './components/modules/render/RMLargeText.vue';
 import RMSudoku from './components/modules/render/RMSudoku.vue';
 import RMTodoList from './components/modules/render/RMTodoList.vue';
 import { parseRenderData } from './utils/render';
+import RMSentryError from './components/modules/render/RMSentryError.vue';
 
 const data = parseRenderDataFromWindow();
 
