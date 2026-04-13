@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { SentryWebhookPayload } from '../../web/src/types/sentry';
+import type { SentryWebhookPayload } from './sentry.js';
 
 export const renderLargeTextInputSchema = z.object({
   _type: z.literal('large-text'),

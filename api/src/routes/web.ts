@@ -1,13 +1,17 @@
 import {
   FILE_UPLOAD_OPTIONS,
   renderLargeTextDataSchema,
+  renderSentryErrorInputSchema,
   renderSudokuDataSchema,
   renderTodoListDataSchema,
   type PrintSubmitResponse,
+  type SentryWebhookPayload,
 } from '@thermal-printer-fun/shared';
 import { Hono } from 'hono';
+import { bearerAuth } from 'hono/bearer-auth';
 import { bodyLimit } from 'hono/body-limit';
 import { HTTPException } from 'hono/http-exception';
+import { env } from '../env.js';
 import { convertImageToPrintData } from '../utils/image.js';
 import { print } from '../utils/printer.js';
 import { renderToPng } from '../utils/render.js';
@@ -61,6 +65,16 @@ app.post('/print/sudoku', async c => {
 app.post('/print/todo-list', async c => {
   const body = await c.req.json();
   const data = renderTodoListDataSchema.parse(body);
+
+  const printData = () => renderToPng(data).then(image => convertImageToPrintData(image));
+  const { jobId } = print(printData, { printQuality: 'highPrint', cutPaper: true });
+  return c.json({ success: true, jobId, renderData: data } satisfies PrintSubmitResponse);
+});
+
+app.post('/print/sentry-error', bearerAuth({ token: env.SENTRY_ERROR_TOKEN }), async c => {
+  const body = await c.req.json();
+  const parsedData = renderSentryErrorInputSchema.parse(body);
+  const data = { ...parsedData, data: parsedData.data as SentryWebhookPayload };
 
   const printData = () => renderToPng(data).then(image => convertImageToPrintData(image));
   const { jobId } = print(printData, { printQuality: 'highPrint', cutPaper: true });
