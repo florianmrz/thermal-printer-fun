@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import { renderTodoListDataSchema, type PrintSubmitResponse } from '@thermal-printer-fun/shared';
+import { renderTodoListInputSchema, type PrintSubmitResponse } from '@thermal-printer-fun/shared';
 import { useFieldArray, useForm } from 'vee-validate';
 import { nextTick, ref, useTemplateRef } from 'vue';
 import { submitTodoList } from '../../../utils/api';
@@ -62,7 +62,7 @@ const { defineField, errors, handleSubmit } = useForm({
     title: '',
     items: [''],
   },
-  validationSchema: renderTodoListDataSchema,
+  validationSchema: renderTodoListInputSchema,
 });
 
 const [title] = defineField<'title', string>('title');

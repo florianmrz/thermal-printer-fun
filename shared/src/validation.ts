@@ -1,6 +1,7 @@
 import { z } from 'zod';
+import type { SentryWebhookPayload } from '../../web/src/types/sentry';
 
-export const renderLargeTextFormSchema = z.object({
+export const renderLargeTextInputSchema = z.object({
   _type: z.literal('large-text'),
   input: z
     .string()
@@ -11,9 +12,9 @@ export const renderLargeTextFormSchema = z.object({
       message: 'Newlines are not allowed',
     }),
 });
-export const renderLargeTextDataSchema = renderLargeTextFormSchema;
+export const renderLargeTextDataSchema = renderLargeTextInputSchema;
 
-export const renderSudokuFormSchema = z.object({
+export const renderSudokuInputSchema = z.object({
   _type: z.literal('sudoku'),
   difficulty: z.enum(['easy', 'medium', 'hard', 'expert']),
 });
@@ -22,14 +23,14 @@ export const renderSudokuDataSchema = z.object({
   data: z.array(z.array(z.number().int().min(0).max(9))).length(9),
 });
 
-export const renderTodoListFormSchema = z.object({
+export const renderTodoListInputSchema = z.object({
   _type: z.literal('todo-list'),
   title: z.string().trim().max(32).optional(),
   items: z.array(z.string().trim().min(1).max(512)).min(1).max(64),
 });
-export const renderTodoListDataSchema = renderTodoListFormSchema;
+export const renderTodoListDataSchema = renderTodoListInputSchema;
 
-export const renderSentryErrorDataSchema = z.object({
+export const renderSentryErrorInputSchema = z.object({
   _type: z.literal('sentry-error'),
   data: z.object({
     id: z.string(),
@@ -44,11 +45,19 @@ export const renderSentryErrorDataSchema = z.object({
   }),
 });
 
-export type RenderLargeTextInput = z.infer<typeof renderLargeTextFormSchema>;
-export type RenderSudokuInput = z.infer<typeof renderSudokuFormSchema>;
-export type RenderTodoListInput = z.infer<typeof renderTodoListFormSchema>;
+export type RenderInputLargeText = z.infer<typeof renderLargeTextInputSchema>;
 export type RenderDataLargeText = z.infer<typeof renderLargeTextDataSchema>;
+
+export type RenderInputSudoku = z.infer<typeof renderSudokuInputSchema>;
 export type RenderDataSudoku = z.infer<typeof renderSudokuDataSchema>;
+
+export type RenderInputTodoList = z.infer<typeof renderTodoListInputSchema>;
 export type RenderDataTodoList = z.infer<typeof renderTodoListDataSchema>;
-export type RenderSentryErrorData = z.infer<typeof renderSentryErrorDataSchema>;
-export type RenderData = RenderDataLargeText | RenderDataSudoku | RenderDataTodoList | RenderSentryErrorData;
+
+export type RenderInputSentryError = z.infer<typeof renderSentryErrorInputSchema>;
+export type RenderDataSentryError = {
+  _type: 'sentry-error';
+  data: SentryWebhookPayload;
+};
+
+export type RenderData = RenderDataLargeText | RenderDataSudoku | RenderDataTodoList | RenderDataSentryError;

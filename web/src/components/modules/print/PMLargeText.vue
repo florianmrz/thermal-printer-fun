@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { renderLargeTextFormSchema, type PrintSubmitResponse } from '@thermal-printer-fun/shared';
+import { renderLargeTextInputSchema, type PrintSubmitResponse } from '@thermal-printer-fun/shared';
 import { useForm } from 'vee-validate';
 import { ref } from 'vue';
 import { submitLargeText } from '../../../utils/api';
@@ -35,7 +35,7 @@ const { defineField, errors, isSubmitting, handleSubmit } = useForm({
     _type: 'large-text',
     input: '',
   },
-  validationSchema: renderLargeTextFormSchema,
+  validationSchema: renderLargeTextInputSchema,
 });
 
 const [largeTextInput] = defineField('input');

@@ -9,7 +9,7 @@
         label="Difficulty"
         required
         :options="
-          renderSudokuFormSchema.shape.difficulty.options.map(option => ({
+          renderSudokuInputSchema.shape.difficulty.options.map(option => ({
             label: `${option.charAt(0).toUpperCase()}${option.slice(1)}`,
             value: option,
           }))
@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { renderSudokuFormSchema, type PrintSubmitResponse } from '@thermal-printer-fun/shared';
+import { renderSudokuInputSchema, type PrintSubmitResponse } from '@thermal-printer-fun/shared';
 import { getSudoku } from 'sudoku-gen';
 import { useForm } from 'vee-validate';
 import { ref } from 'vue';
@@ -43,7 +43,7 @@ const { defineField, errors, isSubmitting, handleSubmit } = useForm({
     _type: 'sudoku',
     difficulty: 'medium',
   },
-  validationSchema: renderSudokuFormSchema,
+  validationSchema: renderSudokuInputSchema,
 });
 
 const [difficulty] = defineField('difficulty');
