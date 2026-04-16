@@ -6,12 +6,15 @@
           <BaseIcon icon="printer" size="large" />
         </RouterLink>
 
+        <!-- TODO protect against SSRF -->
+
         <nav class="nav-links">
           <BaseNavLink :to="{ name: 'upload' }">Upload</BaseNavLink>
           <BaseNavLink :to="{ name: 'camera' }">Camera</BaseNavLink>
           <BaseNavLink :to="{ name: 'large-text' }">Large Text</BaseNavLink>
           <BaseNavLink :to="{ name: 'sudoku' }">Sudoku</BaseNavLink>
           <BaseNavLink :to="{ name: 'todo-list' }">Todo List</BaseNavLink>
+          <BaseNavLink :to="{ name: 'website' }">Website</BaseNavLink>
         </nav>
 
         <div class="printer-status" :class="`is-${printerStatus}`">

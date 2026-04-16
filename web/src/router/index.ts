@@ -4,6 +4,7 @@ import PMLargeText from '../components/modules/print/PMLargeText.vue';
 import PMSudoku from '../components/modules/print/PMSudoku.vue';
 import PMTodoList from '../components/modules/print/PMTodoList.vue';
 import PMUpload from '../components/modules/print/PMUpload.vue';
+import PMWebsite from '../components/modules/print/PMWebsite.vue';
 import HomeView from '../views/HomeView.vue';
 
 const router = createRouter({
@@ -38,6 +39,11 @@ const router = createRouter({
       path: '/todo-list',
       name: 'todo-list',
       component: PMTodoList,
+    },
+    {
+      path: '/website',
+      name: 'website',
+      component: PMWebsite,
     },
   ],
 });

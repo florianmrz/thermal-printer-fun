@@ -4,6 +4,7 @@ import {
   renderSentryErrorInputSchema,
   renderSudokuDataSchema,
   renderTodoListDataSchema,
+  renderWebsiteInputSchema,
   type PrintSubmitResponse,
   type SentryWebhookPayload,
 } from '@thermal-printer-fun/shared';
@@ -14,7 +15,7 @@ import { HTTPException } from 'hono/http-exception';
 import { env } from '../env.js';
 import { convertImageToPrintData } from '../utils/image.js';
 import { print } from '../utils/printer.js';
-import { renderToPng } from '../utils/render.js';
+import { renderToPng, renderWebsiteToPng } from '../utils/render.js';
 
 const app = new Hono();
 
@@ -79,6 +80,15 @@ app.post('/print/sentry-error', bearerAuth({ token: env.SENTRY_ERROR_TOKEN }), a
   const printData = () => renderToPng(data).then(image => convertImageToPrintData(image));
   const { jobId } = print(printData, { printQuality: 'highPrint', cutPaper: true });
   return c.json({ success: true, jobId, renderData: data } satisfies PrintSubmitResponse);
+});
+
+app.post('/print/website', async c => {
+  const body = await c.req.json();
+  const { url, fullPage } = renderWebsiteInputSchema.parse(body);
+
+  const printData = () => renderWebsiteToPng(url, fullPage).then(image => convertImageToPrintData(image));
+  const { jobId } = print(printData, { printQuality: 'highPrint', cutPaper: true });
+  return c.json({ success: true, jobId } satisfies PrintSubmitResponse);
 });
 
 export default app;

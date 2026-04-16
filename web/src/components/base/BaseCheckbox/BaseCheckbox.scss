@@ -1,0 +1,53 @@
+@use '~/assets/styles/variables';
+@use '~/assets/styles/typography';
+
+.base-checkbox {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.label {
+  @include typography.action-small;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+
+  &.is-disabled {
+    cursor: not-allowed;
+  }
+}
+
+.field {
+  width: 16px;
+  height: 16px;
+  border: 2px solid variables.$neutral-1000_black;
+  accent-color: variables.$neutral-1000_black;
+  margin: 0;
+  cursor: inherit;
+
+  &:focus-visible {
+    outline: 2px solid variables.$neutral-1000_black;
+    outline-offset: 2px;
+  }
+
+  &.has-error {
+    outline-color: variables.$color-error;
+  }
+
+  &:disabled {
+    background-color: variables.$neutral-100_off-white;
+  }
+}
+
+.label-text {
+  line-height: 1.2;
+}
+
+.error {
+  @include typography.text-small;
+  color: variables.$color-error;
+}

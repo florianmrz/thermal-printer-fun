@@ -3,6 +3,7 @@ import type {
   RenderDataLargeText,
   RenderDataSudoku,
   RenderDataTodoList,
+  RenderInputWebsite,
 } from '@thermal-printer-fun/shared';
 import env from './env';
 
@@ -37,6 +38,16 @@ export async function submitSudoku(payload: RenderDataSudoku) {
 
 export async function submitTodoList(payload: RenderDataTodoList) {
   return fetch(`${env.VITE_API_BASE_URL}/api/web/print/todo-list`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  }).then(res => res.json() as Promise<PrintSubmitResponse>);
+}
+
+export async function submitWebsite(payload: RenderInputWebsite) {
+  return fetch(`${env.VITE_API_BASE_URL}/api/web/print/website`, {
     method: 'POST',
     headers: {
       'content-type': 'application/json',

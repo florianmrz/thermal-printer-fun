@@ -54,10 +54,18 @@ export type RenderDataSudoku = z.infer<typeof renderSudokuDataSchema>;
 export type RenderInputTodoList = z.infer<typeof renderTodoListInputSchema>;
 export type RenderDataTodoList = z.infer<typeof renderTodoListDataSchema>;
 
+export const renderWebsiteInputSchema = z.object({
+  _type: z.literal('website'),
+  url: z.url(),
+  fullPage: z.boolean().default(true),
+});
+
 export type RenderInputSentryError = z.infer<typeof renderSentryErrorInputSchema>;
 export type RenderDataSentryError = {
   _type: 'sentry-error';
   data: SentryWebhookPayload;
 };
+
+export type RenderInputWebsite = z.infer<typeof renderWebsiteInputSchema>;
 
 export type RenderData = RenderDataLargeText | RenderDataSudoku | RenderDataTodoList | RenderDataSentryError;
