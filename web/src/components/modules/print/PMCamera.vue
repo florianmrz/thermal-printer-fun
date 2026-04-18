@@ -1,8 +1,8 @@
 <template>
-  <section class="pm-camera">
-    <form class="form" @submit="handleSubmit">
-      <PMItemHeader title="Camera" description="Capture a photo using your camera and print it." />
+  <section class="pm-camera print-module">
+    <PMItemHeader title="Camera" description="Capture a photo using your camera and print it." />
 
+    <form class="form" @submit="handleSubmit">
       <div class="video-container" :class="{ 'is-streaming': isStreaming }">
         <template v-if="!isStreaming">
           <BaseIcon icon="camera" size="large" />
@@ -35,9 +35,9 @@
         <BaseButton variant="outlined" type="button" @click="handleOnCancel">Cancel</BaseButton>
         <BaseButton type="submit">Print</BaseButton>
       </div>
-
-      <PMPrintJobResult v-if="submitResponse" :jobId="submitResponse.jobId" :renderData="submitResponse.renderData" />
     </form>
+
+    <PMPrintJobResult v-if="submitResponse" :jobId="submitResponse.jobId" :renderData="submitResponse.renderData" />
   </section>
 </template>
 
@@ -157,4 +157,5 @@ onBeforeUnmount(() => {
 });
 </script>
 
+<style lang="scss" src="./_print.scss" scoped />
 <style lang="scss" src="./PMCamera.scss" scoped />

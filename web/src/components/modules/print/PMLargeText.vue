@@ -1,8 +1,8 @@
 <template>
-  <section class="pm-large-text">
-    <form class="form" @submit.prevent="onSubmit">
-      <PMItemHeader title="Large Text" description="Enter a short text and print it in a large format." />
+  <section class="pm-large-text print-module">
+    <PMItemHeader title="Large Text" description="Enter a short text and print it in a large format." />
 
+    <form class="form" @submit.prevent="onSubmit">
       <BaseInput
         v-model="largeTextInput"
         name="large-text-input"
@@ -14,9 +14,9 @@
         :error="errors.input" />
 
       <BaseButton type="submit" :disabled="isSubmitting">Print</BaseButton>
-
-      <PMPrintJobResult v-if="submitResponse" :jobId="submitResponse.jobId" :renderData="submitResponse.renderData" />
     </form>
+
+    <PMPrintJobResult v-if="submitResponse" :jobId="submitResponse.jobId" :renderData="submitResponse.renderData" />
   </section>
 </template>
 
@@ -46,4 +46,4 @@ const onSubmit = handleSubmit(async values => {
 });
 </script>
 
-<style lang="scss" src="./PMLargeText.scss" scoped />
+<style lang="scss" src="./_print.scss" scoped />

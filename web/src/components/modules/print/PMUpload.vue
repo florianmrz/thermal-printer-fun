@@ -1,8 +1,8 @@
 <template>
-  <section class="pm-upload">
-    <form class="form" @submit="handleSubmit">
-      <PMItemHeader title="Upload" description="Select an image from your device to print." />
+  <section class="pm-upload print-module">
+    <PMItemHeader title="Upload" description="Select an image from your device to print." />
 
+    <form class="form" @submit="handleSubmit">
       <template v-if="!file">
         <label ref="dropzone" class="dropzone" :class="{ 'is-over': isOverDropZone }" for="photo">
           <BaseIcon icon="upload-sharp" size="large" />
@@ -10,7 +10,7 @@
         >
 
         <input ref="fileInput" id="photo" type="file" @change="handleFileSelect" :accept="accept" />
-
+3
         <p class="error" v-if="uploadError">{{ uploadError }}</p>
       </template>
 
@@ -22,9 +22,9 @@
         <BaseButton variant="outlined" type="button" @click="file = null">Cancel</BaseButton>
         <BaseButton type="submit">Print</BaseButton>
       </div>
-
-      <PMPrintJobResult v-if="submitResponse" :jobId="submitResponse.jobId" :renderData="submitResponse.renderData" />
     </form>
+
+    <PMPrintJobResult v-if="submitResponse" :jobId="submitResponse.jobId" :renderData="submitResponse.renderData" />
   </section>
 </template>
 
@@ -91,4 +91,5 @@ async function handleSubmit(e: SubmitEvent) {
 }
 </script>
 
+<style lang="scss" src="./_print.scss" scoped />
 <style lang="scss" src="./PMUpload.scss" scoped />

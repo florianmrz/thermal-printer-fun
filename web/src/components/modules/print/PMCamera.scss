@@ -1,22 +1,5 @@
 @use '~/assets/styles/variables';
 
-.pm-camera {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 0 auto;
-  padding: 32px 0;
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  width: 400px;
-  max-width: 100%;
-}
-
 .video-container {
   position: relative;
   width: 100%;
@@ -64,7 +47,3 @@
   color: variables.$color-error;
 }
 
-.actions-container {
-  display: flex;
-  gap: 8px;
-}

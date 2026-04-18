@@ -1,10 +1,10 @@
 <template>
-  <section class="pm-todo-list">
-    <form class="form" @submit.prevent="onSubmit">
-      <PMItemHeader
-        title="Todo List"
-        description='Create a printable checklist.<br/>("Enter" to add, "Backspace" to remove an item).' />
+  <section class="pm-todo-list print-module">
+    <PMItemHeader
+      title="Todo List"
+      description='Create a printable checklist.<br/>("Enter" to add, "Backspace" to remove an item).' />
 
+    <form class="form" @submit.prevent="onSubmit">
       <BaseInput
         v-model="title"
         name="todo-list-title"
@@ -38,9 +38,9 @@
         <BaseButton type="button" variant="outlined" @click="pushItem('')"> Add Item </BaseButton>
         <BaseButton type="submit">Print</BaseButton>
       </div>
-
-      <PMPrintJobResult v-if="submitResponse" :jobId="submitResponse.jobId" :renderData="submitResponse.renderData" />
     </form>
+
+    <PMPrintJobResult v-if="submitResponse" :jobId="submitResponse.jobId" :renderData="submitResponse.renderData" />
   </section>
 </template>
 
@@ -135,4 +135,5 @@ const onSubmit = handleSubmit(async values => {
 });
 </script>
 
+<style lang="scss" src="./_print.scss" scoped />
 <style lang="scss" src="./PMTodoList.scss" scoped />
