@@ -56,7 +56,19 @@ export type RenderDataTodoList = z.infer<typeof renderTodoListDataSchema>;
 
 export const renderWebsiteInputSchema = z.object({
   _type: z.literal('website'),
-  url: z.url(),
+  url: z.preprocess(
+    val => {
+      if (typeof val !== 'string') {
+        return '';
+      }
+      // Ensure the URL has a protocol and allow omitting it for convenience
+      return /^https?/.test(val) ? val : `https://${val}`;
+    },
+    z.url({
+      protocol: /^https?$/,
+      hostname: z.regexes.domain,
+    })
+  ),
   fullPage: z.boolean().default(true),
 });
 

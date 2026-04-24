@@ -9,7 +9,7 @@
         v-model="urlInput"
         name="website-url-input"
         label="URL"
-        type="url"
+        type="text"
         required
         autocomplete="off"
         placeholder="https://example.com"
@@ -42,7 +42,7 @@ const { defineField, errors, isSubmitting, handleSubmit } = useForm<RenderInputW
   initialValues: {
     _type: 'website',
     url: '',
-    fullPage: true,
+    fullPage: false,
   },
   validationSchema: renderWebsiteInputSchema,
 });
