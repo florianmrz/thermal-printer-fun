@@ -78,8 +78,9 @@ const WEBSITE_VIEWPORT_HEIGHT_PX = 800;
 
 function isPrivateIp(ip: string): boolean {
   const privatePatterns = [/^127\./, /^10\./, /^172\.(1[6-9]|2\d|3[01])\./, /^192\.168\./, /^169\.254\./, /^0\./];
-  if (privatePatterns.some(p => p.test(ip))) return true;
-  if (ip === '::1' || /^f[cd]/i.test(ip)) return true;
+  if (privatePatterns.some(p => p.test(ip)) || ip === '::1' || /^f[cd]/i.test(ip)) {
+    return true;
+  }
   return false;
 }
 
@@ -105,6 +106,9 @@ export async function renderWebsiteToPng(url: string, fullPage: boolean): Promis
       timeout: NAVIGATION_TIMEOUT_MS,
     });
 
+    // Remove any cookie banner scripts that might interfere with the screenshot
+    await Promise.all(removeCookieBannerScripts.map(script => page.evaluate(script)));
+
     let screenshot: Uint8Array<ArrayBufferLike> | null = null;
 
     if (fullPage) {
@@ -119,7 +123,7 @@ export async function renderWebsiteToPng(url: string, fullPage: boolean): Promis
     }
 
     if (env.ENV === 'development') {
-      writeFileSync('last-website-screenshot.png', screenshot);
+      writeFileSync('last-screenshot.png', screenshot);
     }
 
     return new Uint8Array(screenshot);
@@ -127,3 +131,155 @@ export async function renderWebsiteToPng(url: string, fullPage: boolean): Promis
     await page.close();
   }
 }
+
+const removeCookieBannerScripts: (() => Promise<void>)[] = [
+  // Cookiebot
+  async () => {
+    document.getElementById('CybotCookiebotDialog')?.remove();
+    document.getElementById('CybotCookiebotDialogBodyUnderlay')?.remove();
+    document.querySelector('.cookiebot-overlay')?.remove();
+  },
+
+  // OneTrust / OptanonConsent
+  async () => {
+    document.getElementById('onetrust-consent-sdk')?.remove();
+    document.getElementById('onetrust-banner-sdk')?.remove();
+    document.querySelector('.onetrust-pc-dark-filter')?.remove();
+    document.querySelector('#optanon')?.remove();
+  },
+
+  // TrustArc / TrustE
+  async () => {
+    document.getElementById('truste-consent-track')?.remove();
+    document.querySelector('.truste_overlay')?.remove();
+    document.querySelector('.truste_box_overlay')?.remove();
+    document.getElementById('teconsent')?.remove();
+  },
+
+  // Quantcast Choice
+  async () => {
+    document.querySelector('.qc-cmp2-container')?.remove();
+    document.querySelector('.qc-cmp-ui')?.remove();
+    document.querySelector('#qc-cmp2-container')?.remove();
+  },
+
+  // Didomi
+  async () => {
+    document.getElementById('didomi-host')?.remove();
+    document.querySelector('.didomi-popup-backdrop')?.remove();
+  },
+
+  // Osano
+  async () => {
+    document.querySelector('.osano-cm-window')?.remove();
+    document.querySelector('.osano-cm-dialog')?.remove();
+  },
+
+  // Usercentrics
+  async () => {
+    document.getElementById('usercentrics-root')?.remove();
+    document.querySelector('uc-ui-cmp-ui')?.remove();
+  },
+
+  // Cookiefirst
+  async () => {
+    document.getElementById('cookiefirst-root')?.remove();
+    document.querySelector('[data-cookiefirst-widget]')?.remove();
+  },
+
+  // cookie-script.com
+  async () => {
+    document.getElementById('cookie-script-com')?.remove();
+  },
+
+  // Borlabs Cookie
+  async () => {
+    document.getElementById('BorlabsCookieBox')?.remove();
+  },
+
+  // Cookie Notice (WordPress plugin)
+  async () => {
+    document.getElementById('cookie-notice-wrapper')?.remove();
+    document.querySelector('.cookie-notice-container')?.remove();
+  },
+
+  // GDPR Cookie Consent (WordPress plugin)
+  async () => {
+    document.getElementById('gdpr-cookie-consent-bar')?.remove();
+    document.querySelector('.cli-bar-container')?.remove();
+  },
+
+  // CookieYes / Cookie Law Info
+  async () => {
+    document.querySelector('.cky-consent-container')?.remove();
+    document.querySelector('.cky-overlay')?.remove();
+    document.querySelector('#cky-consent')?.remove();
+    document.querySelector('.cli_messagebar')?.remove();
+  },
+
+  // HubSpot cookie banner
+  async () => {
+    document.querySelector('#hs-eu-cookie-confirmation')?.remove();
+    document.querySelector('#hs-eu-policy-wording')?.remove();
+  },
+
+  // Consent Manager (Sourcepoint)
+  async () => {
+    document.querySelector('#sp_message_container')?.remove();
+    document.querySelector('.sp-message-container')?.remove();
+    document.querySelector('div[data-id="sp_privacy_manager_container"]')?.remove();
+  },
+
+  // Iubenda
+  async () => {
+    document.querySelector('#iubenda-cs-banner')?.remove();
+    document.querySelector('.iubenda-cs-container')?.remove();
+  },
+
+  // Complianz
+  async () => {
+    document.querySelector('.cmplz-cookiebanner')?.remove();
+    document.querySelector('.cmplz-overlay')?.remove();
+  },
+
+  // Termly
+  async () => {
+    document.querySelector('#termly-code-snippet-support')?.remove();
+    document.querySelector('[data-tid="banner-overlay"]')?.remove();
+  },
+
+  // Admiral
+  async () => {
+    document.querySelector('#admiral-consent')?.remove();
+  },
+
+  // Generic common selectors
+  async () => {
+    const genericSelectors = [
+      '[id*="cookie-banner"]',
+      '[id*="cookie-consent"]',
+      '[id*="cookie-notice"]',
+      '[id*="cookie-bar"]',
+      '[id*="cookie-overlay"]',
+      '[class*="cookie-banner"]',
+      '[class*="cookie-consent"]',
+      '[class*="cookie-notice"]',
+      '[class*="cookie-bar"]',
+      '[class*="gdpr-banner"]',
+      '[class*="consent-banner"]',
+      '[class*="consent-overlay"]',
+      '[aria-label*="cookie" i]',
+      '[aria-label*="consent" i]',
+    ];
+    for (const selector of genericSelectors) {
+      document.querySelectorAll(selector).forEach(el => el.remove());
+    }
+  },
+
+  // Remove body/html overflow:hidden that cookie overlays often add
+  async () => {
+    document.body.style.overflow = '';
+    document.body.style.position = '';
+    document.documentElement.style.overflow = '';
+  },
+];
