@@ -1,23 +1,6 @@
 @use '~/assets/styles/variables';
 @use '~/assets/styles/typography';
 
-.pm-upload {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 0 auto;
-  padding: 32px 0;
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  width: 400px;
-  max-width: 100%;
-}
-
 .dropzone {
   @include typography.action-medium;
   display: flex;
@@ -55,7 +38,3 @@ input {
   text-align: center;
 }
 
-.actions-container {
-  display: flex;
-  gap: 8px;
-}

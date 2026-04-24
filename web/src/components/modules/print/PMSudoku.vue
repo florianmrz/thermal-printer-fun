@@ -1,8 +1,8 @@
 <template>
-  <section class="pm-sudoku">
-    <form class="form" @submit.prevent="onSubmit">
-      <PMItemHeader title="Sudoku" description="Print a Sudoku puzzle to solve on paper." />
+  <section class="pm-sudoku print-module">
+    <PMItemHeader title="Sudoku" description="Print a Sudoku puzzle to solve on paper." />
 
+    <form class="form" @submit.prevent="onSubmit">
       <BaseSelect
         v-model="difficulty"
         name="sudoku-difficulty"
@@ -21,9 +21,9 @@
       <BaseButton v-if="printedSudokuSolution" type="button" variant="outlined" @click="printSolution"
         >Print Solution</BaseButton
       >
-
-      <PMPrintJobResult v-if="submitResponse" :jobId="submitResponse.jobId" :renderData="submitResponse.renderData" />
     </form>
+
+    <PMPrintJobResult v-if="submitResponse" :jobId="submitResponse.jobId" :renderData="submitResponse.renderData" />
   </section>
 </template>
 
@@ -103,4 +103,4 @@ function convertSudokuToArray(sudoku: string): number[][] {
 }
 </script>
 
-<style lang="scss" src="./PMSudoku.scss" scoped />
+<style lang="scss" src="./_print.scss" scoped />

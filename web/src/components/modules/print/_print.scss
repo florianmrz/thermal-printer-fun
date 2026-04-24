@@ -1,0 +1,21 @@
+.print-module {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 16px;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 32px 0;
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .actions-container {
+    display: flex;
+    gap: 8px;
+  }
+}

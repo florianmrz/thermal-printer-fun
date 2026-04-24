@@ -1,10 +1,8 @@
 <template>
-  <section class="pm-website">
-    <form class="form" @submit.prevent="onSubmit">
-      <PMItemHeader
-        title="Website"
-        description="Is your website thermal-printer ready?" />
+  <section class="pm-website print-module">
+    <PMItemHeader title="Website" description="Is your website thermal-printer ready?" />
 
+    <form class="form" @submit.prevent="onSubmit">
       <BaseInput
         v-model="urlInput"
         name="website-url-input"
@@ -15,15 +13,12 @@
         placeholder="https://example.com"
         :error="errors.url" />
 
-      <BaseCheckbox
-        v-model="fullPageInput"
-        name="full-page"
-        label="Full page (max. 5,000 px)" />
+      <BaseCheckbox v-model="fullPageInput" name="full-page" label="Full page (max. 5,000 px)" />
 
       <BaseButton type="submit" :disabled="isSubmitting">Print</BaseButton>
-
-      <PMPrintJobResult v-if="submitResponse" :jobId="submitResponse.jobId" />
     </form>
+
+    <PMPrintJobResult v-if="submitResponse" :jobId="submitResponse.jobId" />
   </section>
 </template>
 
@@ -56,4 +51,4 @@ const onSubmit = handleSubmit(async values => {
 });
 </script>
 
-<style lang="scss" src="./PMWebsite.scss" scoped />
+<style lang="scss" src="./_print.scss" scoped />
