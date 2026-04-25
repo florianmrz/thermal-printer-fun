@@ -80,4 +80,50 @@ export type RenderDataSentryError = {
 
 export type RenderInputWebsite = z.infer<typeof renderWebsiteInputSchema>;
 
-export type RenderData = RenderDataLargeText | RenderDataSudoku | RenderDataTodoList | RenderDataSentryError;
+export const renderFakeReceiptInputSchema = z.object({
+  _type: z.literal('fake-receipt'),
+  topic: z
+    .string()
+    .trim()
+    .min(2)
+    .max(80)
+    .refine(value => !/[\r\n]/.test(value), { message: 'Newlines are not allowed' })
+    .refine(value => !/<[^>]+>/.test(value), { message: 'HTML/XML tags are not allowed' }),
+});
+
+export const renderFakeReceiptDataSchema = z.object({
+  _type: z.literal('fake-receipt'),
+  topic: z.string(),
+  storeName: z.string(),
+  storeAddress: z.string(),
+  cashierName: z.string(),
+  paymentMethod: z.string(),
+  items: z
+    .array(
+      z.object({
+        name: z.string(),
+        quantity: z.number().int().positive(),
+        unitPriceCents: z.number().int().nonnegative(),
+        lineTotalCents: z.number().int().nonnegative(),
+      })
+    )
+    .min(1),
+  taxRateBps: z.number().int().nonnegative(),
+  subtotalCents: z.number().int().nonnegative(),
+  taxCents: z.number().int().nonnegative(),
+  totalCents: z.number().int().nonnegative(),
+  locale: z.string(),
+  currency: z.string(),
+  dateTime: z.string(),
+  footerMessage: z.string(),
+});
+
+export type RenderInputFakeReceipt = z.infer<typeof renderFakeReceiptInputSchema>;
+export type RenderDataFakeReceipt = z.infer<typeof renderFakeReceiptDataSchema>;
+
+export type RenderData =
+  | RenderDataLargeText
+  | RenderDataSudoku
+  | RenderDataTodoList
+  | RenderDataSentryError
+  | RenderDataFakeReceipt;

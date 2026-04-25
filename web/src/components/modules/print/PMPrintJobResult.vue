@@ -6,7 +6,7 @@
       <span v-else>Print completed</span>
     </p>
     <p v-if="env.VITE_ENV === 'development' && props.renderData">
-      <a :href="`/render.html?data=${encodeURIComponent(encodeRenderData(props.renderData))}`" target="_blank"
+      <a :href="`/render.html?data=${encodeRenderData(props.renderData)}`" target="_blank"
         >View Render</a
       >
     </p>

@@ -1,5 +1,6 @@
 import {
   FILE_UPLOAD_OPTIONS,
+  renderFakeReceiptInputSchema,
   renderLargeTextDataSchema,
   renderSentryErrorInputSchema,
   renderSudokuDataSchema,
@@ -13,6 +14,7 @@ import { bearerAuth } from 'hono/bearer-auth';
 import { bodyLimit } from 'hono/body-limit';
 import { HTTPException } from 'hono/http-exception';
 import { env } from '../env.js';
+import { generateFakeReceipt } from '../utils/fake-receipt.js';
 import { convertImageToPrintData } from '../utils/image.js';
 import { print } from '../utils/printer.js';
 import { renderToPng, renderWebsiteToPng } from '../utils/render.js';
@@ -76,6 +78,18 @@ app.post('/print/sentry-error', bearerAuth({ token: env.SENTRY_ERROR_TOKEN }), a
   const body = await c.req.json();
   const parsedData = renderSentryErrorInputSchema.parse(body);
   const data = { ...parsedData, data: parsedData.data as SentryWebhookPayload };
+
+  const printData = () => renderToPng(data).then(image => convertImageToPrintData(image));
+  const { jobId } = print(printData, { printQuality: 'highPrint', cutPaper: true });
+  return c.json({ success: true, jobId, renderData: data } satisfies PrintSubmitResponse);
+});
+
+app.post('/print/fake-receipt', async c => {
+  const body = await c.req.json();
+  const { topic } = renderFakeReceiptInputSchema.parse(body);
+
+  const receipt = await generateFakeReceipt(topic);
+  const data = { _type: 'fake-receipt' as const, topic, ...receipt };
 
   const printData = () => renderToPng(data).then(image => convertImageToPrintData(image));
   const { jobId } = print(printData, { printQuality: 'highPrint', cutPaper: true });

@@ -23,6 +23,10 @@
         <div class="icon"><BaseIcon icon="check" size="large" /></div>
         <div class="title">Todo List</div>
       </RouterLink>
+      <RouterLink class="card" :to="{ name: 'fake-receipt' }">
+        <div class="icon"><BaseIcon icon="receipt-sharp" size="large" /></div>
+        <div class="title">Fake Receipt</div>
+      </RouterLink>
     </div>
   </div>
 </template>

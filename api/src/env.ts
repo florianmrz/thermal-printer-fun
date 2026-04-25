@@ -6,6 +6,9 @@ const envSchema = z.object({
   SENTRY_ERROR_TOKEN: z.string().min(32),
   WEB_APP_BASE_URL: z.url(),
   RENDER_BASE_URL: z.url(),
+  AWS_REGION: z.string().min(2),
+  AWS_BEDROCK_MODEL_ID: z.string().min(10),
+  AWS_BEDROCK_API_KEY: z.string().min(32),
 });
 
 export const env = envSchema.parse(process.env);

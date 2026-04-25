@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import PMCamera from '../components/modules/print/PMCamera.vue';
+import PMFakeReceipt from '../components/modules/print/PMFakeReceipt.vue';
 import PMLargeText from '../components/modules/print/PMLargeText.vue';
 import PMSudoku from '../components/modules/print/PMSudoku.vue';
 import PMTodoList from '../components/modules/print/PMTodoList.vue';
@@ -39,6 +40,11 @@ const router = createRouter({
       path: '/todo-list',
       name: 'todo-list',
       component: PMTodoList,
+    },
+    {
+      path: '/fake-receipt',
+      name: 'fake-receipt',
+      component: PMFakeReceipt,
     },
     {
       path: '/website',
