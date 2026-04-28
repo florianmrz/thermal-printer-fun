@@ -1,6 +1,7 @@
-import { bedrock, createAmazonBedrock } from '@ai-sdk/amazon-bedrock';
+import { createAmazonBedrock } from '@ai-sdk/amazon-bedrock';
 import type { RenderDataFakeReceipt } from '@thermal-printer-fun/shared';
 import { generateText, Output } from 'ai';
+import Replicate, { type FileOutput } from 'replicate';
 import { z } from 'zod';
 import { env } from '../env.js';
 
@@ -76,12 +77,8 @@ function recomputeTotals(
   return { subtotalCents, taxCents, totalCents, taxRateBps: effectiveTaxRateBps };
 }
 
-export async function generateFakeReceipt(topic: string): Promise<Omit<RenderDataFakeReceipt, '_type' | 'topic'>> {
-  let lastError: unknown;
-
-  for (let attempt = 0; attempt < 3; attempt++) {
-    try {
-      const prompt = `You are generating the contents of a fake, fictional receipt for a store that sells things related to the topic: "${topic}".
+async function generateReceiptContent(topic: string) {
+  const prompt = `You are generating the contents of a fake, fictional receipt for a store that sells things related to the topic: "${topic}".
 
 The receipt should look mostly realistic but with some fun or fitting details. Make the store name, products, cashier, and footer reflect the theme of the topic.
 
@@ -90,39 +87,60 @@ Keep product names short (max 30 chars). Keep store name max 30 chars. Keep stor
 
 Do NOT output anything harmful, offensive, or containing real people's personal data.`;
 
-      const bedrock = createAmazonBedrock({ apiKey: env.AWS_BEDROCK_API_KEY });
-      const { output: receipt } = await generateText({
-        model: bedrock(env.AWS_BEDROCK_MODEL_ID),
-        output: Output.object({ schema: aiReceiptSchema }),
-        prompt,
-      });
+  const bedrock = createAmazonBedrock({ apiKey: env.AWS_BEDROCK_API_KEY });
+  const { output: receipt } = await generateText({
+    model: bedrock(env.AWS_BEDROCK_MODEL_ID),
+    output: Output.object({ schema: aiReceiptSchema }),
+    prompt,
+  });
 
-      if (env.ENV === 'development') {
-        console.log('Generated receipt:', JSON.stringify(receipt, null, 2));
-      }
+  return receipt;
+}
 
-      const items = normalizeItems(receipt.items);
-      const { subtotalCents, taxCents, totalCents, taxRateBps } = recomputeTotals(items, receipt.taxRateBps);
+async function generateLogoUrl(topic: string): Promise<string> {
+  const replicate = new Replicate({
+    auth: env.REPLICATE_API_KEY,
+  });
+  const model = 'black-forest-labs/flux-schnell';
 
-      return {
-        storeName: receipt.storeName.slice(0, 40),
-        storeAddress: receipt.storeAddress.slice(0, 80),
-        cashierName: receipt.cashierName.slice(0, 30),
-        paymentMethod: receipt.paymentMethod.slice(0, 20),
-        items,
-        taxRateBps,
-        subtotalCents,
-        taxCents,
-        totalCents,
-        locale: receipt.locale ?? DEFAULT_LOCALE,
-        currency: receipt.currency ?? DEFAULT_CURRENCY,
-        dateTime: receipt.dateTime ?? new Date().toISOString(),
-        footerMessage: receipt.footerMessage.slice(0, 120),
-      };
-    } catch (error) {
-      lastError = error;
-    }
+  /**
+   * @see https://replicate.com/black-forest-labs/flux-schnell/api/schema#input-schema
+   */
+  const input = {
+    prompt: `A simple logo for a store selling products related to the topic: "${topic}". The logo should have a white background. Avoid text in the logo.`,
+    megapixels: '0.25', // 512x512
+  };
+
+  const [output] = (await replicate.run(model, { input })) as [FileOutput];
+
+  return output.url().toString();
+}
+
+export async function generateFakeReceipt(topic: string): Promise<Omit<RenderDataFakeReceipt, '_type' | 'topic'>> {
+  const receipt = await generateReceiptContent(topic);
+  const storeLogoUrl = await generateLogoUrl(topic);
+
+  if (env.ENV === 'development') {
+    console.log('Generated receipt:', JSON.stringify(receipt, null, 2));
   }
 
-  throw lastError;
+  const items = normalizeItems(receipt.items);
+  const { subtotalCents, taxCents, totalCents, taxRateBps } = recomputeTotals(items, receipt.taxRateBps);
+
+  return {
+    storeLogoUrl,
+    storeName: receipt.storeName.slice(0, 40),
+    storeAddress: receipt.storeAddress.slice(0, 80),
+    cashierName: receipt.cashierName.slice(0, 30),
+    paymentMethod: receipt.paymentMethod.slice(0, 20),
+    items,
+    taxRateBps,
+    subtotalCents,
+    taxCents,
+    totalCents,
+    locale: receipt.locale ?? DEFAULT_LOCALE,
+    currency: receipt.currency ?? DEFAULT_CURRENCY,
+    dateTime: receipt.dateTime ?? new Date().toISOString(),
+    footerMessage: receipt.footerMessage.slice(0, 120),
+  };
 }

@@ -94,6 +94,7 @@ export const renderFakeReceiptInputSchema = z.object({
 export const renderFakeReceiptDataSchema = z.object({
   _type: z.literal('fake-receipt'),
   topic: z.string(),
+  storeLogoUrl: z.url(),
   storeName: z.string(),
   storeAddress: z.string(),
   cashierName: z.string(),

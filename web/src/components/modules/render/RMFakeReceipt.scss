@@ -7,120 +7,130 @@
   background: #fff;
   padding: 10px 8px;
   box-sizing: border-box;
+}
 
-  .store-header {
-    text-align: center;
-    margin-bottom: 6px;
+.store-header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: center;
+  margin-bottom: 6px;
 
-    .store-name {
-      font-size: 20px;
-      font-weight: bold;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-    }
-
-    .store-address {
-      font-size: 13px;
-    }
+  .store-logo {
+    width: 160px;
+    height: 160px;
+    object-fit: contain;
+    margin: 0 auto;
   }
 
-  .divider {
-    border: none;
-    border-top: 1px solid #000;
-    margin: 5px 0;
-
-    &.double {
-      border-top: 3px double #000;
-    }
-  }
-
-  .col-header {
-    text-align: right;
-    font-size: 13px;
-    margin-bottom: 2px;
-  }
-
-  .items {
-    .item {
-      margin-bottom: 2px;
-
-      .item-row {
-        display: flex;
-        justify-content: space-between;
-        gap: 4px;
-
-        .item-name {
-          flex: 1;
-          text-transform: uppercase;
-        }
-
-        .item-total {
-          flex-shrink: 0;
-          font-weight: bold;
-          text-align: right;
-          min-width: 5em;
-        }
-      }
-
-      .item-sub {
-        padding-left: 1em;
-        font-size: 13px;
-        color: #333;
-      }
-    }
-  }
-
-  .totals {
-    .totals-row {
-      display: flex;
-      justify-content: space-between;
-    }
-  }
-
-  .total-row {
-    display: flex;
-    justify-content: space-between;
+  .store-name {
     font-size: 20px;
     font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
   }
 
-  .payment-row {
-    display: flex;
-    justify-content: space-between;
-    font-size: 15px;
+  .store-address {
+    font-size: 13px;
   }
+}
 
-  .tax-table {
-    font-size: 12px;
+.divider {
+  border: none;
+  border-top: 1px solid #000;
+  margin: 5px 0;
 
-    .tax-header,
-    .tax-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1fr;
+  &.double {
+    border-top: 3px double #000;
+  }
+}
+
+.col-header {
+  text-align: right;
+  font-size: 13px;
+  margin-bottom: 2px;
+}
+
+.items {
+  .item {
+    margin-bottom: 2px;
+
+    .item-row {
+      display: flex;
+      justify-content: space-between;
       gap: 4px;
 
-      span:not(:first-child) {
+      .item-name {
+        flex: 1;
+        text-transform: uppercase;
+      }
+
+      .item-total {
+        flex-shrink: 0;
+        font-weight: bold;
         text-align: right;
+        min-width: 5em;
       }
     }
 
-    .tax-header {
-      font-weight: bold;
-      border-bottom: 1px solid #000;
-      margin-bottom: 1px;
+    .item-sub {
+      padding-left: 1em;
+      font-size: 13px;
+      color: #333;
+    }
+  }
+}
+
+.totals {
+  .totals-row {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.payment-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 15px;
+}
+
+.tax-table {
+  font-size: 12px;
+
+  .tax-header,
+  .tax-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 4px;
+
+    span:not(:first-child) {
+      text-align: right;
     }
   }
 
-  .receipt-meta {
-    display: flex;
-    justify-content: space-between;
-    font-size: 13px;
+  .tax-header {
+    font-weight: bold;
+    border-bottom: 1px solid #000;
+    margin-bottom: 1px;
   }
+}
 
-  .footer {
-    text-align: center;
-    font-size: 13px;
-    font-style: italic;
-    margin-top: 2px;
-  }
+.receipt-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+.footer {
+  text-align: center;
+  font-size: 13px;
+  font-style: italic;
+  margin-top: 2px;
 }

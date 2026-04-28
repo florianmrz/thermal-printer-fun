@@ -1,6 +1,7 @@
 <template>
   <div class="rm-fake-receipt">
     <div class="store-header">
+      <img class="store-logo" :src="props.data.storeLogoUrl" />
       <div class="store-name">{{ props.data.storeName }}</div>
       <div class="store-address">{{ props.data.storeAddress }}</div>
     </div>
@@ -41,7 +42,8 @@
     <div class="divider double"></div>
 
     <div class="payment-row">
-      <span>{{ props.data.paymentMethod }}</span><span>{{ formatAmount(props.data.totalCents) }}</span>
+      <span>{{ props.data.paymentMethod }}</span
+      ><span>{{ formatAmount(props.data.totalCents) }}</span>
     </div>
 
     <div class="divider"></div>
@@ -65,7 +67,7 @@
 
     <div class="receipt-meta">
       <span>{{ props.data.cashierName }}</span>
-      <span>{{ formattedDate }}  {{ formattedTime }}</span>
+      <span>{{ formattedDate }} {{ formattedTime }}</span>
     </div>
 
     <div class="divider"></div>
@@ -81,21 +83,18 @@ import type { RenderModuleProps } from './types';
 
 const props = defineProps<RenderModuleProps<RenderDataFakeReceipt>>();
 
-const formatter = computed(() =>
-  new Intl.NumberFormat(props.data.locale, {
-    style: 'currency',
-    currency: props.data.currency,
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })
+const currencyFormatter = computed(
+  () =>
+    new Intl.NumberFormat(props.data.locale, {
+      style: 'currency',
+      currency: props.data.currency,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })
 );
 
-function formatMoney(cents: number): string {
-  return formatter.value.format(cents / 100);
-}
-
 function formatAmount(cents: number): string {
-  return (cents / 100).toFixed(2);
+  return currencyFormatter.value.format(cents / 100);
 }
 
 const taxRateDisplay = computed(() => {
@@ -104,15 +103,11 @@ const taxRateDisplay = computed(() => {
 });
 
 const formattedDate = computed(() => {
-  return new Intl.DateTimeFormat(props.data.locale, { dateStyle: 'short' }).format(
-    new Date(props.data.dateTime)
-  );
+  return new Intl.DateTimeFormat(props.data.locale, { dateStyle: 'short' }).format(new Date(props.data.dateTime));
 });
 
 const formattedTime = computed(() => {
-  return new Intl.DateTimeFormat(props.data.locale, { timeStyle: 'short' }).format(
-    new Date(props.data.dateTime)
-  );
+  return new Intl.DateTimeFormat(props.data.locale, { timeStyle: 'short' }).format(new Date(props.data.dateTime));
 });
 
 onMounted(async () => {
