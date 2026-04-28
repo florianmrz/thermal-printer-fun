@@ -10,7 +10,6 @@
         >
 
         <input ref="fileInput" id="photo" type="file" @change="handleFileSelect" :accept="accept" />
-3
         <p class="error" v-if="uploadError">{{ uploadError }}</p>
       </template>
 
