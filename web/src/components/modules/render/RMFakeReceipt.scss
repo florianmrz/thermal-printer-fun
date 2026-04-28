@@ -1,60 +1,62 @@
 .rm-fake-receipt {
   width: 100%;
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 15px;
+  font-family: 'Courier New', monospace;
+  font-size: 24px;
   line-height: 1.4;
-  color: #000;
   background: #fff;
-  padding: 10px 8px;
   box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+* {
+  font-weight: 600;
 }
 
 .store-header {
   display: flex;
   flex-direction: column;
-  gap: 12px;
   text-align: center;
-  margin-bottom: 6px;
+  margin-bottom: 32px;
+  font-family: 'Arial', sans-serif;
 
   .store-logo {
-    width: 160px;
-    height: 160px;
-    object-fit: contain;
-    margin: 0 auto;
+    width: 100%;
+    height: auto;
+    margin-bottom: 8px;
   }
 
   .store-name {
-    font-size: 20px;
-    font-weight: bold;
+    font-size: 36px;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
   }
 
-  .store-address {
-    font-size: 13px;
+  .store-info {
+    font-size: 24px;
   }
 }
 
 .divider {
   border: none;
-  border-top: 1px solid #000;
-  margin: 5px 0;
+  border-top: 2px solid #000;
+  margin: 6px 0;
 
   &.double {
-    border-top: 3px double #000;
+    height: 12px;
+    border-bottom: 2px solid #000;
   }
 }
 
-.col-header {
+.price-info {
   text-align: right;
-  font-size: 13px;
   margin-bottom: 2px;
+  font-size: 20px;
 }
 
 .items {
   .item {
-    margin-bottom: 2px;
-
     .item-row {
       display: flex;
       justify-content: space-between;
@@ -67,7 +69,7 @@
 
       .item-total {
         flex-shrink: 0;
-        font-weight: bold;
+        font-weight: 600;
         text-align: right;
         min-width: 5em;
       }
@@ -75,13 +77,14 @@
 
     .item-sub {
       padding-left: 1em;
-      font-size: 13px;
-      color: #333;
+      font-size: 20px;
     }
   }
 }
 
 .totals {
+  margin: 16px 0;
+
   .totals-row {
     display: flex;
     justify-content: space-between;
@@ -91,24 +94,27 @@
 .total-row {
   display: flex;
   justify-content: space-between;
-  font-size: 20px;
-  font-weight: bold;
+  margin: 16px 0;
+
+  > span {
+    font-weight: 900;
+    font-size: 48px;
+    text-transform: uppercase;
+  }
 }
 
 .payment-row {
   display: flex;
   justify-content: space-between;
-  font-size: 15px;
+  margin: 16px 0;
 }
 
 .tax-table {
-  font-size: 12px;
-
   .tax-header,
   .tax-row {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: 4px;
+    gap: 8px;
 
     span:not(:first-child) {
       text-align: right;
@@ -116,21 +122,49 @@
   }
 
   .tax-header {
-    font-weight: bold;
+    font-weight: 600;
     border-bottom: 1px solid #000;
     margin-bottom: 1px;
   }
 }
 
 .receipt-meta {
-  display: flex;
-  justify-content: space-between;
-  font-size: 13px;
+  margin-top: 32px;
+
+  > div {
+    display: flex;
+    justify-content: space-between;
+
+    > span:first-child {
+      font-weight: 600;
+    }
+  }
 }
 
-.footer {
+.barcode {
+  width: 100%;
+  height: auto;
+  margin-top: 36px;
+}
+
+.footer-row {
   text-align: center;
-  font-size: 13px;
-  font-style: italic;
-  margin-top: 2px;
+  margin-top: 16px;
+}
+
+.qr-code {
+  display: flex;
+  justify-content: center;
+  margin-top: 48px;
+}
+
+
+.fake-watermark {
+  position: fixed;
+  top: 800px;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  font-size: 280px;
+  font-weight: 900;
+  color: rgba(0, 0, 0, 0.3);
 }

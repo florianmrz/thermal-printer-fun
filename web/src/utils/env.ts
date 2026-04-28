@@ -3,6 +3,7 @@ import z from 'zod';
 const { data: env, error } = z
   .object({
     VITE_ENV: z.enum(['development', 'production']),
+    VITE_BASE_URL: z.url(),
     VITE_API_BASE_URL: z.url(),
   })
   .safeParse(import.meta.env);

@@ -1,0 +1,16 @@
+{
+  "fakeReceipt": {
+    "cashier": "Cashier name",
+    "date": "Date",
+    "gross": "Gross",
+    "net": "Net",
+    "priceInfo": "All prices in {currency}",
+    "subtotal": "Subtotal",
+    "tax": "Tax",
+    "taxAmount": "Tax amt",
+    "taxWithRate": "Tax ({rate})",
+    "total": "Total",
+    "visitUs": "Visit us: {url}",
+    "watermark": "FAKE"
+  }
+}

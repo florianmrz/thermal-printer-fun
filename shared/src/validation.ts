@@ -96,7 +96,9 @@ export const renderFakeReceiptDataSchema = z.object({
   topic: z.string(),
   storeLogoUrl: z.url(),
   storeName: z.string(),
-  storeAddress: z.string(),
+  storeAddress: z.array(z.string()).min(1).max(3),
+  storePhoneNumber: z.string().optional(),
+  storeWebsiteUrl: z.url(),
   cashierName: z.string(),
   paymentMethod: z.string(),
   items: z
@@ -115,7 +117,6 @@ export const renderFakeReceiptDataSchema = z.object({
   totalCents: z.number().int().nonnegative(),
   locale: z.string(),
   currency: z.string(),
-  dateTime: z.string(),
   footerMessage: z.string(),
 });
 

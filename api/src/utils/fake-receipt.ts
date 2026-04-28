@@ -9,13 +9,15 @@ const DEFAULT_LOCALE = 'de-DE';
 const DEFAULT_CURRENCY = 'EUR';
 const DEFAULT_TAX_RATE_BPS = 1900;
 
-const ALLOWED_LOCALES = new Set(['de-DE', 'en-US', 'en-GB', 'fr-FR', 'es-ES', 'it-IT', 'ja-JP', 'zh-CN']);
+const ALLOWED_LOCALES = new Set(['de-DE', 'en-US', 'en-GB']);
 
-const ALLOWED_CURRENCIES = new Set(['EUR', 'USD', 'GBP', 'JPY', 'CHF', 'AUD', 'CAD', 'SEK', 'NOK', 'DKK']);
+const ALLOWED_CURRENCIES = new Set(['EUR', 'USD', 'GBP']);
 
 const aiReceiptSchema = z.object({
   storeName: z.string().describe('Name of the store or business'),
-  storeAddress: z.string().describe('Store address, one line'),
+  storeAddress: z.string().describe('Address of the store, multi-line separated by commas or newlines'),
+  storePhoneNumber: z.string().optional().describe('Phone number of the store (optional)'),
+  storeWebsiteUrl: z.url().describe('URL of the store website'),
   cashierName: z.string().describe('First name of the cashier'),
   paymentMethod: z.string().describe('Payment method, e.g. Cash, Visa, Mastercard'),
   items: z
@@ -44,12 +46,6 @@ const aiReceiptSchema = z.object({
     .default(DEFAULT_CURRENCY)
     .nullable()
     .describe('ISO 4217 currency code appropriate for the locale, e.g. EUR or USD. Null to use default.'),
-  dateTime: z
-    .string()
-    .nullable()
-    .describe(
-      'ISO 8601 datetime string for the receipt, e.g. 2024-06-15T14:32:00. Should be realistic for the context. Null to use server time.'
-    ),
   footerMessage: z
     .string()
     .describe(
@@ -80,10 +76,16 @@ function recomputeTotals(
 async function generateReceiptContent(topic: string) {
   const prompt = `You are generating the contents of a fake, fictional receipt for a store that sells things related to the topic: "${topic}".
 
-The receipt should look mostly realistic but with some fun or fitting details. Make the store name, products, cashier, and footer reflect the theme of the topic.
+The receipt should look mostly realistic but have some fun or fitting details. Make the store name, products, cashier, and footer reflect the theme of the topic.
 
 Generate prices in the minor currency units (cents for EUR/USD, yen for JPY, etc.) that make sense for the type of products.
-Keep product names short (max 30 chars). Keep store name max 30 chars. Keep storeAddress to one concise line.
+Keep product names short (max 30 chars). Keep store name max 30 chars.
+
+Feel free to include a phone number and website URL that look plausible but are not real. The address can be fictional but should have a realistic format.
+
+Use a tax rate that makes sense for the locale (e.g. 19% for Germany, 10% for US food items, etc.).
+
+Ensure that all details reflect the locale you choose for the receipt (allowed locales: ${[...ALLOWED_LOCALES].join(', ')}).
 
 Do NOT output anything harmful, offensive, or containing real people's personal data.`;
 
@@ -107,8 +109,9 @@ async function generateLogoUrl(topic: string): Promise<string> {
    * @see https://replicate.com/black-forest-labs/flux-schnell/api/schema#input-schema
    */
   const input = {
-    prompt: `A simple logo for a store selling products related to the topic: "${topic}". The logo should have a white background. Avoid text in the logo.`,
-    megapixels: '0.25', // 512x512
+    prompt: `A simple logo for a store selling products related to the topic: "${topic}". White background. Avoid text in the logo.`,
+    megapixels: '0.25',
+    aspect_ratio: '16:9',
   };
 
   const [output] = (await replicate.run(model, { input })) as [FileOutput];
@@ -130,7 +133,9 @@ export async function generateFakeReceipt(topic: string): Promise<Omit<RenderDat
   return {
     storeLogoUrl,
     storeName: receipt.storeName.slice(0, 40),
-    storeAddress: receipt.storeAddress.slice(0, 80),
+    storeAddress: receipt.storeAddress.slice(0, 240).split(/[\n,]/),
+    storePhoneNumber: receipt.storePhoneNumber?.slice(0, 30),
+    storeWebsiteUrl: receipt.storeWebsiteUrl.slice(0, 120),
     cashierName: receipt.cashierName.slice(0, 30),
     paymentMethod: receipt.paymentMethod.slice(0, 20),
     items,
@@ -140,7 +145,6 @@ export async function generateFakeReceipt(topic: string): Promise<Omit<RenderDat
     totalCents,
     locale: receipt.locale ?? DEFAULT_LOCALE,
     currency: receipt.currency ?? DEFAULT_CURRENCY,
-    dateTime: receipt.dateTime ?? new Date().toISOString(),
     footerMessage: receipt.footerMessage.slice(0, 120),
   };
 }

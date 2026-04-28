@@ -17,16 +17,20 @@
   "dependencies": {
     "@thermal-printer-fun/shared": "file:../shared",
     "@vueuse/core": "^14.2.1",
+    "jsbarcode": "^3.12.3",
     "pixelarticons": "^2.0.2",
+    "qrcode": "^1.5.4",
     "sudoku-gen": "^1.0.2",
     "vee-validate": "^5.0.0-beta.0",
     "vue": "^3.5.29",
+    "vue-i18n": "^11.4.0",
     "vue-router": "^5.0.3",
     "zod": "^4.3.6"
   },
   "devDependencies": {
     "@tsconfig/node24": "^24.0.4",
     "@types/node": "^24.11.0",
+    "@types/qrcode": "^1.5.6",
     "@vitejs/plugin-vue": "^6.0.4",
     "@vue/eslint-config-typescript": "^14.7.0",
     "@vue/tsconfig": "^0.8.1",

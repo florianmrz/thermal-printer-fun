@@ -1,0 +1,16 @@
+{
+  "fakeReceipt": {
+    "cashier": "Es bediente Sie",
+    "date": "Datum",
+    "gross": "Brutto",
+    "net": "Netto",
+    "priceInfo": "Alle Preise in {currency}",
+    "subtotal": "Zwischensumme",
+    "tax": "Steuer",
+    "taxAmount": "MwSt.",
+    "taxWithRate": "MwSt. ({rate})",
+    "total": "Summe",
+    "visitUs": "Besuchen Sie uns: {url}",
+    "watermark": "FAKE"
+  }
+}
