@@ -1,8 +1,14 @@
 <template>
   <section class="pm-todo-list print-module">
-    <PMItemHeader
-      title="Todo List"
-      description='Create a printable checklist.<br/>("Enter" to add, "Backspace" to remove an item).' />
+    <PMItemHeader moduleId="todo-list" />
+
+    <p class="tip">
+      Hotkeys:
+      <br />
+      "Enter" to add an item
+      <br />
+      "Backspace" to remove an empty item
+    </p>
 
     <form class="form" @submit.prevent="onSubmit">
       <BaseInput

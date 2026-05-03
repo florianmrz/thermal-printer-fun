@@ -1,13 +1,12 @@
 <template>
   <section class="pm-upload print-module">
-    <PMItemHeader title="Upload" description="Select an image from your device to print." />
+    <PMItemHeader moduleId="upload" />
 
     <form class="form" @submit="handleSubmit">
       <template v-if="!file">
         <label ref="dropzone" class="dropzone" :class="{ 'is-over': isOverDropZone }" for="photo">
-          <BaseIcon icon="upload-sharp" size="large" />
-          Upload a file</label
-        >
+          <span class="label">Upload a file</span>
+        </label>
 
         <input ref="fileInput" id="photo" type="file" @change="handleFileSelect" :accept="accept" />
         <p class="error" v-if="uploadError">{{ uploadError }}</p>
@@ -33,7 +32,6 @@ import { useDropZone } from '@vueuse/core';
 import { computed, ref, useTemplateRef } from 'vue';
 import { submitImagePrint } from '../../../utils/api';
 import BaseButton from '../../base/BaseButton/BaseButton.vue';
-import BaseIcon from '../../base/BaseIcon/BaseIcon.vue';
 import PMItemHeader from './PMItemHeader.vue';
 import PMPrintJobResult from './PMPrintJobResult.vue';
 const $dropzone = useTemplateRef('dropzone');

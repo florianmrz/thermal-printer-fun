@@ -1,6 +1,6 @@
 <template>
   <section class="pm-sudoku print-module">
-    <PMItemHeader title="Sudoku" description="Print a Sudoku puzzle to solve on paper." />
+    <PMItemHeader moduleId="sudoku" />
 
     <form class="form" @submit.prevent="onSubmit">
       <BaseSelect

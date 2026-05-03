@@ -2,14 +2,39 @@
 @use '~/assets/styles/typography';
 
 .home-view {
-  padding: 12px 0 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  padding: 56px 0 24px;
+
+  @media (min-width: 1280px) {
+    padding: 128px 0 24px;
+    gap: 64px;
+  }
+}
+
+.headline-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+}
+
+.title {
+  @include typography.text-heading;
+  margin: 0;
+}
+
+.description {
+  @include typography.text-small;
+  margin: 0;
+  color: variables.$neutral-600_grey;
 }
 
 .card-container {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 12px;
-  padding: 20px 0;
 
   @media (min-width: 640px) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -35,17 +60,11 @@
   color: variables.$neutral-1000_black;
   text-decoration: none;
   transition: 0.2s ease;
-  transition-property: transform, box-shadow;
+  transition-property: box-shadow;
   outline-offset: 2px;
 
   &:hover {
-    transform: translateY(-2px);
     box-shadow: 4px 4px 0 variables.$neutral-300;
-  }
-
-  .icon {
-    font-size: 32px;
-    margin-bottom: 2px;
   }
 
   .title {

@@ -3,7 +3,7 @@
     <div class="global-container">
       <div class="header-container">
         <RouterLink :to="{ name: 'home' }" class="logo">
-          <BaseIcon icon="printer" size="large" />
+          <BaseDitheredImage :src="`/images/logo.png`" :size="64" />
         </RouterLink>
 
         <nav class="nav-links" aria-label="Print modules">
@@ -44,6 +44,7 @@ import { printModules } from '../../../utils/print-modules';
 import BaseIcon from '../../base/BaseIcon/BaseIcon.vue';
 import BaseNavLink from '../../base/BaseNavLink/BaseNavLink.vue';
 import BaseSelect from '../../base/BaseSelect/BaseSelect.vue';
+import BaseDitheredImage from '../../base/BaseDitheredImage/BaseDitheredImage.vue';
 
 const route = useRoute();
 const router = useRouter();

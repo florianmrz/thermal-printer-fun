@@ -1,6 +1,11 @@
 @use '~/assets/styles/variables';
 @use '~/assets/styles/typography';
 
+.tip {
+  @include typography.text-small;
+  color: variables.$neutral-600_grey;
+}
+
 .error {
   @include typography.text-small;
   color: variables.$color-error;

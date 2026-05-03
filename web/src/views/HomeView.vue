@@ -1,10 +1,11 @@
 <template>
   <div class="home-view">
+    <div class="headline-container">
+      <h1 class="title">Thermal Printer</h1>
+      <p class="description">Choose one of the print modules below to use the printer.</p>
+    </div>
     <div class="card-container">
       <RouterLink v-for="module in printModules" :key="module.id" class="card" :to="{ name: module.id }">
-        <div class="icon">
-          <BaseIcon :icon="module.icon" size="large" />
-        </div>
         <div class="title">{{ module.name }}</div>
         <div class="description">{{ module.description }}</div>
       </RouterLink>
@@ -14,7 +15,6 @@
 
 <script setup lang="ts">
 import { RouterLink } from 'vue-router';
-import BaseIcon from '../components/base/BaseIcon/BaseIcon.vue';
 import { printModules } from '../utils/print-modules';
 </script>
 

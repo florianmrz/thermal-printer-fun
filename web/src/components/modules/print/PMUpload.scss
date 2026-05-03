@@ -12,14 +12,25 @@
   border: 2px dashed variables.$neutral-1000_black;
   aspect-ratio: 3 / 2;
   cursor: pointer;
-  transition: color 0.2s ease;
 
   &:hover {
-    color: variables.$neutral-600_grey;
+    .label {
+      box-shadow: 4px 4px 0 variables.$neutral-300;
+    }
   }
 
   &.is-over {
     border-style: solid;
+  }
+
+  .label {
+    @include typography.action-medium;
+    padding: 8px 16px;
+    border: none;
+    background-color: variables.$neutral-1000_black;
+    color: variables.$neutral-0_white;
+    transition: 0.2s ease;
+    transition-property: box-shadow;
   }
 }
 
@@ -37,4 +48,3 @@ input {
   color: variables.$color-error;
   text-align: center;
 }
-

@@ -13,6 +13,11 @@
   }
 }
 
+.icon {
+  display: flex;
+  justify-content: center;
+}
+
 .title {
   @include typography.text-heading;
 }

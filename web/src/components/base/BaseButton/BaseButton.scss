@@ -7,7 +7,7 @@
   border: none;
   cursor: pointer;
   transition: 0.2s ease;
-  transition-property: transform, box-shadow;
+  transition-property: box-shadow;
   outline-offset: 2px;
 
   &.is-filled {
@@ -28,7 +28,6 @@
   }
 
   &:hover {
-    transform: translateY(-2px);
     box-shadow: 4px 4px 0 variables.$neutral-300;
   }
 

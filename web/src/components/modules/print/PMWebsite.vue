@@ -1,6 +1,6 @@
 <template>
   <section class="pm-website print-module">
-    <PMItemHeader title="Website" description="Is your website thermal-printer ready?" />
+    <PMItemHeader moduleId="website" />
 
     <form class="form" @submit.prevent="onSubmit">
       <BaseInput

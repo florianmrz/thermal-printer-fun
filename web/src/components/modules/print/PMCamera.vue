@@ -1,11 +1,10 @@
 <template>
   <section class="pm-camera print-module">
-    <PMItemHeader title="Camera" description="Capture a photo using your camera and print it." />
+    <PMItemHeader moduleId="camera" />
 
     <form class="form" @submit="handleSubmit">
       <div class="video-container" :class="{ 'is-streaming': isStreaming }">
         <template v-if="!isStreaming">
-          <BaseIcon icon="camera" size="large" />
           <BaseButton type="button" @click="() => startCamera()">Start camera</BaseButton>
         </template>
 

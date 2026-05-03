@@ -1,6 +1,6 @@
 <template>
   <section class="pm-large-text print-module">
-    <PMItemHeader title="Large Text" description="Enter a short text and print it in a large format." />
+    <PMItemHeader moduleId="large-text" />
 
     <form class="form" @submit.prevent="onSubmit">
       <BaseInput
