@@ -1,0 +1,99 @@
+@use '~/assets/styles/variables';
+@use '~/assets/styles/typography';
+
+.pm-printer-status {
+  display: inline-flex;
+}
+
+.status-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 40px;
+  min-height: 40px;
+  padding: 8px;
+  border: 2px solid variables.$neutral-1000_black;
+  background-color: variables.$neutral-200;
+  color: variables.$neutral-1000_black;
+  cursor: help;
+  transition: 0.2s ease;
+  transition-property: box-shadow;
+
+  &:focus-visible {
+    outline: 2px solid variables.$neutral-1000_black;
+    outline-offset: 2px;
+  }
+
+  &.is-connected {
+    background-color: variables.$green-300;
+    color: variables.$green-950;
+  }
+
+  &.is-disconnected {
+    background-color: variables.$red-300;
+    color: variables.$red-900;
+  }
+
+  @media (min-width: 1280px) {
+    gap: 8px;
+    justify-content: flex-start;
+    padding: 6px 12px;
+  }
+}
+
+.trigger-divider {
+  width: 2px;
+  height: 16px;
+  background-color: currentColor;
+}
+
+.queue-count {
+  @include typography.action-medium-1280;
+  min-width: 8px;
+  text-align: center;
+}
+
+.status-popover {
+  @include typography.text-small;
+  width: min(320px, calc(100vw - 16px));
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  color: variables.$neutral-600_grey;
+
+  :deep(hr) {
+    border: none;
+    border-top: 2px solid variables.$neutral-300;
+  }
+}
+
+.status-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.status-headline {
+  @include typography.text-medium;
+  font-weight: variables.$font-weight-bold;
+  text-transform: uppercase;
+  color: variables.$color-body;
+}
+
+.status-text {
+  text-transform: uppercase;
+}
+
+.queue-list {
+  margin: 6px 0 0;
+  padding-left: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.queue-item {
+  overflow-wrap: anywhere;
+}

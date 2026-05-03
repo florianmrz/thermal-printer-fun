@@ -1,5 +1,4 @@
 @use '~/assets/styles/variables';
-@use '~/assets/styles/typography';
 
 .bm-header {
   height: variables.$header-height;
@@ -41,38 +40,6 @@
   }
 }
 
-.printer-status-wrapper {
-  margin-left: auto;
-}
-
 .printer-status {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 12px;
   margin-left: auto;
-  background-color: variables.$neutral-200;
-
-  &.is-disconnected {
-    background-color: variables.$red-300;
-    color: variables.$red-900;
-
-    .printer-status-indicator {
-      color: variables.$red-900;
-    }
-  }
-
-  &.is-connected {
-    background-color: variables.$green-300;
-    color: variables.$green-950;
-
-    .printer-status-indicator {
-      color: variables.$green-950;
-    }
-  }
-}
-
-.printer-status-text {
-  @include typography.action-medium;
-  text-transform: uppercase;
 }

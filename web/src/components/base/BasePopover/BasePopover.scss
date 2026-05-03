@@ -1,0 +1,14 @@
+@use '~/assets/styles/variables';
+
+.base-popover {
+  position: relative;
+  display: inline-flex;
+}
+
+.content {
+  width: max-content;
+  border: 2px solid variables.$neutral-1000_black;
+  background-color: variables.$neutral-0_white;
+  box-shadow: 4px 4px 0 variables.$neutral-300;
+  z-index: 20;
+}

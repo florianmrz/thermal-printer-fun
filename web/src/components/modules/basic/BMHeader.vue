@@ -20,37 +20,23 @@
           aria-label="Choose a print module"
           :options="moduleSelectOptions" />
 
-        <div class="printer-status-wrapper">
-          <div class="printer-status" :class="`is-${printerStatus}`">
-            <span class="printer-status-text"
-              >Printer: {{ printerStatus }} (Queue: {{ printerQueueJobIds?.length ?? 0 }})</span
-            >
-            <BaseIcon
-              v-if="printerStatus !== 'unknown'"
-              class="printer-status-indicator"
-              :icon="printerStatus === 'disconnected' ? 'warning-diamond' : 'check'" />
-          </div>
-        </div>
+        <PMPrinterStatus class="printer-status" />
       </div>
     </div>
   </header>
 </template>
 
 <script setup lang="ts">
-import { computed, inject } from 'vue';
+import { computed } from 'vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
-import { printerQueueJobIdsInjectionKey, printerStatusInjectionKey } from '../../../utils/keys';
 import { printModules } from '../../../utils/print-modules';
-import BaseIcon from '../../base/BaseIcon/BaseIcon.vue';
+import BaseDitheredImage from '../../base/BaseDitheredImage/BaseDitheredImage.vue';
 import BaseNavLink from '../../base/BaseNavLink/BaseNavLink.vue';
 import BaseSelect from '../../base/BaseSelect/BaseSelect.vue';
-import BaseDitheredImage from '../../base/BaseDitheredImage/BaseDitheredImage.vue';
+import PMPrinterStatus from '../print/PMPrinterStatus.vue';
 
 const route = useRoute();
 const router = useRouter();
-
-const printerStatus = inject(printerStatusInjectionKey);
-const printerQueueJobIds = inject(printerQueueJobIdsInjectionKey);
 
 const moduleSelectOptions = printModules.map(module => ({
   label: module.name,
