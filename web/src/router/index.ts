@@ -1,11 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import PMCamera from '../components/modules/print/PMCamera.vue';
-import PMFakeReceipt from '../components/modules/print/PMFakeReceipt.vue';
-import PMLargeText from '../components/modules/print/PMLargeText.vue';
-import PMSudoku from '../components/modules/print/PMSudoku.vue';
-import PMTodoList from '../components/modules/print/PMTodoList.vue';
-import PMUpload from '../components/modules/print/PMUpload.vue';
-import PMWebsite from '../components/modules/print/PMWebsite.vue';
+import { printModules } from '../utils/print-modules';
 import HomeView from '../views/HomeView.vue';
 
 const router = createRouter({
@@ -16,41 +10,12 @@ const router = createRouter({
       name: 'home',
       component: HomeView,
     },
-    {
-      path: '/upload',
-      name: 'upload',
-      component: PMUpload,
-    },
-    {
-      path: '/camera',
-      name: 'camera',
-      component: PMCamera,
-    },
-    {
-      path: '/large-text',
-      name: 'large-text',
-      component: PMLargeText,
-    },
-    {
-      path: '/sudoku',
-      name: 'sudoku',
-      component: PMSudoku,
-    },
-    {
-      path: '/todo-list',
-      name: 'todo-list',
-      component: PMTodoList,
-    },
-    {
-      path: '/fake-receipt',
-      name: 'fake-receipt',
-      component: PMFakeReceipt,
-    },
-    {
-      path: '/website',
-      name: 'website',
-      component: PMWebsite,
-    },
+
+    ...printModules.map(module => ({
+      path: `/${module.id}`,
+      name: module.id,
+      component: module.component,
+    })),
   ],
 });
 

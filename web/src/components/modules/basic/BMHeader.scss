@@ -9,7 +9,7 @@
 .header-container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 16px;
   padding: 8px 0;
 }
@@ -24,8 +24,25 @@
 }
 
 .nav-links {
-  display: flex;
-  gap: 16px;
+  display: none;
+
+  @media (min-width: 1280px) {
+    display: flex;
+    gap: 16px;
+  }
+}
+
+.nav-select {
+  flex-shrink: 1;
+  width: auto;
+
+  @media (min-width: 1280px) {
+    display: none;
+  }
+}
+
+.printer-status-wrapper {
+  margin-left: auto;
 }
 
 .printer-status {
@@ -33,6 +50,7 @@
   align-items: center;
   gap: 8px;
   padding: 6px 12px;
+  margin-left: auto;
   background-color: variables.$neutral-200;
 
   &.is-disconnected {

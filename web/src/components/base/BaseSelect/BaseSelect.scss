@@ -19,11 +19,17 @@
 
 .field {
   width: 100%;
-  padding: 16px 56px 16px 24px;
+  padding: 12px 32px 12px 16px;
   border: 2px solid variables.$neutral-1000_black;
   transition: border-color 0.2s;
   background-color: variables.$neutral-0_white;
   color: variables.$neutral-1000_black;
+  appearance: none;
+  background: transparent;
+  background-image: url("data:image/svg+xml;utf8,<svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M7 9L7 11L9 11L9 13L11 13L11 15L13 15L13 13L15 13L15 11L17 11L17 9L7 9Z' fill='currentColor'/></svg>");
+  background-repeat: no-repeat;
+  background-position-x: calc(100% - 4px);
+  background-position-y: 8px;
   cursor: pointer;
 
   &:focus-visible {

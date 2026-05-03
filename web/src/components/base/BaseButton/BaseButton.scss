@@ -7,26 +7,29 @@
   border: none;
   cursor: pointer;
   transition: 0.2s ease;
-  transition-property: background-color, color;
+  transition-property: transform, box-shadow;
   outline-offset: 2px;
 
   &.is-filled {
     background-color: variables.$neutral-1000_black;
     color: variables.$neutral-0_white;
-
-    &:hover {
-      background-color: variables.$neutral-600_grey;
-    }
   }
 
   &.is-outlined {
-    background-color: transparent;
+    background-color: variables.$neutral-0_white;
     color: variables.$neutral-1000_black;
     box-shadow: 0 0 0 2px variables.$neutral-1000_black inset;
 
     &:hover {
-      color: variables.$neutral-600_grey;
+      box-shadow:
+        0 0 0 2px variables.$neutral-1000_black inset,
+        4px 4px 0 variables.$neutral-300;
     }
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 0 variables.$neutral-300;
   }
 
   &.is-large {

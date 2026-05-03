@@ -28,7 +28,7 @@
 // text-small
 @mixin text-small-0 {
   font-family: variables.$font-family;
-  font-size: 14px;
+  font-size: 12px;
   line-height: 1.4;
   letter-spacing: 0;
 }
@@ -37,7 +37,7 @@
     font-family: variables.$font-family;
     letter-spacing: 0;
   }
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.6;
 }
 @mixin text-small {
@@ -51,7 +51,7 @@
 // text-medium
 @mixin text-medium-0 {
   font-family: variables.$font-family;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1.6;
   letter-spacing: 0;
 }
@@ -61,7 +61,7 @@
     line-height: 1.6;
     letter-spacing: 0;
   }
-  font-size: 14px;
+  font-size: 16px;
 }
 @mixin text-medium {
   @include text-medium-0;
@@ -74,7 +74,7 @@
 // text-large
 @mixin text-large-0 {
   font-family: variables.$font-family;
-  font-size: 20px;
+  font-size: 18px;
   line-height: 1.4;
   letter-spacing: 0;
 }
@@ -84,7 +84,7 @@
     line-height: 1.4;
     letter-spacing: 0;
   }
-  font-size: 18px;
+  font-size: 20px;
 }
 @mixin text-large {
   @include text-large-0;
@@ -97,7 +97,7 @@
 // action-small
 @mixin action-small-0 {
   font-family: variables.$font-family;
-  font-size: 14px;
+  font-size: 12px;
   line-height: 1.4;
   letter-spacing: 0;
   font-weight: variables.$font-weight-medium;
@@ -108,7 +108,7 @@
     letter-spacing: 0;
     font-weight: variables.$font-weight-medium;
   }
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.6;
 }
 @mixin action-small {
@@ -122,7 +122,7 @@
 // action-medium
 @mixin action-medium-0 {
   font-family: variables.$font-family;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1.6;
   letter-spacing: 0;
   font-weight: variables.$font-weight-medium;
@@ -134,7 +134,7 @@
     letter-spacing: 0;
     font-weight: variables.$font-weight-medium;
   }
-  font-size: 14px;
+  font-size: 16px;
 }
 @mixin action-medium {
   @include action-medium-0;
@@ -147,7 +147,7 @@
 // action-large
 @mixin action-large-0 {
   font-family: variables.$font-family;
-  font-size: 20px;
+  font-size: 18px;
   line-height: 1.4;
   letter-spacing: 0;
   font-weight: variables.$font-weight-medium;
@@ -159,7 +159,7 @@
     letter-spacing: 0;
     font-weight: variables.$font-weight-medium;
   }
-  font-size: 18px;
+  font-size: 20px;
 }
 @mixin action-large {
   @include action-large-0;

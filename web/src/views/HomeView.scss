@@ -2,42 +2,62 @@
 @use '~/assets/styles/typography';
 
 .home-view {
+  padding: 12px 0 24px;
 }
 
 .card-container {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  gap: 16px;
-  padding: 32px 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  padding: 20px 0;
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+  }
 }
 
 .card {
-  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  align-items: center;
-  justify-content: center;
-  width: 144px;
-  height: 144px;
-  padding: 16px;
+  gap: 8px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 16px 24px 24px 24px;
   background-color: variables.$neutral-0_white;
   border: 2px solid variables.$neutral-1000_black;
-  transition: background-color 0.3s;
+  color: variables.$neutral-1000_black;
+  text-decoration: none;
+  transition: 0.2s ease;
+  transition-property: transform, box-shadow;
   outline-offset: 2px;
 
   &:hover {
-    background-color: variables.$neutral-100_off-white;
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 0 variables.$neutral-300;
   }
 
   .icon {
     font-size: 32px;
+    margin-bottom: 2px;
   }
 
   .title {
     @include typography.action-medium;
-    white-space: nowrap;
-    text-align: center;
+    margin: 0;
+    text-align: left;
+  }
+
+  .description {
+    @include typography.text-small;
+    margin: 0;
+    color: variables.$neutral-600_grey;
+    text-wrap: pretty;
   }
 }

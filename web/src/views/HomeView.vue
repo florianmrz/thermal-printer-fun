@@ -1,31 +1,12 @@
 <template>
   <div class="home-view">
     <div class="card-container">
-      <RouterLink class="card" :to="{ name: 'upload' }">
+      <RouterLink v-for="module in printModules" :key="module.id" class="card" :to="{ name: module.id }">
         <div class="icon">
-          <BaseIcon icon="upload-sharp" size="large" />
+          <BaseIcon :icon="module.icon" size="large" />
         </div>
-        <div class="title">Upload</div>
-      </RouterLink>
-      <RouterLink class="card" :to="{ name: 'camera' }">
-        <div class="icon"><BaseIcon icon="camera" size="large" /></div>
-        <div class="title">Camera</div>
-      </RouterLink>
-      <RouterLink class="card" :to="{ name: 'large-text' }">
-        <div class="icon"><BaseIcon icon="a-arrow-up-sharp" size="large" /></div>
-        <div class="title">Large Text</div>
-      </RouterLink>
-      <RouterLink class="card" :to="{ name: 'sudoku' }">
-        <div class="icon"><BaseIcon icon="grid-2x2-2-sharp" size="large" /></div>
-        <div class="title">Sudoku</div>
-      </RouterLink>
-      <RouterLink class="card" :to="{ name: 'todo-list' }">
-        <div class="icon"><BaseIcon icon="check" size="large" /></div>
-        <div class="title">Todo List</div>
-      </RouterLink>
-      <RouterLink class="card" :to="{ name: 'fake-receipt' }">
-        <div class="icon"><BaseIcon icon="receipt-sharp" size="large" /></div>
-        <div class="title">Fake Receipt</div>
+        <div class="title">{{ module.name }}</div>
+        <div class="description">{{ module.description }}</div>
       </RouterLink>
     </div>
   </div>
@@ -34,6 +15,7 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router';
 import BaseIcon from '../components/base/BaseIcon/BaseIcon.vue';
+import { printModules } from '../utils/print-modules';
 </script>
 
 <style lang="scss" src="./HomeView.scss" scoped />

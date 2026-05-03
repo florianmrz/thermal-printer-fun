@@ -11,6 +11,7 @@
         :required="props.required"
         :disabled="props.disabled"
         :name="props.name"
+        :aria-label="props.ariaLabel"
         class="field"
         :class="{ 'has-error': props.error, 'is-placeholder': props.placeholder && !model }">
         <option v-if="props.placeholder" disabled value="">{{ props.placeholder }}</option>
@@ -39,6 +40,7 @@ const props = defineProps<{
   disabled?: boolean;
   name?: string;
   label?: string;
+  ariaLabel?: string;
   error?: string;
 }>();
 
