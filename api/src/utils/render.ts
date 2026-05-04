@@ -13,7 +13,10 @@ let browserPromise: Promise<Browser> | null = null;
 
 async function getBrowser() {
   if (!browserPromise) {
-    browserPromise = puppeteer.launch({ headless: env.ENV === 'development' ? false : true });
+    browserPromise = puppeteer.launch({
+      headless: env.ENV === 'production' ? true : false,
+      args: env.ENV === 'development' ? [] : ['--no-sandbox'],
+    });
     const browser = await browserPromise;
     browser.on('disconnected', () => {
       browserPromise = null;
