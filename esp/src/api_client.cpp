@@ -1,5 +1,6 @@
 #include "api_client.h"
 #include <WiFi.h>
+#include <WiFiMulti.h>
 #include <ArduinoWebsockets.h>
 #include "env.h"
 #include "print_client.h"
@@ -8,13 +9,59 @@ using namespace websockets;
 
 // WebSocket client and state management
 WebsocketsClient websocketClient;
+WiFiMulti wifiMulti;
 const String websocketUrlWithToken = websocketServerUrl + String("?token=") + String(websocketToken);
 unsigned long websocketLastReconnectAttempt = 0;
 const unsigned long websocketReconnectInterval = 3000;
 unsigned long wifiLastReconnectAttempt = 0;
 const unsigned long wifiReconnectInterval = 5000;
 const unsigned long wifiInitialConnectTimeout = 5000;
+const unsigned long wifiReconnectConnectTimeout = 2000;
+const unsigned long wifiPollInterval = 500;
 bool webSocketIsConnected = false;
+
+void registerConfiguredWifiNetworks()
+{
+  const size_t wifiNetworkCount = sizeof(wifiNetworks) / sizeof(wifiNetworks[0]);
+
+  for (size_t networkIndex = 0; networkIndex < wifiNetworkCount; networkIndex++)
+  {
+    const WifiNetworkConfig &network = wifiNetworks[networkIndex];
+    Serial.printf("Registering WIFI SSID: %s\n", network.ssid);
+    wifiMulti.addAP(network.ssid, network.password);
+  }
+}
+
+bool connectToAnyConfiguredWifi(unsigned long timeout)
+{
+  const size_t wifiNetworkCount = sizeof(wifiNetworks) / sizeof(wifiNetworks[0]);
+
+  if (wifiNetworkCount == 0)
+  {
+    Serial.println("No WiFi networks configured.");
+    return false;
+  }
+
+  Serial.println("Attempting WiFi connection...");
+
+  unsigned long connectStart = millis();
+  while (millis() - connectStart < timeout)
+  {
+    if (wifiMulti.run() == WL_CONNECTED)
+    {
+      Serial.println("\nWiFi connected");
+      Serial.print("IP address: ");
+      Serial.println(WiFi.localIP());
+      return true;
+    }
+
+    delay(wifiPollInterval);
+    Serial.print(".");
+  }
+
+  Serial.printf("\nWiFi connect timed out (status=%d).\n", WiFi.status());
+  return false;
+}
 
 void onMessageCallback(WebsocketsMessage message)
 {
@@ -53,27 +100,10 @@ void onEventsCallback(WebsocketsEvent event, String data)
 
 void apiClientSetup()
 {
-  Serial.printf("Connecting to WIFI SSID: %s\n", wifiSSID);
-  WiFi.begin(wifiSSID, wifiPassword);
+  WiFi.mode(WIFI_STA);
   WiFi.setAutoReconnect(true);
-
-  unsigned long connectStart = millis();
-  while (WiFi.status() != WL_CONNECTED && millis() - connectStart < wifiInitialConnectTimeout)
-  {
-    delay(500);
-    Serial.print(".");
-  }
-
-  if (WiFi.status() == WL_CONNECTED)
-  {
-    Serial.println("\nWiFi connected");
-    Serial.print("IP address: ");
-    Serial.println(WiFi.localIP());
-  }
-  else
-  {
-    Serial.printf("\nWiFi connect timed out (status=%d). Continuing and retrying in loop.\n", WiFi.status());
-  }
+  registerConfiguredWifiNetworks();
+  connectToAnyConfiguredWifi(wifiInitialConnectTimeout);
 
   websocketClient.onMessage(onMessageCallback);
   websocketClient.onEvent(onEventsCallback);
@@ -93,7 +123,7 @@ void apiClientLoop()
     {
       wifiLastReconnectAttempt = currentMillis;
       Serial.println("Attempting WiFi reconnection...");
-      WiFi.begin(wifiSSID, wifiPassword);
+      connectToAnyConfiguredWifi(wifiReconnectConnectTimeout);
     }
     webSocketIsConnected = false;
     return;
