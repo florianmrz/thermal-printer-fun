@@ -107,6 +107,10 @@ void apiClientSetup()
 
   websocketClient.onMessage(onMessageCallback);
   websocketClient.onEvent(onEventsCallback);
+  if (String(websocketServerUrl).startsWith("wss://"))
+  {
+    websocketClient.setCACert(websocketCaCert);
+  }
 
   if (WiFi.status() == WL_CONNECTED)
   {
