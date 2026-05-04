@@ -1,16 +1,28 @@
 @use '~/assets/styles/variables';
 
 .bm-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
   height: variables.$header-height;
-  box-shadow: 0 2px 4px rgba(variables.$neutral-1000_black, 0.1);
+  box-shadow:
+    0 0 0 2px rgba(variables.$neutral-1000_black, 0.4),
+    0 2px 0 2px rgba(variables.$neutral-1000_black, 0.2),
+    0 4px 0 2px rgba(variables.$neutral-1000_black, 0.05);
+  background-color: variables.$neutral-0_white;
 }
 
 .header-container {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 16px;
+  gap: 12px;
   padding: 8px 0;
+
+  @media (min-width: 1280px) {
+    gap: 16px;
+  }
 }
 
 .logo {

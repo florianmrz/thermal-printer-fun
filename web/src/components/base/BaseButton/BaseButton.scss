@@ -3,12 +3,22 @@
 
 .base-button {
   @include typography.action-medium;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 8px 16px;
   border: none;
   cursor: pointer;
   transition: 0.2s ease;
-  transition-property: box-shadow;
+  transition-property: box-shadow, opacity;
   outline-offset: 2px;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+    box-shadow: none;
+  }
 
   &.is-filled {
     background-color: variables.$neutral-1000_black;
@@ -20,19 +30,58 @@
     color: variables.$neutral-1000_black;
     box-shadow: 0 0 0 2px variables.$neutral-1000_black inset;
 
-    &:hover {
+    &:not(:disabled):not(.is-loading):hover {
       box-shadow:
         0 0 0 2px variables.$neutral-1000_black inset,
-        4px 4px 0 variables.$neutral-300;
+        4px 4px 0 rgba(variables.$neutral-1000_black, 0.3);
     }
   }
 
-  &:hover {
-    box-shadow: 4px 4px 0 variables.$neutral-300;
+  &:not(:disabled):not(.is-loading):hover {
+    box-shadow: 4px 4px 0 rgba(variables.$neutral-1000_black, 0.3);
+  }
+
+  &.is-loading {
+    cursor: wait;
+  }
+
+  &.is-loading .button-content {
+    opacity: 0;
+  }
+
+  .button-content {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s ease;
+  }
+
+  .button-loader {
+    position: absolute;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+  }
+
+  .loader-dot {
+    width: 4px;
+    height: 4px;
+    opacity: 0.2;
+    background-color: currentColor;
+    animation: base-button-loading 2s infinite;
+  }
+
+  .loader-dot:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+
+  .loader-dot:nth-child(3) {
+    animation-delay: 0.4s;
   }
 
   &.is-large {
-    padding: 12px 24px;
+    padding: 16px 24px;
   }
 
   &.is-icon-only {
@@ -40,5 +89,20 @@
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+}
+
+@keyframes base-button-loading {
+  0% {
+    opacity: 0.2;
+  }
+  49% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
   }
 }

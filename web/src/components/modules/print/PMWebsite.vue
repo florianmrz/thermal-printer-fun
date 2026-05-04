@@ -15,7 +15,7 @@
 
       <BaseCheckbox v-model="fullPageInput" name="full-page" label="Full page (max. 5,000 px)" />
 
-      <BaseButton type="submit" :disabled="isSubmitting">Print</BaseButton>
+      <BaseButton type="submit" :loading="isSubmitting">Print</BaseButton>
     </form>
 
     <PMPrintJobResult v-if="submitResponse" :jobId="submitResponse.jobId" />

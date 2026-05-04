@@ -16,7 +16,7 @@
         "
         :error="errors.difficulty" />
 
-      <BaseButton type="submit" :disabled="isSubmitting">Print</BaseButton>
+      <BaseButton type="submit"  :loading="isSubmitting">Print</BaseButton>
 
       <BaseButton v-if="printedSudokuSolution" type="button" variant="outlined" @click="printSolution"
         >Print Solution</BaseButton

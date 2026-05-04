@@ -20,19 +20,19 @@
           type="button"
           @click="toggleCamera"
           iconOnly>
-          <BaseIcon icon="arrows-horizontal" />
+          <BaseIcon icon="reload" />
         </BaseButton>
+
+        <BaseButton v-if="isStreaming && !file" class="photo-button" type="button" @click="takePicture" size="large"
+          >Take picture</BaseButton
+        >
       </div>
 
       <canvas ref="canvas" hidden></canvas>
 
-      <BaseButton v-if="isStreaming && !file" class="photo-button" type="button" @click="takePicture" size="large"
-        >Take picture</BaseButton
-      >
-
       <div class="actions-container" v-if="file">
         <BaseButton variant="outlined" type="button" @click="handleOnCancel">Cancel</BaseButton>
-        <BaseButton type="submit">Print</BaseButton>
+        <BaseButton type="submit" :loading="isSubmitting">Print</BaseButton>
       </div>
     </form>
 
@@ -56,6 +56,7 @@ const $canvas = useTemplateRef('canvas');
 const cameraError = ref<string | null>(null);
 const videoSize = reactive({ width: 320, height: 0 });
 const file = ref<File | null>(null);
+const isSubmitting = ref(false);
 const submitResponse = ref<PrintSubmitResponse | null>(null);
 const currentStream = ref<MediaStream | null>(null);
 const availableVideoDevices = ref<MediaDeviceInfo[]>([]);
@@ -142,11 +143,17 @@ useEventListener($video, 'canplay', () => {
 async function handleSubmit(e: SubmitEvent) {
   e.preventDefault();
 
-  if (!file.value) {
+  if (!file.value || isSubmitting.value) {
     return;
   }
 
-  submitResponse.value = await submitImagePrint(file.value);
+  isSubmitting.value = true;
+
+  try {
+    submitResponse.value = await submitImagePrint(file.value);
+  } finally {
+    isSubmitting.value = false;
+  }
 }
 
 onBeforeUnmount(() => {

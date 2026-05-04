@@ -42,7 +42,7 @@
 
       <div class="actions-container">
         <BaseButton type="button" variant="outlined" @click="pushItem('')"> Add Item </BaseButton>
-        <BaseButton type="submit">Print</BaseButton>
+        <BaseButton type="submit"  :loading="isSubmitting">Print</BaseButton>
       </div>
     </form>
 
@@ -62,7 +62,7 @@ import PMPrintJobResult from './PMPrintJobResult.vue';
 
 const $itemsInputs = useTemplateRef<{ $el: HTMLDivElement }[]>('itemsInputs');
 
-const { defineField, errors, handleSubmit } = useForm({
+const { defineField, errors, isSubmitting, handleSubmit } = useForm({
   initialValues: {
     _type: 'todo-list',
     title: '',

@@ -13,7 +13,7 @@
         :maxlength="20"
         :error="errors.input" />
 
-      <BaseButton type="submit" :disabled="isSubmitting">Print</BaseButton>
+      <BaseButton type="submit"  :loading="isSubmitting">Print</BaseButton>
     </form>
 
     <PMPrintJobResult v-if="submitResponse" :jobId="submitResponse.jobId" :renderData="submitResponse.renderData" />

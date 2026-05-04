@@ -1,6 +1,6 @@
 import uploadSharp from '../../../assets/icons/account_circle_24dp_E3E3E3.svg';
 import camera from 'pixelarticons/svg/camera.svg';
-import arrowsHorizontal from 'pixelarticons/svg/arrows-horizontal.svg';
+import arrowsHorizontal from 'pixelarticons/svg/reload.svg';
 import aArrowUpSharp from 'pixelarticons/svg/a-arrow-up-sharp.svg';
 import printer from 'pixelarticons/svg/printer.svg';
 import warningDiamond from 'pixelarticons/svg/warning-diamond.svg';
@@ -16,7 +16,7 @@ export const icons = {
   ['a-arrow-up-sharp']: aArrowUpSharp,
   ['upload-sharp']: uploadSharp,
   camera,
-  ['arrows-horizontal']: arrowsHorizontal,
+  ['reload']: arrowsHorizontal,
   printer,
   ['warning-diamond']: warningDiamond,
   ['check']: check,

@@ -18,7 +18,7 @@
 
       <div class="actions-container" v-if="file">
         <BaseButton variant="outlined" type="button" @click="file = null">Cancel</BaseButton>
-        <BaseButton type="submit">Print</BaseButton>
+        <BaseButton type="submit" :loading="isSubmitting">Print</BaseButton>
       </div>
     </form>
 
@@ -39,6 +39,7 @@ const $input = useTemplateRef('fileInput');
 
 const uploadError = ref<string | null>(null);
 const file = ref<File | null>(null);
+const isSubmitting = ref(false);
 const submitResponse = ref<PrintSubmitResponse | null>(null);
 
 const { isOverDropZone } = useDropZone($dropzone, {
@@ -75,11 +76,17 @@ function handleFileSelect(event: Event) {
 async function handleSubmit(e: SubmitEvent) {
   e.preventDefault();
 
-  if (!file.value) {
+  if (!file.value || isSubmitting.value) {
     return;
   }
 
-  submitResponse.value = await submitImagePrint(file.value);
+  isSubmitting.value = true;
+
+  try {
+    submitResponse.value = await submitImagePrint(file.value);
+  } finally {
+    isSubmitting.value = false;
+  }
 
   // Clear input
   if ($input.value) {

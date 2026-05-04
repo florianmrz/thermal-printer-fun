@@ -2,7 +2,9 @@
 @use '~/assets/styles/typography';
 
 #main {
-  min-height: calc(100vh - #{variables.$header-height});
+  min-height: 100dvh;
+  min-height: 100vh;
+  padding-top: variables.$header-height;
 }
 
 .skip-to-content-link {

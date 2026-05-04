@@ -1,7 +1,7 @@
 <template>
   <header v-if="moduleInfo" class="pm-item-header">
     <div class="icon">
-      <BaseDitheredImage :src="`/images/print-modules/${moduleInfo.id}.png`" />
+      <BaseDitheredImage :src="`/images/print-modules/${moduleInfo.id}.png`" :size="isDesktop ? 128 : 96" />
     </div>
     <h2 class="title">{{ moduleInfo.name }}</h2>
     <p class="description">{{ moduleInfo.description }}</p>
@@ -9,6 +9,7 @@
 </template>
 
 <script setup lang="ts">
+import { useMediaQuery } from '@vueuse/core';
 import { computed } from 'vue';
 import { type PrintModuleId, printModules } from '../../../utils/print-modules';
 import BaseDitheredImage from '../../base/BaseDitheredImage/BaseDitheredImage.vue';
@@ -16,6 +17,8 @@ import BaseDitheredImage from '../../base/BaseDitheredImage/BaseDitheredImage.vu
 const props = defineProps<{
   moduleId: PrintModuleId;
 }>();
+
+const isDesktop = useMediaQuery('(min-width: 1280px)');
 
 const moduleInfo = computed(() => printModules.find(module => module.id === props.moduleId));
 </script>

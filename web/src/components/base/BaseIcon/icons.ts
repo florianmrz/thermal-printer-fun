@@ -1,4 +1,4 @@
-import arrowsHorizontal from 'pixelarticons/svg/arrows-horizontal.svg';
+import reload from 'pixelarticons/svg/reload.svg';
 import warningDiamond from 'pixelarticons/svg/warning-diamond.svg';
 import check from 'pixelarticons/svg/check.svg';
 import listBox from 'pixelarticons/svg/list-box.svg';
@@ -10,7 +10,7 @@ import loader from 'pixelarticons/svg/loader.svg';
  */
 
 export const icons = {
-  ['arrows-horizontal']: arrowsHorizontal,
+  ['reload']: reload,
   ['warning-diamond']: warningDiamond,
   ['check']: check,
   ['list-box']: listBox,

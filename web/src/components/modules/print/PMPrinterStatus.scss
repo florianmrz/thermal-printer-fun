@@ -9,7 +9,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 4px;
   min-width: 40px;
   min-height: 40px;
   padding: 8px;
@@ -44,7 +44,8 @@
 
 .trigger-divider {
   width: 2px;
-  height: 16px;
+  height: 24px;
+  margin: 0 4px;
   background-color: currentColor;
 }
 

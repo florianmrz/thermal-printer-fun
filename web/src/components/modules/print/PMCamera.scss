@@ -4,12 +4,16 @@
   position: relative;
   width: 100%;
   border: 2px solid variables.$neutral-1000_black;
-  aspect-ratio: 3 / 2;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 16px;
+  aspect-ratio: 1 / 1;
+
+  @media (min-width: 1280px) {
+    aspect-ratio: 3 / 2;
+  }
 
   &.is-streaming {
     aspect-ratio: unset;
@@ -18,12 +22,15 @@
 
 .toggle-camera-button {
   position: absolute;
-  bottom: 8px;
+  top: 8px;
   right: 8px;
 }
 
 .photo-button {
-  width: 100%;
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  right: 8px;
 }
 
 .video {
@@ -46,4 +53,3 @@
 .error {
   color: variables.$color-error;
 }
-

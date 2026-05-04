@@ -10,8 +10,12 @@
   gap: 8px;
   width: 100%;
   border: 2px dashed variables.$neutral-1000_black;
-  aspect-ratio: 3 / 2;
+  aspect-ratio: 1 / 1;
   cursor: pointer;
+
+  @media (min-width: 768px) {
+    aspect-ratio: 3 / 2;
+  }
 
   &:hover {
     .label {
