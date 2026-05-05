@@ -2,6 +2,7 @@ import PQueue from 'p-queue';
 import { broadcastPrinterQueue, getPrinterClient } from './ws.js';
 import { nanoid } from 'nanoid';
 import type { PrinterStatus } from '@thermal-printer-fun/shared';
+import { env } from '../env.js';
 
 const queue = new PQueue({ concurrency: 1, timeout: 30_000 });
 const queueJobIds = new Set<string>();
@@ -81,9 +82,13 @@ export function print(
     let linesInChunk = 0;
     const lineChunks: Uint8Array[] = [];
     let currentChunk: Uint8Array = new Uint8Array();
-    printLines.forEach(line => {
+    const linesToPrint = env.PRINT_UPSIDE_DOWN ? [...printLines].reverse() : printLines;
+    linesToPrint.forEach(line => {
       const lineHeader = Uint8Array.from([0x62, 0x48, 0x00]);
-      const linePacket = new Uint8Array([...lineHeader, ...line]);
+      const lineToPrint = env.PRINT_UPSIDE_DOWN
+        ? Uint8Array.from([...line].reverse().map(byte => reverseByteBits(byte)))
+        : line;
+      const linePacket = new Uint8Array([...lineHeader, ...lineToPrint]);
       currentChunk = new Uint8Array([...currentChunk, ...linePacket]);
       linesInChunk++;
       if (linesInChunk >= 100) {
@@ -140,6 +145,17 @@ export function print(
   );
 
   return { jobId };
+}
+
+/**
+ * Reverses the bits of a byte.
+ */
+function reverseByteBits(byte: number) {
+  let reversed = 0;
+  for (let bit = 0; bit < 8; bit++) {
+    reversed = (reversed << 1) | ((byte >> bit) & 1);
+  }
+  return reversed;
 }
 
 async function sendToPrinter(data: Uint8Array) {

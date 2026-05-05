@@ -9,7 +9,8 @@ const envSchema = z.object({
   AWS_REGION: z.string().min(2),
   AWS_BEDROCK_MODEL_ID: z.string().min(10),
   AWS_BEDROCK_API_KEY: z.string().min(32),
-  REPLICATE_API_KEY: z.string().min(32)
+  REPLICATE_API_KEY: z.string().min(32),
+  PRINT_UPSIDE_DOWN: z.enum(["true", "false"]).default("false").transform(val => val === "true"),
 });
 
 export const env = envSchema.parse(process.env);
