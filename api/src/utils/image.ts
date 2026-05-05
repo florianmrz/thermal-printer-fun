@@ -10,6 +10,7 @@ export async function convertImageToPrintData(
 ): Promise<Uint8Array<ArrayBuffer>[]> {
   const { data: sharpData, info: sharpInfo } = await sharp(imageData)
     .resize({ width: MAX_FILE_WIDTH, fit: 'inside', background: 'white' })
+    .flatten({ background: 'white' }) // Removes alpha channel if present, filling with white
     .greyscale()
     .raw()
     .toBuffer({ resolveWithObject: true });
