@@ -13,4 +13,7 @@ void printClientLoop();
 // Trigger a print job with the given data
 void triggerPrint(const std::vector<uint8_t> &printData);
 
+// Check if printer is connected
+bool isPrinterConnected();
+
 #endif // PRINT_CLIENT_H

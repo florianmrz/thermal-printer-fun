@@ -150,3 +150,8 @@ void apiClientLoop()
     websocketClient.poll();
   }
 }
+
+bool isWebSocketConnected()
+{
+  return webSocketIsConnected;
+}

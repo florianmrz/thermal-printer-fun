@@ -238,3 +238,8 @@ void triggerPrint(const std::vector<uint8_t> &printData)
     Serial.println("✗ No printer connected");
   }
 }
+
+bool isPrinterConnected()
+{
+  return dev_hdl != NULL;
+}

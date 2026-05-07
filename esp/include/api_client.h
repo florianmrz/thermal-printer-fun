@@ -13,4 +13,7 @@ void apiClientLoop();
 // Fetch print data from API and return as vector of byte arrays (72 bytes each)
 std::vector<std::vector<uint8_t>> getPrintData();
 
+// Check if WebSocket is connected
+bool isWebSocketConnected();
+
 #endif // API_CLIENT_H
