@@ -1,5 +1,6 @@
 import { createNodeWebSocket } from '@hono/node-ws';
 import { Hono } from 'hono';
+import { nanoid } from 'nanoid';
 import type WebSocket from 'ws';
 import { env } from '../env.js';
 import { broadcastPrinterQueue, broadcastPrinterStatus } from '../utils/ws.js';
@@ -10,14 +11,16 @@ const { injectWebSocket, upgradeWebSocket, wss } = createNodeWebSocket({ app });
 /**
  * To distinguish between printer clients and web clients, we add a custom property to underlying WebSocket object.
  */
-type WebSocketWithIdentifier = WebSocket & { __clientType: 'printer' | 'web' };
+type WebSocketWithIdentifier = WebSocket & { __clientType: 'printer' | 'web'; __id: string };
 
 app.get(
   '/web',
   upgradeWebSocket(_c => {
     return {
       onOpen(_event, ws) {
-        (ws.raw as WebSocketWithIdentifier).__clientType = 'web';
+        const newClient = ws.raw as WebSocketWithIdentifier;
+        newClient.__clientType = 'web';
+        newClient.__id = nanoid();
         broadcastPrinterStatus();
         broadcastPrinterQueue();
       },
@@ -34,7 +37,20 @@ app.get(
         ws.close(1008, 'Invalid API token');
         return;
       }
-      (ws.raw as WebSocketWithIdentifier).__clientType = 'printer';
+      const newClient = ws.raw as WebSocketWithIdentifier;
+      newClient.__clientType = 'printer';
+      newClient.__id = nanoid();
+
+      /**
+       * Disconnect any stale printer clients that might be still connected.
+       * This can happen if the printer client crashes or loses connection without properly closing the WebSocket connection.
+       */
+      getWebSocketClients().forEach(client => {
+        if (client.__id !== newClient.__id && client.__clientType === 'printer') {
+          client.terminate();
+        }
+      });
+
       broadcastPrinterStatus();
     },
     onMessage(event) {
