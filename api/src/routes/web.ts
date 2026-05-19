@@ -19,6 +19,7 @@ import { env } from '../env.js';
 import { generateFakeReceipt } from '../utils/fake-receipt.js';
 import { convertImageToPrintData } from '../utils/image.js';
 import { print } from '../utils/printer.js';
+import { getConnInfo } from '@hono/node-server/conninfo';
 import { renderToPng, renderWebsiteToPng } from '../utils/render.js';
 
 const app = new Hono();
@@ -27,14 +28,60 @@ const app = new Hono();
  * Auth code
  */
 
+const AUTH_RATE_LIMIT_FREE_ATTEMPTS = 5;
+const AUTH_RATE_LIMIT_MAX_BLOCK_MS = 15 * 60 * 1000; // 15 minutes
+
+interface AuthRateLimitEntry {
+  failedAttempts: number;
+  blockedUntil: number;
+}
+
+const authRateLimitMap = new Map<string, AuthRateLimitEntry>();
+
+function pruneAuthRateLimit() {
+  const now = Date.now();
+  for (const [ip, entry] of authRateLimitMap) {
+    if (entry.blockedUntil < now && entry.failedAttempts <= AUTH_RATE_LIMIT_FREE_ATTEMPTS) {
+      authRateLimitMap.delete(ip);
+    }
+  }
+}
+
 function assertAuthCode(c: Context) {
   if (env.AUTH_CODE.length === 0) {
     return;
   }
 
+  const ip = getConnInfo(c).remote.address || 'unknown';
+  const now = Date.now();
+  const entry = authRateLimitMap.get(ip);
+
+  if (entry && entry.blockedUntil > now) {
+    const retryAfterSeconds = Math.ceil((entry.blockedUntil - now) / 1000);
+    throw new HTTPException(429, { message: `Too many failed attempts. Try again in ${retryAfterSeconds}s.` });
+  }
+
   const providedCode = c.req.header('X-Auth-Code') || '';
   if (providedCode !== env.AUTH_CODE) {
+    const current = entry ?? { failedAttempts: 0, blockedUntil: 0 };
+    current.failedAttempts++;
+
+    if (current.failedAttempts > AUTH_RATE_LIMIT_FREE_ATTEMPTS) {
+      const exponent = current.failedAttempts - AUTH_RATE_LIMIT_FREE_ATTEMPTS - 1;
+      const blockMs = Math.min(Math.pow(2, exponent) * 1000, AUTH_RATE_LIMIT_MAX_BLOCK_MS);
+      current.blockedUntil = now + blockMs;
+    }
+
+    authRateLimitMap.set(ip, current);
+    if (authRateLimitMap.size % 100 === 0) {
+      pruneAuthRateLimit();
+    }
+
     throw new HTTPException(401, { message: 'Incorrect code. Please try again.' });
+  }
+
+  if (entry) {
+    authRateLimitMap.delete(ip);
   }
 }
 

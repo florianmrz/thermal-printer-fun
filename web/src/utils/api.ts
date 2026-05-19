@@ -41,7 +41,7 @@ async function fetchWithAuth(url: string, init: RequestInit): Promise<PrintSubmi
   const headers = { ...(init.headers as Record<string, string> | undefined), 'X-Auth-Code': code };
   const res = await fetch(url, { ...init, headers });
 
-  if (res.status === 401) {
+  if (res.status === 401 || res.status === 429) {
     // Request failed due to auth, clear current code and ask for another code
     authCode.value = '';
     authCodeError.value = (await res.text()) || 'Unauthorized. Please enter a valid code.';
