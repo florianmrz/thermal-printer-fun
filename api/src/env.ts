@@ -1,7 +1,7 @@
-import z from "zod";
+import z from 'zod';
 
 const envSchema = z.object({
-  ENV: z.enum(["development", "production"]),
+  ENV: z.enum(['development', 'production']),
   WEBSOCKET_TOKEN: z.string().min(32),
   SENTRY_ERROR_TOKEN: z.string().min(32),
   WEB_APP_BASE_URL: z.url(),
@@ -10,7 +10,11 @@ const envSchema = z.object({
   AWS_BEDROCK_MODEL_ID: z.string().min(10),
   AWS_BEDROCK_API_KEY: z.string().min(32),
   REPLICATE_API_KEY: z.string().min(32),
-  PRINT_UPSIDE_DOWN: z.enum(["true", "false"]).default("false").transform(val => val === "true"),
+  PRINT_UPSIDE_DOWN: z
+    .enum(['true', 'false'])
+    .default('false')
+    .transform(val => val === 'true'),
+  AUTH_CODE: z.union([z.literal(''), z.string().regex(/^\d{6}$/)]),
 });
 
 export const env = envSchema.parse(process.env);

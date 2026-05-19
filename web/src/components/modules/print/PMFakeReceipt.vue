@@ -13,6 +13,8 @@
         :maxlength="80"
         :error="errors.topic" />
 
+      <span class="error-message" v-if="submitError">{{ submitError }}</span>
+
       <BaseButton type="submit" :loading="isSubmitting">Print</BaseButton>
     </form>
 
@@ -40,9 +42,15 @@ const { defineField, errors, isSubmitting, handleSubmit } = useForm({
 
 const [topicInput] = defineField('topic');
 const submitResponse = ref<PrintSubmitResponse | null>(null);
+const submitError = ref<string | null>(null);
 
 const onSubmit = handleSubmit(async values => {
-  submitResponse.value = await submitFakeReceipt(values);
+  try {
+    submitResponse.value = await submitFakeReceipt(values);
+    submitError.value = null;
+  } catch (error) {
+    submitError.value = (error instanceof Error ? error.message : String(error));
+  }
 });
 </script>
 

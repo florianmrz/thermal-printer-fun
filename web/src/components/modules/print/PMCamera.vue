@@ -30,10 +30,11 @@
 
       <canvas ref="canvas" hidden></canvas>
 
-      <div class="actions-container" v-if="file">
-        <BaseButton variant="outlined" type="button" @click="handleOnCancel">Cancel</BaseButton>
-        <BaseButton type="submit" :loading="isSubmitting">Print</BaseButton>
-      </div>
+      <BaseButton variant="outlined" type="button" @click="handleOnCancel">Cancel</BaseButton>
+
+      <span class="error-message" v-if="submitError">{{ submitError }}</span>
+
+      <BaseButton type="submit" :loading="isSubmitting">Print</BaseButton>
     </form>
 
     <PMPrintJobResult v-if="submitResponse" :jobId="submitResponse.jobId" :renderData="submitResponse.renderData" />
@@ -58,6 +59,7 @@ const videoSize = reactive({ width: 320, height: 0 });
 const file = ref<File | null>(null);
 const isSubmitting = ref(false);
 const submitResponse = ref<PrintSubmitResponse | null>(null);
+const submitError = ref<string | null>(null);
 const currentStream = ref<MediaStream | null>(null);
 const availableVideoDevices = ref<MediaDeviceInfo[]>([]);
 const canToggleCamera = computed(
@@ -148,9 +150,11 @@ async function handleSubmit(e: SubmitEvent) {
   }
 
   isSubmitting.value = true;
-
   try {
     submitResponse.value = await submitImagePrint(file.value);
+    submitError.value = null;
+  } catch (error) {
+    submitError.value = error instanceof Error ? error.message : String(error);
   } finally {
     isSubmitting.value = false;
   }

@@ -39,11 +39,11 @@
       </div>
 
       <p v-if="errors.items" class="error">{{ errors.items }}</p>
+      <BaseButton type="button" variant="outlined" @click="pushItem('')"> Add Item </BaseButton>
 
-      <div class="actions-container">
-        <BaseButton type="button" variant="outlined" @click="pushItem('')"> Add Item </BaseButton>
-        <BaseButton type="submit"  :loading="isSubmitting">Print</BaseButton>
-      </div>
+      <span class="error-message" v-if="submitError">{{ submitError }}</span>
+
+      <BaseButton type="submit" :loading="isSubmitting">Print</BaseButton>
     </form>
 
     <PMPrintJobResult v-if="submitResponse" :jobId="submitResponse.jobId" :renderData="submitResponse.renderData" />
@@ -80,6 +80,7 @@ const {
   insert: insertItem,
 } = useFieldArray<string>('items');
 const submitResponse = ref<PrintSubmitResponse | null>(null);
+const submitError = ref<string | null>(null);
 
 async function handleKeyPressOnItem(index: number, event: KeyboardEvent) {
   console.log(event.key);
@@ -137,7 +138,12 @@ async function handlePasteOnItem(index: number, event: ClipboardEvent) {
 }
 
 const onSubmit = handleSubmit(async values => {
-  submitResponse.value = await submitTodoList(values);
+  try {
+    submitResponse.value = await submitTodoList(values);
+    submitError.value = null;
+  } catch (error) {
+    submitError.value = error instanceof Error ? error.message : String(error);
+  }
 });
 </script>
 

@@ -9,17 +9,18 @@
         </label>
 
         <input ref="fileInput" id="photo" type="file" @change="handleFileSelect" :accept="accept" />
-        <p class="error" v-if="uploadError">{{ uploadError }}</p>
+        <p class="error-message" v-if="fileError">{{ fileError }}</p>
       </template>
 
       <div v-else-if="previewSrc">
         <img class="file-preview" :src="previewSrc" alt="Uploaded image" />
       </div>
 
-      <div class="actions-container" v-if="file">
-        <BaseButton variant="outlined" type="button" @click="file = null">Cancel</BaseButton>
-        <BaseButton type="submit" :loading="isSubmitting">Print</BaseButton>
-      </div>
+      <BaseButton variant="outlined" type="button" @click="file = null">Cancel</BaseButton>
+
+      <span class="error-message" v-if="submitError">{{ submitError }}</span>
+
+      <BaseButton type="submit" :loading="isSubmitting">Print</BaseButton>
     </form>
 
     <PMPrintJobResult v-if="submitResponse" :jobId="submitResponse.jobId" :renderData="submitResponse.renderData" />
@@ -30,14 +31,15 @@
 import { FILE_UPLOAD_OPTIONS, type PrintSubmitResponse } from '@thermal-printer-fun/shared';
 import { useDropZone } from '@vueuse/core';
 import { computed, ref, useTemplateRef } from 'vue';
-import { submitImagePrint } from '../../../utils/api';
+import { submitImagePrint, getApiErrorMessage } from '../../../utils/api';
 import BaseButton from '../../base/BaseButton/BaseButton.vue';
 import PMItemHeader from './PMItemHeader.vue';
 import PMPrintJobResult from './PMPrintJobResult.vue';
 const $dropzone = useTemplateRef('dropzone');
 const $input = useTemplateRef('fileInput');
 
-const uploadError = ref<string | null>(null);
+const fileError = ref<string | null>(null);
+const submitError = ref<string | null>(null);
 const file = ref<File | null>(null);
 const isSubmitting = ref(false);
 const submitResponse = ref<PrintSubmitResponse | null>(null);
@@ -47,7 +49,7 @@ const { isOverDropZone } = useDropZone($dropzone, {
     const droppedFile = files?.[0];
     if (droppedFile) {
       if (droppedFile.size > FILE_UPLOAD_OPTIONS.MAX_FILE_SIZE) {
-        uploadError.value = `File is too large. Maximum size is ${FILE_UPLOAD_OPTIONS.MAX_FILE_SIZE / (1024 * 1024)} MB.`;
+        fileError.value = `File is too large. Maximum size is ${FILE_UPLOAD_OPTIONS.MAX_FILE_SIZE / (1024 * 1024)} MB.`;
         return;
       }
 
@@ -66,7 +68,7 @@ function handleFileSelect(event: Event) {
   const selectedFile = target.files?.[0];
   if (selectedFile) {
     if (selectedFile.size > FILE_UPLOAD_OPTIONS.MAX_FILE_SIZE) {
-      uploadError.value = `File is too large. Maximum size is ${FILE_UPLOAD_OPTIONS.MAX_FILE_SIZE / (1024 * 1024)} MB.`;
+      fileError.value = `File is too large. Maximum size is ${FILE_UPLOAD_OPTIONS.MAX_FILE_SIZE / (1024 * 1024)} MB.`;
       return;
     }
     file.value = selectedFile;
@@ -84,6 +86,9 @@ async function handleSubmit(e: SubmitEvent) {
 
   try {
     submitResponse.value = await submitImagePrint(file.value);
+    submitError.value = null;
+  } catch (error) {
+    submitError.value = getApiErrorMessage(error);
   } finally {
     isSubmitting.value = false;
   }

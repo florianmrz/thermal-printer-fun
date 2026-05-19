@@ -1,3 +1,4 @@
+import { zValidator } from '@hono/zod-validator';
 import {
   FILE_UPLOAD_OPTIONS,
   renderFakeReceiptInputSchema,
@@ -9,9 +10,10 @@ import {
   type PrintSubmitResponse,
   type SentryWebhookPayload,
 } from '@thermal-printer-fun/shared';
-import { Hono } from 'hono';
+import { Hono, type Context } from 'hono';
 import { bearerAuth } from 'hono/bearer-auth';
 import { bodyLimit } from 'hono/body-limit';
+import { createMiddleware } from 'hono/factory';
 import { HTTPException } from 'hono/http-exception';
 import { env } from '../env.js';
 import { generateFakeReceipt } from '../utils/fake-receipt.js';
@@ -21,6 +23,32 @@ import { renderToPng, renderWebsiteToPng } from '../utils/render.js';
 
 const app = new Hono();
 
+/**
+ * Auth code
+ */
+
+function assertAuthCode(c: Context) {
+  if (env.AUTH_CODE.length === 0) {
+    return;
+  }
+
+  const providedCode = c.req.header('X-Auth-Code') || '';
+  if (providedCode !== env.AUTH_CODE) {
+    throw new HTTPException(401, { message: 'Incorrect code. Please try again.' });
+  }
+}
+
+const authMiddleware = createMiddleware((c, next) => {
+  assertAuthCode(c);
+  return next();
+});
+
+app.get('/code/status', c => c.json({ enabled: env.AUTH_CODE.length > 0 }));
+
+/**
+ * Print
+ */
+
 app.post(
   '/print',
   bodyLimit({
@@ -29,6 +57,8 @@ app.post(
   }),
   async c => {
     const body = await c.req.parseBody();
+    assertAuthCode(c); // This has to be happen after parsing the body
+
     const file = body['file'];
 
     if (!file || typeof file === 'string') {
@@ -47,58 +77,60 @@ app.post(
   }
 );
 
-app.post('/print/large-text', async c => {
-  const body = await c.req.json();
-  const data = renderLargeTextDataSchema.parse(body);
+app.post('/print/large-text', authMiddleware, zValidator('json', renderLargeTextDataSchema), async c => {
+  const data = c.req.valid('json');
 
   const printData = () => renderToPng(data).then(image => convertImageToPrintData(image));
   const { jobId } = print(printData, { printQuality: 'highPrint', cutPaper: true });
   return c.json({ success: true, jobId, renderData: data } satisfies PrintSubmitResponse);
 });
 
-app.post('/print/sudoku', async c => {
-  const body = await c.req.json();
-  const data = renderSudokuDataSchema.parse(body);
+app.post('/print/sudoku', authMiddleware, zValidator('json', renderSudokuDataSchema), async c => {
+  const data = c.req.valid('json');
 
   const printData = () => renderToPng(data).then(image => convertImageToPrintData(image));
   const { jobId } = print(printData, { printQuality: 'highPrint', cutPaper: true });
   return c.json({ success: true, jobId, renderData: data } satisfies PrintSubmitResponse);
 });
 
-app.post('/print/todo-list', async c => {
-  const body = await c.req.json();
-  const data = renderTodoListDataSchema.parse(body);
+app.post('/print/todo-list', authMiddleware, zValidator('json', renderTodoListDataSchema), async c => {
+  const data = c.req.valid('json');
 
   const printData = () => renderToPng(data).then(image => convertImageToPrintData(image));
   const { jobId } = print(printData, { printQuality: 'highPrint', cutPaper: true });
   return c.json({ success: true, jobId, renderData: data } satisfies PrintSubmitResponse);
 });
 
-app.post('/print/sentry-error', bearerAuth({ token: env.SENTRY_ERROR_TOKEN }), async c => {
-  const body = await c.req.json();
-  const parsedData = renderSentryErrorInputSchema.parse(body);
-  const data = { ...parsedData, data: parsedData.data as SentryWebhookPayload };
+app.post(
+  '/print/sentry-error',
+  bearerAuth({ token: env.SENTRY_ERROR_TOKEN }),
+  authMiddleware,
+  zValidator('json', renderSentryErrorInputSchema),
+  async c => {
+    const data = c.req.valid('json');
+    const finalData = { ...data, data: data.data as SentryWebhookPayload };
 
-  const printData = () => renderToPng(data).then(image => convertImageToPrintData(image));
-  const { jobId } = print(printData, { printQuality: 'highPrint', cutPaper: true });
-  return c.json({ success: true, jobId, renderData: data } satisfies PrintSubmitResponse);
-});
+    const printData = () => renderToPng(finalData).then(image => convertImageToPrintData(image));
+    const { jobId } = print(printData, { printQuality: 'highPrint', cutPaper: true });
+    return c.json({ success: true, jobId, renderData: finalData } satisfies PrintSubmitResponse);
+  }
+);
 
-app.post('/print/fake-receipt', async c => {
-  const body = await c.req.json();
-  const { topic } = renderFakeReceiptInputSchema.parse(body);
+app.post('/print/fake-receipt', authMiddleware, zValidator('json', renderFakeReceiptInputSchema), async c => {
+  const data = c.req.valid('json');
+  const { topic } = data;
 
   const receipt = await generateFakeReceipt(topic);
-  const data = { _type: 'fake-receipt' as const, topic, ...receipt };
+  const finalData = { _type: 'fake-receipt' as const, topic, ...receipt };
 
-  const printData = () => renderToPng(data).then(image => convertImageToPrintData(image));
+  const printData = () => renderToPng(finalData).then(image => convertImageToPrintData(image));
   const { jobId } = print(printData, { printQuality: 'highPrint', cutPaper: true });
-  return c.json({ success: true, jobId, renderData: data } satisfies PrintSubmitResponse);
+  return c.json({ success: true, jobId, renderData: finalData } satisfies PrintSubmitResponse);
 });
 
-app.post('/print/website', async c => {
-  const body = await c.req.json();
-  const { url, fullPage } = renderWebsiteInputSchema.parse(body);
+app.post('/print/website', authMiddleware, zValidator('json', renderWebsiteInputSchema), async c => {
+  const data = c.req.valid('json');
+  const { url, fullPage } = data;
 
   const printData = () => renderWebsiteToPng(url, fullPage).then(image => convertImageToPrintData(image));
   const { jobId } = print(printData, { printQuality: 'highPrint', cutPaper: true });

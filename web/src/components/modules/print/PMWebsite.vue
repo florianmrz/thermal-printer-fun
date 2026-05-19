@@ -15,6 +15,8 @@
 
       <BaseCheckbox v-model="fullPageInput" name="full-page" label="Full page (max. 5,000 px)" />
 
+      <span class="error-message" v-if="submitError">{{ submitError }}</span>
+
       <BaseButton type="submit" :loading="isSubmitting">Print</BaseButton>
     </form>
 
@@ -45,9 +47,15 @@ const { defineField, errors, isSubmitting, handleSubmit } = useForm<RenderInputW
 const [urlInput] = defineField('url');
 const [fullPageInput] = defineField('fullPage');
 const submitResponse = ref<{ jobId: string } | null>(null);
+const submitError = ref<string | null>(null);
 
 const onSubmit = handleSubmit(async values => {
-  submitResponse.value = await submitWebsite(values);
+  try {
+    submitResponse.value = await submitWebsite(values);
+    submitError.value = null;
+  } catch (error) {
+    submitError.value = error instanceof Error ? error.message : String(error);
+  }
 });
 </script>
 

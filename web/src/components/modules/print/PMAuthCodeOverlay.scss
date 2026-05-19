@@ -1,0 +1,82 @@
+@use '~/assets/styles/variables';
+@use '~/assets/styles/typography';
+
+.overlay-dialog {
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  margin: auto;
+  background-color: transparent;
+  max-width: 100vw;
+  max-height: 100vh;
+
+  &::backdrop {
+    background-color: rgba(variables.$neutral-1000_black, 0.9);
+  }
+}
+
+.overlay-panel {
+  width: min(420px, calc(100vw - 32px));
+  padding: 24px 16px;
+  border: 2px solid variables.$neutral-1000_black;
+  background-color: variables.$neutral-0_white;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  @media (min-width: 1280px) {
+    padding: 24px;
+  }
+}
+
+.overlay-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+}
+
+.overlay-icon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+}
+
+.overlay-title {
+  @include typography.text-heading;
+  margin: 0;
+}
+
+.overlay-description {
+  @include typography.text-small;
+  margin: 0 0 16px;
+  color: variables.$neutral-600_grey;
+  text-align: center;
+}
+
+.overlay-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.overlay-error {
+  @include typography.text-small;
+  margin: 0;
+  color: variables.$color-error;
+}
+
+.actions-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  margin-top: 8px;
+
+  @media (min-width: 1280px) {
+    flex-direction: row;
+    justify-content: center;
+  }
+}

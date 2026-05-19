@@ -4,6 +4,7 @@ import check from 'pixelarticons/svg/check.svg';
 import listBox from 'pixelarticons/svg/list-box.svg';
 import priner from 'pixelarticons/svg/printer.svg';
 import loader from 'pixelarticons/svg/loader.svg';
+import unlock from 'pixelarticons/svg/unlock.svg';
 
 /**
  * @see https://pixelarticons.com/
@@ -16,6 +17,7 @@ export const icons = {
   ['list-box']: listBox,
   ['printer']: priner,
   ['loader']: loader,
+  ['unlock']: unlock,
 };
 
 export type IconName = keyof typeof icons;

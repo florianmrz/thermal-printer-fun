@@ -16,7 +16,9 @@
         "
         :error="errors.difficulty" />
 
-      <BaseButton type="submit"  :loading="isSubmitting">Print</BaseButton>
+      <span class="error-message" v-if="submitError">{{ submitError }}</span>
+
+      <BaseButton type="submit" :loading="isSubmitting">Print</BaseButton>
 
       <BaseButton v-if="printedSudokuSolution" type="button" variant="outlined" @click="printSolution"
         >Print Solution</BaseButton
@@ -49,16 +51,20 @@ const { defineField, errors, isSubmitting, handleSubmit } = useForm({
 const [difficulty] = defineField('difficulty');
 const submitResponse = ref<PrintSubmitResponse | null>(null);
 const printedSudokuSolution = ref<number[][] | null>(null);
+const submitError = ref<string | null>(null);
 
 const onSubmit = handleSubmit(async values => {
-  const sudoku = getSudoku(values.difficulty);
-
-  submitResponse.value = await submitSudoku({
-    _type: 'sudoku',
-    data: convertSudokuToArray(sudoku.puzzle),
-  });
-
-  printedSudokuSolution.value = convertSudokuToArray(sudoku.solution);
+  try {
+    const sudoku = getSudoku(values.difficulty);
+    submitResponse.value = await submitSudoku({
+      _type: 'sudoku',
+      data: convertSudokuToArray(sudoku.puzzle),
+    });
+    printedSudokuSolution.value = convertSudokuToArray(sudoku.solution);
+    submitError.value = null;
+  } catch (error) {
+    submitError.value = error instanceof Error ? error.message : String(error);
+  }
 });
 
 async function printSolution() {

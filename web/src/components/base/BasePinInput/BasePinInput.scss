@@ -1,0 +1,29 @@
+@use '~/assets/styles/variables';
+@use '~/assets/styles/typography';
+
+.base-pin-input {
+  display: flex;
+  gap: 8px;
+}
+
+.pin-cell {
+  @include typography.action-large;
+  width: 40px;
+  height: 48px;
+  border: 2px solid variables.$neutral-1000_black;
+  background-color: variables.$neutral-0_white;
+  color: variables.$neutral-1000_black;
+  text-align: center;
+  caret-color: transparent;
+  outline-offset: 2px;
+
+  &:disabled {
+    background-color: variables.$neutral-100_off-white;
+    cursor: not-allowed;
+  }
+
+  @media (min-width: 1280px) {
+    width: 48px;
+    height: 56px;
+  }
+}
