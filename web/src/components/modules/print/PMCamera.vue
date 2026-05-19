@@ -30,11 +30,11 @@
 
       <canvas ref="canvas" hidden></canvas>
 
-      <BaseButton variant="outlined" type="button" @click="handleOnCancel">Cancel</BaseButton>
-
-      <span class="error-message" v-if="submitError">{{ submitError }}</span>
-
-      <BaseButton type="submit" :loading="isSubmitting">Print</BaseButton>
+      <div class="actions-container" v-if="file">
+        <BaseButton variant="outlined" type="button" @click="handleOnCancel">Cancel</BaseButton>
+        <span class="error-message" v-if="submitError">{{ submitError }}</span>
+        <BaseButton type="submit" :loading="isSubmitting">Print</BaseButton>
+      </div>
     </form>
 
     <PMPrintJobResult v-if="submitResponse" :jobId="submitResponse.jobId" :renderData="submitResponse.renderData" />
