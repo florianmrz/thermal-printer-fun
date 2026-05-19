@@ -34,7 +34,7 @@ import { renderSudokuInputSchema, type PrintSubmitResponse } from '@thermal-prin
 import { getSudoku } from 'sudoku-gen';
 import { useForm } from 'vee-validate';
 import { ref } from 'vue';
-import { submitSudoku } from '../../../utils/api';
+import { getApiErrorMessage, submitSudoku } from '../../../utils/api';
 import BaseButton from '../../base/BaseButton/BaseButton.vue';
 import BaseSelect from '../../base/BaseSelect/BaseSelect.vue';
 import PMItemHeader from './PMItemHeader.vue';
@@ -63,7 +63,7 @@ const onSubmit = handleSubmit(async values => {
     printedSudokuSolution.value = convertSudokuToArray(sudoku.solution);
     submitError.value = null;
   } catch (error) {
-    submitError.value = error instanceof Error ? error.message : String(error);
+    submitError.value = getApiErrorMessage(error);
   }
 });
 

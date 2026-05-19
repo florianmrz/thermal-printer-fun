@@ -45,7 +45,7 @@
 import type { PrintSubmitResponse } from '@thermal-printer-fun/shared';
 import { useEventListener } from '@vueuse/core';
 import { computed, onBeforeUnmount, reactive, ref, useTemplateRef } from 'vue';
-import { submitImagePrint } from '../../../utils/api';
+import { getApiErrorMessage, submitImagePrint } from '../../../utils/api';
 import BaseButton from '../../base/BaseButton/BaseButton.vue';
 import BaseIcon from '../../base/BaseIcon/BaseIcon.vue';
 import PMItemHeader from './PMItemHeader.vue';
@@ -154,7 +154,7 @@ async function handleSubmit(e: SubmitEvent) {
     submitResponse.value = await submitImagePrint(file.value);
     submitError.value = null;
   } catch (error) {
-    submitError.value = error instanceof Error ? error.message : String(error);
+    submitError.value = getApiErrorMessage(error);
   } finally {
     isSubmitting.value = false;
   }

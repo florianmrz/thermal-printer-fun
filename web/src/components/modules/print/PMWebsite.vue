@@ -28,7 +28,7 @@
 import { renderWebsiteInputSchema, type RenderInputWebsite } from '@thermal-printer-fun/shared';
 import { useForm } from 'vee-validate';
 import { ref } from 'vue';
-import { submitWebsite } from '../../../utils/api';
+import { getApiErrorMessage, submitWebsite } from '../../../utils/api';
 import BaseButton from '../../base/BaseButton/BaseButton.vue';
 import BaseCheckbox from '../../base/BaseCheckbox/BaseCheckbox.vue';
 import BaseInput from '../../base/BaseInput/BaseInput.vue';
@@ -54,7 +54,7 @@ const onSubmit = handleSubmit(async values => {
     submitResponse.value = await submitWebsite(values);
     submitError.value = null;
   } catch (error) {
-    submitError.value = error instanceof Error ? error.message : String(error);
+    submitError.value = getApiErrorMessage(error);
   }
 });
 </script>

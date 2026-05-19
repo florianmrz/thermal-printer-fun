@@ -13,6 +13,8 @@
         :maxlength="20"
         :error="errors.input" />
 
+      <span class="error-message" v-if="submitError">{{ submitError }}</span>
+
       <BaseButton type="submit"  :loading="isSubmitting">Print</BaseButton>
     </form>
 
@@ -24,7 +26,7 @@
 import { renderLargeTextInputSchema, type PrintSubmitResponse } from '@thermal-printer-fun/shared';
 import { useForm } from 'vee-validate';
 import { ref } from 'vue';
-import { submitLargeText } from '../../../utils/api';
+import { getApiErrorMessage, submitLargeText } from '../../../utils/api';
 import BaseButton from '../../base/BaseButton/BaseButton.vue';
 import BaseInput from '../../base/BaseInput/BaseInput.vue';
 import PMItemHeader from './PMItemHeader.vue';
@@ -40,9 +42,15 @@ const { defineField, errors, isSubmitting, handleSubmit } = useForm({
 
 const [largeTextInput] = defineField('input');
 const submitResponse = ref<PrintSubmitResponse | null>(null);
+const submitError = ref<string | null>(null);
 
 const onSubmit = handleSubmit(async values => {
-  submitResponse.value = await submitLargeText(values);
+  try {
+    submitResponse.value = await submitLargeText(values);
+    submitError.value = null;
+  } catch (error) {
+    submitError.value = getApiErrorMessage(error);
+  }
 });
 </script>
 

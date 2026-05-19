@@ -54,7 +54,7 @@
 import { renderTodoListInputSchema, type PrintSubmitResponse } from '@thermal-printer-fun/shared';
 import { useFieldArray, useForm } from 'vee-validate';
 import { nextTick, ref, useTemplateRef } from 'vue';
-import { submitTodoList } from '../../../utils/api';
+import { getApiErrorMessage, submitTodoList } from '../../../utils/api';
 import BaseButton from '../../base/BaseButton/BaseButton.vue';
 import BaseInput from '../../base/BaseInput/BaseInput.vue';
 import PMItemHeader from './PMItemHeader.vue';
@@ -142,7 +142,7 @@ const onSubmit = handleSubmit(async values => {
     submitResponse.value = await submitTodoList(values);
     submitError.value = null;
   } catch (error) {
-    submitError.value = error instanceof Error ? error.message : String(error);
+    submitError.value = getApiErrorMessage(error);
   }
 });
 </script>

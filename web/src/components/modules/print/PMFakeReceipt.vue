@@ -26,7 +26,7 @@
 import { renderFakeReceiptInputSchema, type PrintSubmitResponse } from '@thermal-printer-fun/shared';
 import { useForm } from 'vee-validate';
 import { ref } from 'vue';
-import { submitFakeReceipt } from '../../../utils/api';
+import { getApiErrorMessage, submitFakeReceipt } from '../../../utils/api';
 import BaseButton from '../../base/BaseButton/BaseButton.vue';
 import BaseInput from '../../base/BaseInput/BaseInput.vue';
 import PMItemHeader from './PMItemHeader.vue';
@@ -49,7 +49,7 @@ const onSubmit = handleSubmit(async values => {
     submitResponse.value = await submitFakeReceipt(values);
     submitError.value = null;
   } catch (error) {
-    submitError.value = (error instanceof Error ? error.message : String(error));
+    submitError.value = getApiErrorMessage(error);
   }
 });
 </script>
