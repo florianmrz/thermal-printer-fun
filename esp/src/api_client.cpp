@@ -16,9 +16,13 @@ const unsigned long websocketReconnectInterval = 3000;
 unsigned long wifiLastReconnectAttempt = 0;
 const unsigned long wifiReconnectInterval = 5000;
 const unsigned long wifiInitialConnectTimeout = 5000;
-const unsigned long wifiReconnectConnectTimeout = 2000;
+const unsigned long wifiReconnectConnectTimeout = 5000;  // Increased from 2000ms to give more time
 const unsigned long wifiPollInterval = 500;
 bool webSocketIsConnected = false;
+
+// Print data queue to avoid blocking WebSocket callback
+std::vector<std::vector<uint8_t>> printQueue;
+const size_t MAX_PRINT_QUEUE = 10;
 
 void registerConfiguredWifiNetworks()
 {
@@ -71,15 +75,21 @@ void onMessageCallback(WebsocketsMessage message)
   
   Serial.printf("Received %d bytes of binary data\n", dataLength);
 
-  std::vector<uint8_t> printData;
-  
-  // Convert binary data to vector
-  for (size_t i = 0; i < dataLength; i++)
+  // Only queue if there's room (don't overflow)
+  if (printQueue.size() < MAX_PRINT_QUEUE)
   {
-    printData.push_back((uint8_t)rawData[i]);
+    std::vector<uint8_t> printData;
+    for (size_t i = 0; i < dataLength; i++)
+    {
+      printData.push_back((uint8_t)rawData[i]);
+    }
+    printQueue.push_back(printData);
+    Serial.printf("Queued print job (queue size: %d)\n", printQueue.size());
   }
-
-  triggerPrint(printData);
+  else
+  {
+    Serial.println("ERROR: Print queue full, dropping message!");
+  }
 }
 
 void onEventsCallback(WebsocketsEvent event, String data)
@@ -127,6 +137,9 @@ void apiClientLoop()
     {
       wifiLastReconnectAttempt = currentMillis;
       Serial.println("Attempting WiFi reconnection...");
+      // Clear stale WiFi state before reconnecting
+      WiFi.disconnect(false);
+      delay(100);
       connectToAnyConfiguredWifi(wifiReconnectConnectTimeout);
     }
     webSocketIsConnected = false;
@@ -145,9 +158,19 @@ void apiClientLoop()
     }
   }
 
+  // Poll WebSocket first to keep connection alive
   if (webSocketIsConnected && websocketClient.available())
   {
     websocketClient.poll();
+  }
+
+  // Process one queued print job per loop (non-blocking for WebSocket)
+  if (!printQueue.empty())
+  {
+    std::vector<uint8_t> printData = printQueue.front();
+    printQueue.erase(printQueue.begin());
+    Serial.printf("Processing print job (queue size now: %d)\n", printQueue.size());
+    triggerPrint(printData);
   }
 }
 
