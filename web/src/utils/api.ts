@@ -1,4 +1,5 @@
 import type {
+  PrinterStateResponse,
   PrintSubmitResponse,
   RenderDataLargeText,
   RenderDataSudoku,
@@ -34,6 +35,20 @@ export async function getAuthCodeStatus(): Promise<boolean> {
     .catch(err => console.error('Failed to fetch auth code state:', err));
 
   return res ?? false;
+}
+
+/**
+ * Fetches the current printer status and queue.
+ */
+export async function getPrinterState(): Promise<PrinterStateResponse | null> {
+  try {
+    return await fetch(`${env.VITE_API_BASE_URL}/api/web/state`).then(
+      res => res.json() as Promise<PrinterStateResponse>
+    );
+  } catch (err) {
+    console.error('Failed to fetch printer state:', err);
+    return null;
+  }
 }
 
 async function fetchWithAuth(url: string, init: RequestInit): Promise<PrintSubmitResponse> {

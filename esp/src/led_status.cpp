@@ -49,6 +49,12 @@ void updateLEDStatus()
     // -> Red
     setLEDColor(BRIGHTNESS, 0, 0);
   }
+  else if (!isApiReachable())
+  {
+    // WiFi connected, but the API cannot be reached
+    // -> Blue
+    setLEDColor(0, 0, BRIGHTNESS);
+  }
   else if (!isPrinterConnected())
   {
     // WiFi connected, no printer connection

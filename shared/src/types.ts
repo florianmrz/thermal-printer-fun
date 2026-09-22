@@ -2,17 +2,13 @@ import type { RenderData } from './validation.js';
 
 export type PrinterStatus = 'unknown' | 'connected' | 'disconnected';
 
-interface WebSocketMessagePrinterStatus {
-  type: 'printer-status';
+/**
+ * Response of the state endpoint the web app polls while its tab is active.
+ */
+export interface PrinterStateResponse {
   status: PrinterStatus;
-}
-
-interface WebSocketMessagePrinterQueue {
-  type: 'printer-queue';
   queueJobIds: string[];
 }
-
-export type WebSocketMessage = WebSocketMessagePrinterStatus | WebSocketMessagePrinterQueue;
 
 export interface PrintSubmitResponse {
   success: true;

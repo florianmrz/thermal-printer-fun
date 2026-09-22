@@ -8,6 +8,7 @@ import {
   renderTodoListDataSchema,
   renderWebsiteInputSchema,
   type PrintSubmitResponse,
+  type PrinterStateResponse,
   type SentryWebhookPayload,
 } from '@thermal-printer-fun/shared';
 import { Hono, type Context } from 'hono';
@@ -18,7 +19,8 @@ import { HTTPException } from 'hono/http-exception';
 import { env } from '../env.js';
 import { generateFakeReceipt } from '../utils/fake-receipt.js';
 import { convertImageToPrintData } from '../utils/image.js';
-import { print } from '../utils/printer.js';
+import { getPrinterStatus, recordWebActivity } from '../utils/presence.js';
+import { getPrinterQueueJobIds, print } from '../utils/printer.js';
 import { getConnInfo } from '@hono/node-server/conninfo';
 import { renderToPng, renderWebsiteToPng } from '../utils/render.js';
 
@@ -91,6 +93,23 @@ const authMiddleware = createMiddleware((c, next) => {
 });
 
 app.get('/code/status', c => c.json({ enabled: env.AUTH_CODE.length > 0 }));
+
+/**
+ * State
+ */
+
+/**
+ * Polled by the web app while its tab is active.
+ * Each request also marks the web app as in use, which ramps up how often the printer client polls for new jobs.
+ */
+app.get('/state', c => {
+  recordWebActivity();
+
+  return c.json({
+    status: getPrinterStatus(),
+    queueJobIds: getPrinterQueueJobIds(),
+  } satisfies PrinterStateResponse);
+});
 
 /**
  * Print

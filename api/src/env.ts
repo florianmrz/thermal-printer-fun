@@ -2,7 +2,8 @@ import z from 'zod';
 
 const envSchema = z.object({
   ENV: z.enum(['development', 'production']),
-  WEBSOCKET_TOKEN: z.string().min(32),
+  PORT: z.coerce.number().min(1).max(65535).optional(),
+  PRINTER_TOKEN: z.string().min(32),
   SENTRY_ERROR_TOKEN: z.string().min(32),
   WEB_APP_BASE_URL: z.url(),
   RENDER_BASE_URL: z.url(),

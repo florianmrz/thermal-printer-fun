@@ -8,15 +8,14 @@
 </template>
 
 <script setup lang="ts">
-import { type PrinterStatus, type WebSocketMessage } from '@thermal-printer-fun/shared';
-import { useWebSocket } from '@vueuse/core';
-import { onMounted, provide, readonly, ref, shallowReadonly } from 'vue';
+import { type PrinterStatus } from '@thermal-printer-fun/shared';
+import { useDocumentVisibility, useTimeoutPoll } from '@vueuse/core';
+import { onMounted, provide, readonly, ref, shallowReadonly, watch } from 'vue';
 import { RouterView, useRouter } from 'vue-router';
 import BMHeader from './components/modules/basic/BMHeader.vue';
 import PMAuthCodeOverlay from './components/modules/print/PMAuthCodeOverlay.vue';
-import { getAuthCodeStatus } from './utils/api';
+import { getAuthCodeStatus, getPrinterState } from './utils/api';
 import { authCode, authCodeRequired } from './utils/auth-code';
-import env from './utils/env';
 import { printerQueueJobIdsInjectionKey, printerStatusInjectionKey } from './utils/keys';
 
 const router = useRouter();
@@ -41,29 +40,31 @@ onMounted(async () => {
   authCodeRequired.value = await getAuthCodeStatus();
 });
 
-useWebSocket(`${env.VITE_API_BASE_URL}/ws/web`, {
-  autoReconnect: true,
-  onMessage(_ws, event) {
-    try {
-      const parsed: WebSocketMessage = JSON.parse(event.data);
+async function fetchPrinterState() {
+  const state = await getPrinterState();
+  if (!state) {
+    // Keep showing the last known state, a single failed poll is not worth a UI flicker.
+    return;
+  }
 
-      switch (parsed.type) {
-        case 'printer-status': {
-          printerStatus.value = parsed.status;
-          break;
-        }
-        case 'printer-queue': {
-          printerQueueJobIds.value = parsed.queueJobIds;
-          break;
-        }
-        default: {
-          console.warn('Unknown WebSocket message:', JSON.stringify(parsed as unknown));
-        }
-      }
-    } catch (error) {
-      console.error('Failed to parse WebSocket message:', error);
-    }
-  },
+  printerStatus.value = state.status;
+  printerQueueJobIds.value = state.queueJobIds;
+}
+
+/**
+ * Request printer and queue status while the tab is active.
+ */
+const printerStatusPoll = useTimeoutPoll(fetchPrinterState, 5_000, {
+  immediate: true,
+  immediateCallback: true,
+});
+const documentVisibility = useDocumentVisibility();
+watch(documentVisibility, visibility => {
+  if (visibility === 'visible') {
+    printerStatusPoll.resume();
+  } else {
+    printerStatusPoll.pause();
+  }
 });
 </script>
 

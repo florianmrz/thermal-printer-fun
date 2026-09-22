@@ -2,18 +2,14 @@
 #define API_CLIENT_H
 
 #include <Arduino.h>
-#include <vector>
 
-// Initialize the API client and WebSocket connection
+// Initialize WiFi and the API client
 void apiClientSetup();
 
-// Poll WebSocket and handle reconnection logic
+// Poll the API for new print jobs and handle WiFi reconnection
 void apiClientLoop();
 
-// Fetch print data from API and return as vector of byte arrays (72 bytes each)
-std::vector<std::vector<uint8_t>> getPrintData();
-
-// Check if WebSocket is connected
-bool isWebSocketConnected();
+// Whether the most recent poll of the API succeeded
+bool isApiReachable();
 
 #endif // API_CLIENT_H

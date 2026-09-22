@@ -1,7 +1,6 @@
 #include "print_client.h"
 #include <Arduino.h>
 #include "usb/usb_host.h"
-#include <freertos/semphr.h>
 
 // Global client handle
 usb_host_client_handle_t client_hdl;
@@ -10,21 +9,20 @@ uint8_t printer_address = 0;
 uint8_t ep_out = 0;
 uint8_t ep_in = 0;
 
-// Transfer completion tracking
-typedef struct
-{
-  SemaphoreHandle_t done_sem;
-  bool completed;
-} transfer_context_t;
+// How long a single chunk may take before the printer is considered stuck. A busy printer stops
+// accepting data once its input buffer fills, so this has to tolerate waiting for it to catch up.
+static const unsigned long usbTransferTimeoutMs = 5000;
+
+// One transfer is allocated up front and reused for every chunk of every job, so the memory needed
+// to print never depends on the size of a job.
+static usb_transfer_t *sharedTransfer = NULL;
+
+// Set by the completion callback, which runs on this task from inside usb_host_client_handle_events.
+static volatile bool transferCompleted = false;
 
 static void transfer_callback(usb_transfer_t *transfer)
 {
-  transfer_context_t *ctx = (transfer_context_t *)transfer->context;
-  if (ctx)
-  {
-    ctx->completed = true;
-    xSemaphoreGive(ctx->done_sem);
-  }
+  transferCompleted = true;
 }
 
 static void usb_lib_task(void *arg)
@@ -36,75 +34,132 @@ static void usb_lib_task(void *arg)
   }
 }
 
-// Send data to printer
-void print(const std::vector<uint8_t> &printData)
+static bool ensureSharedTransfer()
+{
+  if (sharedTransfer != NULL)
+  {
+    return true;
+  }
+
+  if (usb_host_transfer_alloc(usbChunkBytes, 0, &sharedTransfer) != ESP_OK)
+  {
+    Serial.println("✗ Transfer alloc failed");
+    sharedTransfer = NULL;
+    return false;
+  }
+
+  return true;
+}
+
+/**
+ * Brings the out endpoint back to a usable state after a chunk timed out. Flushing completes the
+ * transfer that is still queued, which is what makes the shared buffer safe to touch again.
+ */
+static void recoverStalledEndpoint()
+{
+  if (dev_hdl == NULL || ep_out == 0)
+  {
+    return;
+  }
+
+  usb_host_endpoint_halt(dev_hdl, ep_out);
+  usb_host_endpoint_flush(dev_hdl, ep_out);
+  usb_host_endpoint_clear(dev_hdl, ep_out);
+
+  // Dispatch the callback of the flushed transfer before anybody reuses the buffer.
+  unsigned long start = millis();
+  while (!transferCompleted && millis() - start < 500)
+  {
+    usb_host_client_handle_events(client_hdl, pdMS_TO_TICKS(10));
+  }
+
+  if (!transferCompleted)
+  {
+    // The transfer is still owned by the host stack, so the buffer can never be reused safely.
+    // Leaking it costs one chunk worth of memory and is preferable to corrupting the heap.
+    Serial.println("✗ Stalled transfer did not complete, dropping its buffer");
+    sharedTransfer = NULL;
+  }
+}
+
+bool printChunk(const uint8_t *data, size_t length)
 {
   if (dev_hdl == NULL || ep_out == 0)
   {
     Serial.println("Device not ready");
-    return;
+    return false;
   }
 
-  const uint8_t *data = printData.data();
-  size_t len = printData.size();
-
-  // Serial.println();
-  // Serial.printf("Data: (%d bytes)", len);
-  // Serial.println();
-  // for (int i = 0; i < len; i++)
-  // {
-  //   Serial.printf("%02X ", data[i]);
-  // }
-  // Serial.println();
-
-  usb_transfer_t *transfer;
-  if (usb_host_transfer_alloc(len, 0, &transfer) != ESP_OK)
+  if (length == 0)
   {
-    Serial.println("✗ Transfer alloc failed");
-    return;
+    return true;
   }
 
-  transfer_context_t ctx = {
-      .done_sem = xSemaphoreCreateBinary(),
-      .completed = false};
+  if (length > usbChunkBytes)
+  {
+    Serial.printf("✗ Chunk of %u bytes exceeds the transfer size of %u bytes\n", length, usbChunkBytes);
+    return false;
+  }
 
-  transfer->device_handle = dev_hdl;
-  transfer->bEndpointAddress = ep_out;
-  transfer->callback = transfer_callback;
-  transfer->context = &ctx;
-  transfer->num_bytes = len;
-  transfer->timeout_ms = 2000;
-  memcpy(transfer->data_buffer, data, len);
+  if (!ensureSharedTransfer())
+  {
+    return false;
+  }
 
-  if (usb_host_transfer_submit(transfer) != ESP_OK)
+  transferCompleted = false;
+
+  sharedTransfer->device_handle = dev_hdl;
+  sharedTransfer->bEndpointAddress = ep_out;
+  sharedTransfer->callback = transfer_callback;
+  sharedTransfer->context = NULL;
+  sharedTransfer->num_bytes = length;
+  sharedTransfer->timeout_ms = usbTransferTimeoutMs;
+  memcpy(sharedTransfer->data_buffer, data, length);
+
+  if (usb_host_transfer_submit(sharedTransfer) != ESP_OK)
   {
     Serial.println("✗ Transfer submit failed");
-    vSemaphoreDelete(ctx.done_sem);
-    usb_host_transfer_free(transfer);
+    return false;
+  }
+
+  unsigned long start = millis();
+  while (!transferCompleted && millis() - start < usbTransferTimeoutMs)
+  {
+    usb_host_client_handle_events(client_hdl, pdMS_TO_TICKS(10));
+  }
+
+  if (!transferCompleted)
+  {
+    Serial.println("✗ Transfer timed out");
+    recoverStalledEndpoint();
+    return false;
+  }
+
+  if (sharedTransfer->status != USB_TRANSFER_STATUS_COMPLETED)
+  {
+    Serial.printf("✗ Transfer failed (status=%d)\n", sharedTransfer->status);
+    return false;
+  }
+
+  if ((size_t)sharedTransfer->actual_num_bytes != length)
+  {
+    Serial.printf("✗ Sent %d/%u bytes\n", sharedTransfer->actual_num_bytes, length);
+    return false;
+  }
+
+  return true;
+}
+
+void printCut()
+{
+  if (!isPrinterConnected())
+  {
     return;
   }
 
-  // Wait for transfer callback
-  unsigned long start = millis();
-  while (!ctx.completed && millis() - start < 2500)
-  {
-    usb_host_client_handle_events(client_hdl, 10);
-    if (xSemaphoreTake(ctx.done_sem, 0) == pdTRUE)
-    {
-      break;
-    }
-  }
-
-  bool success = (transfer->actual_num_bytes > 0);
-  // Serial.printf("%s Sent %d/%d bytes (status=%d)\n",
-  //               success ? "✓" : "✗",
-  //               transfer->actual_num_bytes, len, transfer->status);
-
-  vSemaphoreDelete(ctx.done_sem);
-
-  usb_host_transfer_free(transfer);
-
-  usb_host_client_handle_events(client_hdl, 100);
+  // ESC FF NUL
+  const uint8_t cutCommand[] = {0x1b, 0x0c, 0x00};
+  printChunk(cutCommand, sizeof(cutCommand));
 }
 
 static void client_event_callback(const usb_host_client_event_msg_t *event_msg, void *arg)
@@ -220,23 +275,14 @@ void printClientSetup()
           .client_event_callback = client_event_callback,
           .callback_arg = NULL}};
   usb_host_client_register(&client_config, &client_hdl);
+
+  // Reserve the transfer buffer while the heap is still unfragmented.
+  ensureSharedTransfer();
 }
 
 void printClientLoop()
 {
   usb_host_client_handle_events(client_hdl, 0);
-}
-
-void triggerPrint(const std::vector<uint8_t> &printData)
-{
-  if (printer_address != 0 && dev_hdl != NULL)
-  {
-    print(printData);
-  }
-  else
-  {
-    Serial.println("✗ No printer connected");
-  }
 }
 
 bool isPrinterConnected()
