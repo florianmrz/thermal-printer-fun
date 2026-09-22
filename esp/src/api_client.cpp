@@ -211,9 +211,9 @@ void pollApi()
 
   int statusCode = http.GET();
 
-  if (statusCode <= 0)
+  if (statusCode != HTTP_CODE_OK && statusCode != HTTP_CODE_NO_CONTENT)
   {
-    Serial.printf("Poll request error: %s\n", http.errorToString(statusCode).c_str());
+    Serial.printf("Unexpected poll status: %d\n", statusCode);
     http.end();
     onPollFailed();
     return;
@@ -230,12 +230,6 @@ void pollApi()
     return;
   }
 
-  if (statusCode != HTTP_CODE_OK)
-  {
-    Serial.printf("Unexpected poll status: %d\n", statusCode);
-    http.end();
-    return;
-  }
 
   String jobId = http.header("X-Job-Id");
   int contentLength = http.getSize();
