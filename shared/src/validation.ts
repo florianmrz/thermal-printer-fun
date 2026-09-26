@@ -32,17 +32,8 @@ export const renderTodoListDataSchema = renderTodoListInputSchema;
 
 export const renderSentryErrorInputSchema = z.object({
   _type: z.literal('sentry-error'),
-  data: z.object({
-    id: z.string(),
-    project: z.string(),
-    project_name: z.string(),
-    project_slug: z.string(),
-    level: z.string(),
-    culprit: z.string(),
-    message: z.string(),
-    url: z.url(),
-    event: z.json(),
-  }),
+  data: z.record(z.string(), z.any()),
+  projectName: z.string().optional(),
 });
 
 export type RenderInputLargeText = z.infer<typeof renderLargeTextInputSchema>;
@@ -76,6 +67,7 @@ export type RenderInputSentryError = z.infer<typeof renderSentryErrorInputSchema
 export type RenderDataSentryError = {
   _type: 'sentry-error';
   data: SentryWebhookPayload;
+  projectName?: string;
 };
 
 export type RenderInputWebsite = z.infer<typeof renderWebsiteInputSchema>;

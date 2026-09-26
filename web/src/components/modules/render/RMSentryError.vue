@@ -3,27 +3,27 @@
     <SentryLogo class="logo" />
 
     <div class="header">
-      <div class="project">{{ payload.project_name }}</div>
-      <div class="issue-id">#{{ payload.id }}</div>
+      <div class="project">{{ data.projectName ?? 'Unknown Project' }}</div>
+      <div class="issue-id">#{{ data.data.issue_id }}</div>
     </div>
 
     <div class="meta-row">
-      <div class="level-badge">
-        {{ payload.level.toUpperCase() }}
+      <div v-if="data.data?.level" class="level-badge">
+        {{ data.data.level.toUpperCase() }}
       </div>
       <div v-if="formattedTimestamp" class="timestamp">{{ formattedTimestamp }}</div>
     </div>
 
-    <div class="error-title">{{ event?.title ?? 'Unknown Error' }}</div>
+    <div class="error-title">{{ data.data?.title ?? 'Unknown Error' }}</div>
 
-    <div v-if="payload.culprit" class="section">
+    <div v-if="data.data?.culprit" class="section">
       <div class="section-label">Culprit</div>
-      <div class="section-value">{{ payload.culprit }}</div>
+      <div class="section-value">{{ data.data.culprit }}</div>
     </div>
 
-    <div v-if="event?.request?.url" class="section">
+    <div v-if="data.data?.request?.url" class="section">
       <div class="section-label">URL</div>
-      <div class="section-value url-value">{{ event.request.url }}</div>
+      <div class="section-value url-value">{{ data.data.request.url }}</div>
     </div>
 
     <div v-if="tags.length" class="section">
@@ -56,11 +56,8 @@ import SentryLogo from '~/assets/images/sentry-logo.svg';
 
 const props = defineProps<RenderModuleProps<RenderDataSentryError>>();
 
-const payload = computed(() => props.data.data);
-const event = computed(() => payload.value.event);
-
 const formattedTimestamp = computed(() => {
-  const timestamp = event.value?.timestamp;
+  const timestamp = props.data.data?.timestamp;
   if (!timestamp) {
     return '';
   }
@@ -71,13 +68,13 @@ const formattedTimestamp = computed(() => {
 });
 
 const tags = computed(() =>
-  (event.value?.tags ?? [])
+  (props.data.data?.tags ?? [])
     .filter((tag): tag is [string, string] => Array.isArray(tag) && tag.length >= 2)
     .filter(([key]) => !['url', 'level'].includes(key)) // Filter out tags that are already displayed somewhere else
 );
 
 const frames = computed(() => {
-  const exceptionValues = event.value?.exception?.values;
+  const exceptionValues = props.data.data?.exception?.values;
   if (!exceptionValues?.length) {
     return [];
   }
@@ -88,7 +85,6 @@ const frames = computed(() => {
 });
 
 onMounted(async () => {
-  console.log(props.data.data);
   props.onReady();
 });
 </script>

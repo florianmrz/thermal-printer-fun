@@ -170,7 +170,6 @@ app.post('/print/todo-list', authMiddleware, zValidator('json', renderTodoListDa
 app.post(
   '/print/sentry-error',
   bearerAuth({ token: env.SENTRY_ERROR_TOKEN }),
-  authMiddleware,
   zValidator('json', renderSentryErrorInputSchema),
   async c => {
     const data = c.req.valid('json');
