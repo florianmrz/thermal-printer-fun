@@ -1,0 +1,70 @@
+name: build and deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '26'
+      
+      - name: build web
+        run: |
+          cd web
+          npm ci
+          npm run build
+
+      - name: setup SSH key
+        env:
+          DEPLOY_KEY: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+          DEPLOY_HOST: ${{ vars.DEPLOY_HOST }}
+        run: |
+          install -m 600 -D /dev/null ~/.ssh/deploy_key
+          echo "$DEPLOY_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H $DEPLOY_HOST >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: sync web dist to server
+        env:
+          DEPLOY_HOST: ${{ vars.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ vars.DEPLOY_USER }}
+          DEPLOY_PATH_WEB: ${{ vars.DEPLOY_PATH_WEB }}
+        run: |
+          rsync -avz --delete \
+            -e "ssh -i ~/.ssh/deploy_key" \
+            web/dist/ $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH_WEB/
+
+      - name: sync api to server
+        env:
+          DEPLOY_HOST: ${{ vars.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ vars.DEPLOY_USER }}
+          DEPLOY_PATH_API: ${{ vars.DEPLOY_PATH_API }}
+        run: |
+          rsync -avz --delete \
+            --exclude='.env' \
+            -e "ssh -i ~/.ssh/deploy_key" \
+            api shared $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH_API/
+
+      - name: restart api on server
+        env:
+          DEPLOY_HOST: ${{ vars.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ vars.DEPLOY_USER }}
+          DEPLOY_PATH_API: ${{ vars.DEPLOY_PATH_API }}
+        run: |
+          # install node dependencies
+          ssh -i ~/.ssh/deploy_key $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH_API/api && npm ci"
+          ssh -i ~/.ssh/deploy_key $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH_API/shared && npm ci"
+          # Restart service
+          ssh -i ~/.ssh/deploy_key $DEPLOY_USER@$DEPLOY_HOST "systemctl --user restart thermal-printer-fun"
+
+      - name: cleanup
+        if: always()
+        run: rm -f ~/.ssh/deploy_key
